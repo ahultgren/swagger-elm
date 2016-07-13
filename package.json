@@ -1,0 +1,16 @@
+{
+  "name": "swagger-elm",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "elm-make example/Main.elm  --output dist/elm.js",
+    "dev": "nodemon -w source -w example -e 'elm' -x npm run build",
+    "example": "nodemon -w dist -x node dist/elm.js"
+  },
+  "author": "Andreas Hultgren",
+  "license": "ISC",
+  "dependencies": {
+  }
+}
