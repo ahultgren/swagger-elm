@@ -5,47 +5,57 @@ import Json.Encode
 import Json.Decode exposing ((:=))
 import Json.Decode.Extra exposing ((|:))
 
+
 type alias Swagger =
-  { definitions : SwaggerDefinitions
-  }
+    { definitions : SwaggerDefinitions
+    }
+
 
 type alias SwaggerDefinitions =
-  Dict String SwaggerDefinition
+    Dict String SwaggerDefinition
+
 
 type alias SwaggerDefinition =
-  { required : Maybe (List String)
-  , properties : Maybe SwaggerDefinitionProperties
-  }
+    { required : Maybe (List String)
+    , properties : Maybe SwaggerDefinitionProperties
+    }
+
 
 type alias SwaggerDefinitionProperties =
-  Dict String SwaggerDefinitionProperty
+    Dict String SwaggerDefinitionProperty
+
 
 type alias SwaggerDefinitionProperty =
-  { type' : Maybe String
-  , ref' : Maybe String
-  }
+    { type' : Maybe String
+    , ref' : Maybe String
+    }
+
 
 decodeSwagger : Json.Decode.Decoder Swagger
 decodeSwagger =
-  Json.Decode.succeed Swagger
-    |: ("definitions" := decodeSwaggerDefinitions)
+    Json.Decode.succeed Swagger
+        |: ("definitions" := decodeSwaggerDefinitions)
+
 
 decodeSwaggerDefinitions : Json.Decode.Decoder SwaggerDefinitions
 decodeSwaggerDefinitions =
-  Json.Decode.dict decodeSwaggerDefinition
+    Json.Decode.dict decodeSwaggerDefinition
+
 
 decodeSwaggerDefinition : Json.Decode.Decoder SwaggerDefinition
 decodeSwaggerDefinition =
-  Json.Decode.succeed SwaggerDefinition
-    |: Json.Decode.maybe ("required" := Json.Decode.list Json.Decode.string)
-    |: Json.Decode.maybe ("properties" := decodeSwaggerDefinitionProperties)
+    Json.Decode.succeed SwaggerDefinition
+        |: Json.Decode.maybe ("required" := Json.Decode.list Json.Decode.string)
+        |: Json.Decode.maybe ("properties" := decodeSwaggerDefinitionProperties)
+
 
 decodeSwaggerDefinitionProperties : Json.Decode.Decoder SwaggerDefinitionProperties
 decodeSwaggerDefinitionProperties =
-  Json.Decode.dict decodeSwaggerDefinitionProperty
+    Json.Decode.dict decodeSwaggerDefinitionProperty
+
 
 decodeSwaggerDefinitionProperty : Json.Decode.Decoder SwaggerDefinitionProperty
 decodeSwaggerDefinitionProperty =
-  Json.Decode.succeed SwaggerDefinitionProperty
-    |: Json.Decode.maybe ("type" := Json.Decode.string)
-    |: Json.Decode.maybe ("$ref" := Json.Decode.string)
+    Json.Decode.succeed SwaggerDefinitionProperty
+        |: Json.Decode.maybe ("type" := Json.Decode.string)
+        |: Json.Decode.maybe ("$ref" := Json.Decode.string)
