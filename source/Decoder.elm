@@ -1,4 +1,4 @@
-module Generator.Decoder exposing (..)
+module Decoder exposing (..)
 
 import Dict exposing (Dict)
 import Json.Encode

@@ -1,7 +1,7 @@
 module Generator exposing (..)
 
 import Json.Decode exposing (decodeString)
-import Generator.Decoder exposing (Swagger, decodeSwagger)
+import Decoder exposing (Swagger, decodeSwagger)
 
 
 generate : String -> Result String Swagger
