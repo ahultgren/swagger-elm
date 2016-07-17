@@ -2,6 +2,7 @@ module Generator exposing (..)
 
 import String
 import Dict
+import Regex exposing (regex)
 import Json.Decode exposing (decodeString)
 import Decoder exposing (Swagger, decodeSwagger, SwaggerDefinition, SwaggerDefinitionProperty)
 
@@ -48,8 +49,23 @@ type Type
     | Bool'
     | Object'
     | Array'
-    | Ref'
+    | Ref' String
     | Unknown'
+
+
+renderRefType : String -> String
+renderRefType ref =
+    let
+        parsed =
+            (List.head (Regex.find (Regex.AtMost 1) (regex "^#/definitions/(.+)$") ref))
+                `Maybe.andThen` (List.head << .submatches)
+    in
+        case parsed of
+            Just (Just ref') ->
+                ref'
+
+            _ ->
+                Debug.crash "Unparseable reference " ++ ref
 
 
 renderFieldType : Type -> SwaggerDefinitionProperty -> String
@@ -68,22 +84,22 @@ renderFieldType type' property =
             "Bool"
 
         Object' ->
-            "TODO (implement objects as property)"
+            "TODO (Object)"
 
         Array' ->
-            "TODO (implement objects as property)"
+            "TODO (Array)"
 
-        Ref' ->
-            "TODO Ref"
+        Ref' ref' ->
+            renderRefType ref'
 
         Unknown' ->
-            "TODO (implement unknown property (or crash))"
+            "TODO (Unknown)"
 
 
 getType : SwaggerDefinitionProperty -> Type
 getType property =
-    case property.type' of
-        Just type' ->
+    case ( property.type', property.ref' ) of
+        ( Just type', _ ) ->
             case type' of
                 "string" ->
                     String'
@@ -106,11 +122,10 @@ getType property =
                 _ ->
                     Unknown'
 
-        Nothing ->
-            case property.ref' of
-                Just ref' ->
-                    Ref'
+        ( Nothing, Just ref' ) ->
+            Ref' ref'
 
-                Nothing ->
-                    -- TODO handle property.items
-                    Object'
+        ( Nothing, Nothing ) ->
+            -- TODO handle property.properties
+            -- TODO handle property.items
+            Object'
