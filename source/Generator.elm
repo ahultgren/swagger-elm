@@ -7,6 +7,17 @@ import Json.Decode exposing (decodeString)
 import Decoder exposing (Swagger, decodeSwagger, Definition, Property)
 
 
+type Type
+    = String'
+    | Int'
+    | Float'
+    | Bool'
+    | Object'
+    | Array' Definition
+    | Ref' String
+    | Unknown'
+
+
 generate : String -> Result String String
 generate json =
     decodeString decodeSwagger json
@@ -20,12 +31,7 @@ types { definitions } =
 
 renderType : ( String, Definition ) -> String
 renderType ( name, definition ) =
-    "type alias " ++ name ++ " = " ++ (renderTypeFields definition)
-
-
-renderTypeFields : Definition -> String
-renderTypeFields definition =
-    "{\n" ++ renderProperties definition ++ "}\n"
+    "type alias " ++ name ++ " = " ++ (renderFieldType (getType definition) definition) ++ "\n"
 
 
 renderProperties : Definition -> String
@@ -45,17 +51,6 @@ renderProperties { required, properties } =
 renderProperty : ( String, Property ) -> Maybe String
 renderProperty ( name, Decoder.Property property ) =
     Just <| name ++ " : " ++ renderFieldType (getType property) property
-
-
-type Type
-    = String'
-    | Int'
-    | Float'
-    | Bool'
-    | Object'
-    | Array'
-    | Ref' String
-    | Unknown'
 
 
 renderRefType : String -> String
@@ -89,10 +84,10 @@ renderFieldType type' definition =
             "Bool"
 
         Object' ->
-            renderTypeFields definition
+            renderObject definition
 
-        Array' ->
-            "TODO (Array)"
+        Array' definition ->
+            renderArray definition
 
         Ref' ref' ->
             renderRefType ref'
@@ -101,10 +96,23 @@ renderFieldType type' definition =
             "TODO (Unknown)"
 
 
+renderObject : Definition -> String
+renderObject definition =
+    "{\n" ++ renderProperties definition ++ "}\n"
+
+
+renderArray : Definition -> String
+renderArray definition =
+    "List " ++ (renderFieldType (getType definition) definition)
+
+
 getType : Definition -> Type
-getType definition =
-    case ( definition.type', definition.ref' ) of
-        ( Just type', _ ) ->
+getType { type', ref', items } =
+    case ( type', ref', items ) of
+        ( Just "array", _, Just (Decoder.Property items') ) ->
+            Array' items'
+
+        ( Just type', _, _ ) ->
             case type' of
                 "string" ->
                     String'
@@ -121,16 +129,14 @@ getType definition =
                 "object" ->
                     Object'
 
-                "array" ->
-                    Array'
-
                 _ ->
                     Unknown'
 
-        ( Nothing, Just ref' ) ->
+        ( Nothing, Just ref', _ ) ->
             Ref' ref'
 
-        ( Nothing, Nothing ) ->
-            -- TODO handle property.properties
-            -- TODO handle property.items
+        ( Nothing, Nothing, Just (Decoder.Property items') ) ->
+            Array' items'
+
+        ( Nothing, Nothing, Nothing ) ->
             Object'

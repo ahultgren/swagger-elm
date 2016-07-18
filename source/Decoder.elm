@@ -19,6 +19,7 @@ type alias Definition =
     { type' : Maybe String
     , required : Maybe (List String)
     , properties : Maybe Properties
+    , items : Maybe Property
     , ref' : Maybe String
     }
 
@@ -50,6 +51,7 @@ decodeDefinition =
                 |: Json.Decode.maybe ("type" := Json.Decode.string)
                 |: Json.Decode.maybe ("required" := Json.Decode.list Json.Decode.string)
                 |: Json.Decode.maybe ("properties" := decodeProperties)
+                |: Json.Decode.maybe ("items" := decodeDefinition |> Json.Decode.map Property)
                 |: Json.Decode.maybe ("$ref" := Json.Decode.string)
         )
 
