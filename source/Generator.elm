@@ -4,7 +4,7 @@ import String
 import Dict
 import Regex exposing (regex)
 import Json.Decode exposing (decodeString)
-import Decoder exposing (Swagger, decodeSwagger, SwaggerDefinition, SwaggerDefinitionProperty)
+import Decoder exposing (Swagger, decodeSwagger, Definition, Property)
 
 
 generate : String -> Result String String
@@ -18,12 +18,12 @@ types { definitions } =
     String.concat <| List.map renderType <| Dict.toList definitions
 
 
-renderType : ( String, SwaggerDefinition ) -> String
+renderType : ( String, Definition ) -> String
 renderType ( name, definition ) =
     "type alias " ++ name ++ " = {\n" ++ renderProperties definition ++ "}\n"
 
 
-renderProperties : SwaggerDefinition -> String
+renderProperties : Definition -> String
 renderProperties { required, properties } =
     let
         required' =
@@ -37,7 +37,7 @@ renderProperties { required, properties } =
                 ""
 
 
-renderProperty : ( String, SwaggerDefinitionProperty ) -> Maybe String
+renderProperty : ( String, Property ) -> Maybe String
 renderProperty ( name, property ) =
     Just <| name ++ " : " ++ renderFieldType (getType property) property
 
@@ -68,7 +68,7 @@ renderRefType ref =
                 Debug.crash "Unparseable reference " ++ ref
 
 
-renderFieldType : Type -> SwaggerDefinitionProperty -> String
+renderFieldType : Type -> Property -> String
 renderFieldType type' property =
     case type' of
         String' ->
@@ -96,7 +96,7 @@ renderFieldType type' property =
             "TODO (Unknown)"
 
 
-getType : SwaggerDefinitionProperty -> Type
+getType : Property -> Type
 getType property =
     case ( property.type', property.ref' ) of
         ( Just type', _ ) ->
