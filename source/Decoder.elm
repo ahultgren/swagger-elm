@@ -16,8 +16,10 @@ type alias Definitions =
 
 
 type alias Definition =
-    { required : Maybe (List String)
+    { type' : Maybe String
+    , required : Maybe (List String)
     , properties : Maybe Properties
+    , ref' : Maybe String
     }
 
 
@@ -25,10 +27,8 @@ type alias Properties =
     Dict String Property
 
 
-type alias Property =
-    { type' : Maybe String
-    , ref' : Maybe String
-    }
+type Property
+    = Property Definition
 
 
 decodeSwagger : Json.Decode.Decoder Swagger
@@ -44,9 +44,14 @@ decodeDefinitions =
 
 decodeDefinition : Json.Decode.Decoder Definition
 decodeDefinition =
-    Json.Decode.succeed Definition
-        |: Json.Decode.maybe ("required" := Json.Decode.list Json.Decode.string)
-        |: Json.Decode.maybe ("properties" := decodeProperties)
+    lazy
+        (\_ ->
+            Json.Decode.succeed Definition
+                |: Json.Decode.maybe ("type" := Json.Decode.string)
+                |: Json.Decode.maybe ("required" := Json.Decode.list Json.Decode.string)
+                |: Json.Decode.maybe ("properties" := decodeProperties)
+                |: Json.Decode.maybe ("$ref" := Json.Decode.string)
+        )
 
 
 decodeProperties : Json.Decode.Decoder Properties
@@ -56,6 +61,14 @@ decodeProperties =
 
 decodeProperty : Json.Decode.Decoder Property
 decodeProperty =
-    Json.Decode.succeed Property
-        |: Json.Decode.maybe ("type" := Json.Decode.string)
-        |: Json.Decode.maybe ("$ref" := Json.Decode.string)
+    lazy (\_ -> decodeDefinition) |> Json.Decode.map Property
+
+
+
+-- helpers
+
+
+lazy : (() -> Json.Decode.Decoder a) -> Json.Decode.Decoder a
+lazy thunk =
+    Json.Decode.customDecoder Json.Decode.value
+        (\js -> Json.Decode.decodeValue (thunk ()) js)
