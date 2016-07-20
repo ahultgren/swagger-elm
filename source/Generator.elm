@@ -31,7 +31,7 @@ types { definitions } =
 
 renderType : ( String, Definition ) -> String
 renderType ( name, definition ) =
-    "type alias " ++ name ++ " = " ++ (renderFieldType (getType definition) definition) ++ "\n"
+    "type alias " ++ name ++ " = " ++ (renderFieldType definition) ++ "\n"
 
 
 renderProperties : Definition -> String
@@ -50,7 +50,7 @@ renderProperties { required, properties } =
 
 renderProperty : ( String, Property ) -> Maybe String
 renderProperty ( name, Decoder.Property property ) =
-    Just <| name ++ " : " ++ renderFieldType (getType property) property
+    Just <| name ++ " : " ++ renderFieldType property
 
 
 renderRefType : String -> String
@@ -68,9 +68,9 @@ renderRefType ref =
                 Debug.crash "Unparseable reference " ++ ref
 
 
-renderFieldType : Type -> Definition -> String
-renderFieldType type' definition =
-    case type' of
+renderFieldType : Definition -> String
+renderFieldType definition =
+    case getType definition of
         String' ->
             "String"
 
@@ -84,26 +84,16 @@ renderFieldType type' definition =
             "Bool"
 
         Object' ->
-            renderObject definition
+            "{\n" ++ renderProperties definition ++ "}\n"
 
         Array' definition ->
-            renderArray definition
+            "List " ++ (renderFieldType definition)
 
         Ref' ref' ->
             renderRefType ref'
 
         Unknown' ->
             "TODO (Unknown)"
-
-
-renderObject : Definition -> String
-renderObject definition =
-    "{\n" ++ renderProperties definition ++ "}\n"
-
-
-renderArray : Definition -> String
-renderArray definition =
-    "List " ++ (renderFieldType (getType definition) definition)
 
 
 getType : Definition -> Type
