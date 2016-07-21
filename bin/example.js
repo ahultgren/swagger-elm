@@ -1,7 +1,7 @@
 'use strict';
 
 var log = console.log.bind(console);
-var outputRegex = /^[^:]*: "(.*)"$/;
+var outputRegex = /^result: "(.*)"$/;
 console.log = function (output) {
   var match = output.match(outputRegex);
 

@@ -31,26 +31,22 @@ types { definitions } =
 
 renderType : ( String, Definition ) -> String
 renderType ( name, definition ) =
-    "type alias " ++ name ++ " = " ++ (renderFieldType definition) ++ "\n"
+    "type alias " ++ name ++ " = " ++ (renderFieldType True definition) ++ "\n"
 
 
 renderProperties : Definition -> String
 renderProperties { required, properties } =
-    let
-        required' =
-            Maybe.withDefault [] required
-    in
-        case properties of
-            Just properties ->
-                String.join ",\n" <| List.filterMap renderProperty <| Dict.toList properties
+    case properties of
+        Just properties ->
+            String.join ",\n" <| List.filterMap (renderProperty required) <| Dict.toList properties
 
-            Nothing ->
-                ""
+        Nothing ->
+            ""
 
 
-renderProperty : ( String, Property ) -> Maybe String
-renderProperty ( name, Decoder.Property property ) =
-    Just <| name ++ " : " ++ renderFieldType property
+renderProperty : Maybe (List String) -> ( String, Property ) -> Maybe String
+renderProperty required ( name, Decoder.Property property ) =
+    Just <| name ++ " : " ++ renderFieldType (isRequired required name) property
 
 
 renderRefType : String -> String
@@ -68,32 +64,37 @@ renderRefType ref =
                 Debug.crash "Unparseable reference " ++ ref
 
 
-renderFieldType : Definition -> String
-renderFieldType definition =
-    case getType definition of
-        String' ->
-            "String"
+renderFieldType : Bool -> Definition -> String
+renderFieldType isRequired' definition =
+    let
+        type' =
+            case getType definition of
+                String' ->
+                    "String"
 
-        Int' ->
-            "Int"
+                Int' ->
+                    "Int"
 
-        Float' ->
-            "Float"
+                Float' ->
+                    "Float"
 
-        Bool' ->
-            "Bool"
+                Bool' ->
+                    "Bool"
 
-        Object' ->
-            "{\n" ++ renderProperties definition ++ "}\n"
+                Object' ->
+                    "{\n" ++ renderProperties definition ++ "}\n"
 
-        Array' definition ->
-            "List " ++ (renderFieldType definition)
+                Array' definition' ->
+                    -- TODO How to check if the array is required?
+                    "List (" ++ (renderFieldType True definition') ++ ")"
 
-        Ref' ref' ->
-            renderRefType ref'
+                Ref' ref' ->
+                    renderRefType ref'
 
-        Unknown' ->
-            "TODO (Unknown)"
+                Unknown' ->
+                    "TODO (Unknown)"
+    in
+        maybeWrap isRequired' type'
 
 
 getType : Definition -> Type
@@ -130,3 +131,27 @@ getType { type', ref', items } =
 
         ( Nothing, Nothing, Nothing ) ->
             Object'
+
+
+maybeWrap : Bool -> String -> String
+maybeWrap isRequired type' =
+    case isRequired of
+        True ->
+            type'
+
+        False ->
+            "Maybe (" ++ type' ++ ")"
+
+
+isRequired : Maybe (List String) -> String -> Bool
+isRequired required name =
+    case required of
+        Nothing ->
+            False
+
+        Just required ->
+            let
+                x =
+                    Debug.log "name" ( name, required )
+            in
+                (not <| List.isEmpty <| List.filter ((==) name) required)
