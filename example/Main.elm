@@ -1,7 +1,6 @@
 module Main exposing (..)
 
 import Generator exposing (generate)
-import Decoder
 import String
 
 

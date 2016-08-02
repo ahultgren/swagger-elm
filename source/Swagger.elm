@@ -1,4 +1,4 @@
-module Decoder exposing (..)
+module Swagger exposing (..)
 
 import Dict exposing (Dict)
 import Json.Encode

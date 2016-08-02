@@ -4,7 +4,7 @@ import String
 import Dict
 import Regex exposing (regex)
 import Json.Decode exposing (decodeString)
-import Decoder exposing (decodeSwagger)
+import Swagger exposing (decodeSwagger)
 import Type
 
 

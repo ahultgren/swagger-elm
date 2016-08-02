@@ -3,7 +3,7 @@ module Type exposing (..)
 import String
 import Dict
 import Regex exposing (regex)
-import Decoder exposing (Swagger, Definition, Property)
+import Swagger exposing (Swagger, Definition, Property)
 
 
 type Type
@@ -38,7 +38,7 @@ renderProperties { required, properties } =
 
 
 renderProperty : Maybe (List String) -> ( String, Property ) -> Maybe String
-renderProperty required ( name, Decoder.Property property ) =
+renderProperty required ( name, Swagger.Property property ) =
     Just <| name ++ " : " ++ renderFieldType (isRequired required name) property
 
 
@@ -93,7 +93,7 @@ renderFieldType isRequired' definition =
 getType : Definition -> Type
 getType { type', ref', items } =
     case ( type', ref', items ) of
-        ( Just "array", _, Just (Decoder.Property items') ) ->
+        ( Just "array", _, Just (Swagger.Property items') ) ->
             Array' items'
 
         ( Just type', _, _ ) ->
@@ -119,7 +119,7 @@ getType { type', ref', items } =
         ( Nothing, Just ref', _ ) ->
             Ref' ref'
 
-        ( Nothing, Nothing, Just (Decoder.Property items') ) ->
+        ( Nothing, Nothing, Just (Swagger.Property items') ) ->
             Array' items'
 
         ( Nothing, Nothing, Nothing ) ->
