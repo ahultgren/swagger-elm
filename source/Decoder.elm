@@ -4,6 +4,7 @@ import String
 import Dict
 import Swagger exposing (Swagger, Definition, Property)
 import Type exposing (getType, Type)
+import Codegen.Function as Fun exposing (function, pipeline)
 
 
 renderDecoders : Swagger -> String
@@ -13,16 +14,10 @@ renderDecoders { definitions } =
 
 renderDecoder : ( String, Definition ) -> String
 renderDecoder ( name, definition ) =
-    renderDecoderHeader name
-        ++ decoderName name
-        ++ " = "
-        ++ renderDecoderBody name definition
-        ++ "\n"
-
-
-renderDecoderHeader : String -> String
-renderDecoderHeader name =
-    decoderName name ++ " : Decoder " ++ name ++ "\n"
+    function (decoderName name)
+        []
+        ("Decoder " ++ name)
+        (renderDecoderBody name definition)
 
 
 decoderName : String -> String
@@ -62,10 +57,9 @@ renderObjectDecoder : String -> Definition -> String
 renderObjectDecoder name definition =
     case definition.properties of
         Just properties ->
-            "decode "
-                ++ name
-                ++ "\n"
-                ++ (String.join "\n  " <| List.map renderObjectDecoderProperty <| Dict.toList properties)
+            Dict.toList properties
+                |> List.map renderObjectDecoderProperty
+                |> pipeline ("decode " ++ name)
 
         Nothing ->
             "decode TODO empty object"
@@ -77,4 +71,4 @@ renderObjectDecoderProperty ( name, property ) =
         x =
             Debug.log "mjau" property
     in
-        "|> optional (\"" ++ name ++ "\" string)"
+        "optional (\"" ++ name ++ "\" string)"
