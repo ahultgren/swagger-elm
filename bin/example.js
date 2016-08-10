@@ -6,7 +6,7 @@ console.log = function (output) {
   var match = output.match(outputRegex);
 
   if(match) {
-    log(match[1]);
+    log(match[1].replace(/\\"/g, '"'));
   }
   else {
     console.error(output);

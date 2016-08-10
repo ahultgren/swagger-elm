@@ -143,8 +143,4 @@ isRequired required name =
             False
 
         Just required ->
-            let
-                x =
-                    Debug.log "name" ( name, required )
-            in
-                (not <| List.isEmpty <| List.filter ((==) name) required)
+            (not <| List.isEmpty <| List.filter ((==) name) required)
