@@ -129,12 +129,10 @@ renderProperty required ( name, Swagger.Property property ) =
 
 maybeWrap : Bool -> String -> String
 maybeWrap isRequired type' =
-    case isRequired of
-        True ->
-            type'
-
-        False ->
-            maybe type'
+    if isRequired then
+        type'
+    else
+        maybe type'
 
 
 isRequired : Maybe (List String) -> String -> Bool
@@ -144,4 +142,4 @@ isRequired required name =
             False
 
         Just required ->
-            (not <| List.isEmpty <| List.filter ((==) name) required)
+            List.member name required
