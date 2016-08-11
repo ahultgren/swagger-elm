@@ -4,6 +4,7 @@ import String
 import Dict
 import Regex exposing (regex)
 import Swagger exposing (Swagger, Definition, Property)
+import Codegen.Type exposing (typeAlias, record, recordField, list, maybe)
 
 
 type Type
@@ -24,22 +25,7 @@ renderTypes { definitions } =
 
 renderType : ( String, Definition ) -> String
 renderType ( name, definition ) =
-    "type alias " ++ name ++ " = " ++ (renderFieldType True definition) ++ "\n"
-
-
-renderProperties : Definition -> String
-renderProperties { required, properties } =
-    case properties of
-        Just properties ->
-            String.join ",\n" <| List.filterMap (renderProperty required) <| Dict.toList properties
-
-        Nothing ->
-            ""
-
-
-renderProperty : Maybe (List String) -> ( String, Property ) -> Maybe String
-renderProperty required ( name, Swagger.Property property ) =
-    Just <| name ++ " : " ++ renderFieldType (isRequired required name) property
+    typeAlias name (renderFieldType True definition)
 
 
 renderRefType : String -> String
@@ -75,11 +61,11 @@ renderFieldType isRequired' definition =
                     "Bool"
 
                 Object' ->
-                    "{\n" ++ renderProperties definition ++ "}\n"
+                    record <| renderProperties definition
 
                 Array' definition' ->
                     -- TODO How to check if the array is required?
-                    "List (" ++ (renderFieldType True definition') ++ ")"
+                    list <| renderFieldType True definition'
 
                 Ref' ref' ->
                     renderRefType ref'
@@ -126,6 +112,21 @@ getType { type', ref', items } =
             Object'
 
 
+renderProperties : Definition -> List String
+renderProperties { required, properties } =
+    case properties of
+        Just properties ->
+            List.filterMap (renderProperty required) <| Dict.toList properties
+
+        Nothing ->
+            []
+
+
+renderProperty : Maybe (List String) -> ( String, Property ) -> Maybe String
+renderProperty required ( name, Swagger.Property property ) =
+    Just <| recordField name <| renderFieldType (isRequired required name) property
+
+
 maybeWrap : Bool -> String -> String
 maybeWrap isRequired type' =
     case isRequired of
@@ -133,7 +134,7 @@ maybeWrap isRequired type' =
             type'
 
         False ->
-            "Maybe (" ++ type' ++ ")"
+            maybe type'
 
 
 isRequired : Maybe (List String) -> String -> Bool
