@@ -122,7 +122,7 @@ renderProperties { required, properties } =
             []
 
 
-renderProperty : Maybe (List String) -> ( String, Property ) -> Maybe String
+renderProperty : List String -> ( String, Property ) -> Maybe String
 renderProperty required ( name, Swagger.Property property ) =
     Just <| recordField name <| renderFieldType (isRequired required name) property
 
@@ -135,11 +135,6 @@ maybeWrap isRequired type' =
         maybe type'
 
 
-isRequired : Maybe (List String) -> String -> Bool
+isRequired : List String -> String -> Bool
 isRequired required name =
-    case required of
-        Nothing ->
-            False
-
-        Just required ->
-            List.member name required
+    List.member name required

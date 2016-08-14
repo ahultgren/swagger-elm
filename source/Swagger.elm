@@ -17,7 +17,7 @@ type alias Definitions =
 
 type alias Definition =
     { type' : Maybe String
-    , required : Maybe (List String)
+    , required : List String
     , properties : Maybe Properties
     , items : Maybe Property
     , ref' : Maybe String
@@ -49,7 +49,7 @@ decodeDefinition =
         (\_ ->
             decode Definition
                 |> maybe "type" string
-                |> maybe "required" (list string)
+                |> optional "required" (list string) []
                 |> maybe "properties" decodeProperties
                 |> maybe "items" (decodeDefinition |> map Property)
                 |> maybe "$ref" string
