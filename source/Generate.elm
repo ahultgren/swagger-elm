@@ -23,9 +23,4 @@ render swagger =
 
 applyList : List (a -> b) -> a -> List b
 applyList fns value =
-    List.map (apply value) fns
-
-
-apply : a -> (a -> b) -> b
-apply value fn =
-    fn value
+    List.map ((|>) value) fns
