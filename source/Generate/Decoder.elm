@@ -1,9 +1,9 @@
-module Decoder exposing (..)
+module Generate.Decoder exposing (..)
 
 import String
 import Dict
-import Swagger exposing (Swagger, Definition, Property)
-import Type exposing (getType, Type)
+import Swagger.Decode as Swagger exposing (Swagger, Definition, Property)
+import Generate.Type as Type exposing (getType, Type)
 import Codegen.Function as Fun exposing (function, pipeline)
 
 

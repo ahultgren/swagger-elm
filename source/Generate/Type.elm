@@ -1,9 +1,9 @@
-module Type exposing (..)
+module Generate.Type exposing (..)
 
 import String
 import Dict
 import Regex exposing (regex)
-import Swagger exposing (Swagger, Definition, Property)
+import Swagger.Decode as Swagger exposing (Swagger, Definition, Property)
 import Codegen.Type exposing (typeAlias, record, recordField, list, maybe)
 
 

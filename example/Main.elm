@@ -1,6 +1,6 @@
 module Main exposing (..)
 
-import Generator exposing (generate)
+import Generate exposing (generate)
 import String
 
 

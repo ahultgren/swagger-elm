@@ -1,12 +1,12 @@
-module Generator exposing (..)
+module Generate exposing (..)
 
 import String
 import Dict
 import Regex exposing (regex)
 import Json.Decode exposing (decodeString)
-import Swagger exposing (Swagger, decodeSwagger)
-import Type
-import Decoder
+import Swagger.Decode as Swagger exposing (Swagger, decodeSwagger)
+import Generate.Type as Type
+import Generate.Decoder as Decoder
 
 
 generate : String -> Result String String
