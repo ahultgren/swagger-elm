@@ -2,8 +2,8 @@ module Swagger exposing (..)
 
 import Dict exposing (Dict)
 import Json.Encode
-import Json.Decode exposing ((:=))
-import Json.Decode.Extra exposing ((|:))
+import Json.Decode exposing (Decoder, string, dict, list, map, customDecoder, value, decodeValue)
+import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 
 
 type alias Swagger =
@@ -32,45 +32,50 @@ type Property
     = Property Definition
 
 
-decodeSwagger : Json.Decode.Decoder Swagger
+decodeSwagger : Decoder Swagger
 decodeSwagger =
-    Json.Decode.succeed Swagger
-        |: ("definitions" := decodeDefinitions)
+    decode Swagger
+        |> required "definitions" decodeDefinitions
 
 
-decodeDefinitions : Json.Decode.Decoder Definitions
+decodeDefinitions : Decoder Definitions
 decodeDefinitions =
-    Json.Decode.dict decodeDefinition
+    dict decodeDefinition
 
 
-decodeDefinition : Json.Decode.Decoder Definition
+decodeDefinition : Decoder Definition
 decodeDefinition =
     lazy
         (\_ ->
-            Json.Decode.succeed Definition
-                |: Json.Decode.maybe ("type" := Json.Decode.string)
-                |: Json.Decode.maybe ("required" := Json.Decode.list Json.Decode.string)
-                |: Json.Decode.maybe ("properties" := decodeProperties)
-                |: Json.Decode.maybe ("items" := decodeDefinition |> Json.Decode.map Property)
-                |: Json.Decode.maybe ("$ref" := Json.Decode.string)
+            decode Definition
+                |> maybe "type" string
+                |> maybe "required" (list string)
+                |> maybe "properties" decodeProperties
+                |> maybe "items" (decodeDefinition |> map Property)
+                |> maybe "$ref" string
         )
 
 
-decodeProperties : Json.Decode.Decoder Properties
+decodeProperties : Decoder Properties
 decodeProperties =
-    Json.Decode.dict decodeProperty
+    dict decodeProperty
 
 
-decodeProperty : Json.Decode.Decoder Property
+decodeProperty : Decoder Property
 decodeProperty =
-    lazy (\_ -> decodeDefinition) |> Json.Decode.map Property
+    lazy (\_ -> decodeDefinition) |> map Property
 
 
 
 -- helpers
 
 
-lazy : (() -> Json.Decode.Decoder a) -> Json.Decode.Decoder a
+lazy : (() -> Decoder a) -> Decoder a
 lazy thunk =
-    Json.Decode.customDecoder Json.Decode.value
-        (\js -> Json.Decode.decodeValue (thunk ()) js)
+    customDecoder value
+        (\js -> decodeValue (thunk ()) js)
+
+
+maybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b
+maybe name decoder =
+    optional name (map Just decoder) Nothing
