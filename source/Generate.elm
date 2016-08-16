@@ -5,6 +5,7 @@ import Dict
 import Regex exposing (regex)
 import Json.Decode exposing (decodeString)
 import Swagger.Decode as Swagger exposing (Swagger, decodeSwagger)
+import Swagger.Parse exposing (parseDefinitions)
 import Generate.Type as Type
 import Generate.Decoder as Decoder
 
@@ -17,8 +18,15 @@ generate json =
 
 render : Swagger -> String
 render swagger =
-    applyList [ Type.renderTypes, Decoder.renderDecoders ] swagger
-        |> String.concat
+    let
+        definitions =
+            parseDefinitions swagger.definitions
+
+        swagger' =
+            { swagger | definitions = definitions }
+    in
+        applyList [ Type.renderTypes, Decoder.renderDecoders ] swagger'
+            |> String.concat
 
 
 applyList : List (a -> b) -> a -> List b
