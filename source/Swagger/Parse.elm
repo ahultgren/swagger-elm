@@ -24,7 +24,12 @@ extractNestedDefinition isToplevel ( name, definition ) =
             if isToplevel then
                 [ ( name, definition ) ]
             else
-                []
+                case definition.items of
+                    Nothing ->
+                        []
+
+                    Just (Decode.Property items) ->
+                        extractNestedDefinition False ( name, items )
 
         Just properties ->
             let
