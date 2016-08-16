@@ -59,7 +59,7 @@ renderObjectDecoder name definition =
         Just properties ->
             Dict.toList properties
                 |> List.map renderObjectDecoderProperty
-                |> pipeline (decoderName name)
+                |> pipeline ("decode " ++ name)
 
         Nothing ->
             "decode TODO empty object"
