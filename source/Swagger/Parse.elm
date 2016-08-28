@@ -2,6 +2,7 @@ module Swagger.Parse exposing (..)
 
 import Dict
 import String
+import Regex exposing (regex)
 import Swagger.Decode as Decode
 import Swagger.Flatten exposing (flattenNestedDefinitions, extractProperty)
 
@@ -53,7 +54,7 @@ toNewDefinition parentRequired ( name, { type', ref', items, properties, require
     in
         case ( type', ref' ) of
             ( _, Just ref' ) ->
-                Definition name isRequired' (Ref' ref')
+                Definition name isRequired' (Ref' <| extractRefType ref')
 
             ( Just type', Nothing ) ->
                 case type' of
@@ -97,12 +98,27 @@ toNewItems : Parser -> Maybe Decode.Property -> Definition
 toNewItems toNewDefinition' items =
     case items of
         Nothing ->
-            toNewDefinition' ( "wtf?", Decode.Definition Nothing [] Nothing Nothing Nothing )
+            toNewDefinition' ( "TODO WTF", Decode.Definition Nothing [] Nothing Nothing Nothing )
 
         Just items ->
-            toNewDefinition' <| extractProperty ( "que?", items )
+            toNewDefinition' <| extractProperty ( "TODO FIX", items )
 
 
 isRequired : List String -> String -> Bool
 isRequired required name =
     List.member name required
+
+
+extractRefType : String -> String
+extractRefType ref =
+    let
+        parsed =
+            (List.head (Regex.find (Regex.AtMost 1) (regex "^#/definitions/(.+)$") ref))
+                `Maybe.andThen` (List.head << .submatches)
+    in
+        case parsed of
+            Just (Just ref') ->
+                ref'
+
+            _ ->
+                Debug.crash "Unparseable reference " ++ ref

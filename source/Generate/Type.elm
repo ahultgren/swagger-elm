@@ -2,7 +2,6 @@ module Generate.Type exposing (..)
 
 import String
 import Dict
-import Regex exposing (regex)
 import Swagger.Parse as Parse exposing (Definitions, Definition, Definition(Definition), Type(Object', Array', Ref', Int', Float', String', Bool'))
 import Codegen.Type exposing (typeAlias, record, recordField, list, maybe)
 
@@ -44,27 +43,12 @@ renderFieldType type' =
             list <| renderFieldType type'
 
         Ref' ref ->
-            renderRef ref
+            ref
 
 
 renderProperty : Definition -> String
 renderProperty (Definition name isRequired type') =
     recordField name <| renderType isRequired type'
-
-
-renderRef : String -> String
-renderRef ref =
-    let
-        parsed =
-            (List.head (Regex.find (Regex.AtMost 1) (regex "^#/definitions/(.+)$") ref))
-                `Maybe.andThen` (List.head << .submatches)
-    in
-        case parsed of
-            Just (Just ref') ->
-                ref'
-
-            _ ->
-                Debug.crash "Unparseable reference " ++ ref
 
 
 maybeWrap : Bool -> String -> String

@@ -22,16 +22,10 @@ render swagger =
         definitions =
             parseDefinitions swagger.definitions
 
-        definitionsTempWhileRefactoring =
+        definitions' =
             List.map (Swagger.Parse.toNewDefinition <| Dict.keys definitions) <| Dict.toList definitions
-
-        swagger' =
-            { swagger | definitions = definitions }
     in
-        [ Type.renderTypes definitionsTempWhileRefactoring, Decoder.renderDecoders swagger' ]
+        [ Type.renderTypes definitions'
+        , Decoder.renderDecoders definitions'
+        ]
             |> String.concat
-
-
-applyList : List (a -> b) -> a -> List b
-applyList fns value =
-    List.map ((|>) value) fns
