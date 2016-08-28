@@ -22,13 +22,13 @@ render swagger =
         definitions =
             parseDefinitions swagger.definitions
 
-        x =
-            Debug.log "mjau" <| List.map (Swagger.Parse.toNewDefinition []) <| Dict.toList definitions
+        definitionsTempWhileRefactoring =
+            List.map (Swagger.Parse.toNewDefinition <| Dict.keys definitions) <| Dict.toList definitions
 
         swagger' =
             { swagger | definitions = definitions }
     in
-        applyList [ Type.renderTypes, Decoder.renderDecoders ] swagger'
+        [ Type.renderTypes definitionsTempWhileRefactoring, Decoder.renderDecoders swagger' ]
             |> String.concat
 
 

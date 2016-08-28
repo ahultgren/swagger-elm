@@ -3,8 +3,18 @@ module Generate.Decoder exposing (..)
 import String
 import Dict
 import Swagger.Decode as Swagger exposing (Swagger, Definition, Property)
-import Generate.Type as Type exposing (getType, Type)
 import Codegen.Function as Fun exposing (function, pipeline)
+
+
+type Type
+    = String'
+    | Int'
+    | Float'
+    | Bool'
+    | Object'
+    | Array' Definition
+    | Ref' String
+    | Unknown'
 
 
 renderDecoders : Swagger -> String
@@ -28,28 +38,28 @@ decoderName name =
 renderDecoderBody : String -> Definition -> String
 renderDecoderBody name definition =
     case getType definition of
-        Type.String' ->
+        String' ->
             "String"
 
-        Type.Int' ->
+        Int' ->
             "Int"
 
-        Type.Float' ->
+        Float' ->
             "Float"
 
-        Type.Bool' ->
+        Bool' ->
             "Bool"
 
-        Type.Object' ->
+        Object' ->
             renderObjectDecoder name definition
 
-        Type.Array' definition' ->
+        Array' definition' ->
             "List"
 
-        Type.Ref' ref' ->
+        Ref' ref' ->
             "Ref"
 
-        Type.Unknown' ->
+        Unknown' ->
             "TODO (Unknown)"
 
 
@@ -68,3 +78,39 @@ renderObjectDecoder name definition =
 renderObjectDecoderProperty : ( String, Property ) -> String
 renderObjectDecoderProperty ( name, property ) =
     "optional (\"" ++ name ++ "\" string)"
+
+
+getType : Definition -> Type
+getType { type', ref', items } =
+    case ( type', ref', items ) of
+        ( Just "array", _, Just (Swagger.Property items') ) ->
+            Array' items'
+
+        ( Just type', _, _ ) ->
+            case type' of
+                "string" ->
+                    String'
+
+                "integer" ->
+                    Int'
+
+                "number" ->
+                    Float'
+
+                "boolean" ->
+                    Bool'
+
+                "object" ->
+                    Object'
+
+                _ ->
+                    Unknown'
+
+        ( Nothing, Just ref', _ ) ->
+            Ref' ref'
+
+        ( Nothing, Nothing, Just (Swagger.Property items') ) ->
+            Array' items'
+
+        ( Nothing, Nothing, Nothing ) ->
+            Object'

@@ -11,13 +11,17 @@ type alias Definitions =
 
 
 type Definition
-    = Object' Name IsRequired Properties
-    | Array' Name IsRequired Properties
-    | Int' Name IsRequired
-    | Float' Name IsRequired
-    | String' Name IsRequired
-    | Bool' Name IsRequired
-    | Ref' Name IsRequired Name
+    = Definition Name IsRequired Type
+
+
+type Type
+    = Object' Properties
+    | Array' Definition
+    | Ref' Name
+    | Int'
+    | Float'
+    | String'
+    | Bool'
 
 
 type alias Name =
@@ -49,33 +53,33 @@ toNewDefinition parentRequired ( name, { type', ref', items, properties, require
     in
         case ( type', ref' ) of
             ( _, Just ref' ) ->
-                Ref' name isRequired' ref'
+                Definition name isRequired' (Ref' ref')
 
             ( Just type', Nothing ) ->
                 case type' of
                     "string" ->
-                        String' name isRequired'
+                        Definition name isRequired' String'
 
                     "integer" ->
-                        Int' name isRequired'
+                        Definition name isRequired' Int'
 
                     "number" ->
-                        Float' name isRequired'
+                        Definition name isRequired' Float'
 
                     "boolean" ->
-                        Bool' name isRequired'
+                        Definition name isRequired' Bool'
 
                     "array" ->
-                        Array' name isRequired' <| toNewItems (toNewDefinition required) items
+                        Definition name isRequired' <| Array' <| toNewItems (toNewDefinition required) items
 
                     "object" ->
-                        Object' name isRequired' <| toNewProperties (toNewDefinition required) properties
+                        Definition name isRequired' <| Object' <| toNewProperties (toNewDefinition required) properties
 
                     _ ->
-                        Object' name isRequired' <| toNewProperties (toNewDefinition required) properties
+                        Definition name isRequired' <| Object' <| toNewProperties (toNewDefinition required) properties
 
             _ ->
-                Object' name isRequired' <| toNewProperties (toNewDefinition required) properties
+                Definition name isRequired' <| Object' <| toNewProperties (toNewDefinition required) properties
 
 
 toNewProperties : Parser -> Maybe Decode.Properties -> Definitions
@@ -89,14 +93,14 @@ toNewProperties toNewDefinition' properties =
                 |> List.map (toNewDefinition' << extractProperty)
 
 
-toNewItems : Parser -> Maybe Decode.Property -> Definitions
+toNewItems : Parser -> Maybe Decode.Property -> Definition
 toNewItems toNewDefinition' items =
     case items of
         Nothing ->
-            []
+            toNewDefinition' ( "wtf?", Decode.Definition Nothing [] Nothing Nothing Nothing )
 
         Just items ->
-            [ toNewDefinition' <| extractProperty ( "que?", items ) ]
+            toNewDefinition' <| extractProperty ( "que?", items )
 
 
 isRequired : List String -> String -> Bool
