@@ -3,80 +3,102 @@ module Swagger.Parse exposing (..)
 import Dict
 import String
 import Swagger.Decode as Decode
+import Swagger.Flatten exposing (flattenNestedDefinitions, extractProperty)
+
+
+type alias Definitions =
+    List Definition
+
+
+type Definition
+    = Object' Name IsRequired Properties
+    | Array' Name IsRequired Properties
+    | Int' Name IsRequired
+    | Float' Name IsRequired
+    | String' Name IsRequired
+    | Bool' Name IsRequired
+    | Ref' Name IsRequired Name
+
+
+type alias Name =
+    String
+
+
+type alias IsRequired =
+    Bool
+
+
+type alias Properties =
+    Definitions
+
+
+type alias Parser =
+    ( String, Decode.Definition ) -> Definition
 
 
 parseDefinitions : Decode.Definitions -> Decode.Definitions
 parseDefinitions definitions =
-    extractNestedDefinitions definitions
+    flattenNestedDefinitions definitions
 
 
-extractNestedDefinitions : Decode.Definitions -> Decode.Definitions
-extractNestedDefinitions definitions =
-    Dict.toList definitions
-        |> List.concatMap (extractNestedDefinition True)
-        |> Dict.fromList
+toNewDefinition : List String -> ( String, Decode.Definition ) -> Definition
+toNewDefinition parentRequired ( name, { type', ref', items, properties, required } ) =
+    let
+        isRequired' =
+            isRequired parentRequired name
+    in
+        case ( type', ref' ) of
+            ( _, Just ref' ) ->
+                Ref' name isRequired' ref'
+
+            ( Just type', Nothing ) ->
+                case type' of
+                    "string" ->
+                        String' name isRequired'
+
+                    "integer" ->
+                        Int' name isRequired'
+
+                    "number" ->
+                        Float' name isRequired'
+
+                    "boolean" ->
+                        Bool' name isRequired'
+
+                    "array" ->
+                        Array' name isRequired' <| toNewItems (toNewDefinition required) items
+
+                    "object" ->
+                        Object' name isRequired' <| toNewProperties (toNewDefinition required) properties
+
+                    _ ->
+                        Object' name isRequired' <| toNewProperties (toNewDefinition required) properties
+
+            _ ->
+                Object' name isRequired' <| toNewProperties (toNewDefinition required) properties
 
 
-extractNestedDefinition : Bool -> ( String, Decode.Definition ) -> List ( String, Decode.Definition )
-extractNestedDefinition isToplevel ( name, definition ) =
-    case (definition.properties) of
+toNewProperties : Parser -> Maybe Decode.Properties -> Definitions
+toNewProperties toNewDefinition' properties =
+    case properties of
         Nothing ->
-            if isToplevel then
-                [ ( name, definition ) ]
-            else
-                case definition.items of
-                    Nothing ->
-                        []
-
-                    Just (Decode.Property items) ->
-                        extractNestedDefinition False ( name, items )
+            []
 
         Just properties ->
-            let
-                children =
-                    flattenProperties name properties
-            in
-                ( name, { definition | properties = children } )
-                    :: (List.concatMap (extractNestedDefinition False << extractProperty name) <| Dict.toList properties)
+            Dict.toList properties
+                |> List.map (toNewDefinition' << extractProperty)
 
 
-flattenProperties : String -> Decode.Properties -> Maybe Decode.Properties
-flattenProperties parentName properties =
-    Just
-        (Dict.toList properties
-            |> List.map
-                (\( name, Decode.Property definition ) ->
-                    case definition.properties of
-                        Nothing ->
-                            ( name, Decode.Property definition )
-
-                        Just props ->
-                            ( name, Decode.Property (makeRef parentName name) )
-                )
-            |> Dict.fromList
-        )
-
-
-makeRef : String -> String -> Decode.Definition
-makeRef parentName name =
-    Decode.Definition Nothing [] Nothing Nothing <| Just <| "#/definitions/" ++ (nestedTypeName parentName name)
-
-
-extractProperty : String -> ( String, Decode.Property ) -> ( String, Decode.Definition )
-extractProperty parentName ( name, Decode.Property definition ) =
-    ( nestedTypeName parentName name, definition )
-
-
-nestedTypeName : String -> String -> String
-nestedTypeName parentName name =
-    parentName ++ "'" ++ (capitalize name)
-
-
-capitalize : String -> String
-capitalize str =
-    case String.uncons str of
-        Just ( head, tail ) ->
-            (String.toUpper <| String.fromChar head) ++ tail
-
+toNewItems : Parser -> Maybe Decode.Property -> Definitions
+toNewItems toNewDefinition' items =
+    case items of
         Nothing ->
-            ""
+            []
+
+        Just items ->
+            [ toNewDefinition' <| extractProperty ( "que?", items ) ]
+
+
+isRequired : List String -> String -> Bool
+isRequired required name =
+    List.member name required

@@ -22,6 +22,9 @@ render swagger =
         definitions =
             parseDefinitions swagger.definitions
 
+        x =
+            Debug.log "mjau" <| List.map (Swagger.Parse.toNewDefinition []) <| Dict.toList definitions
+
         swagger' =
             { swagger | definitions = definitions }
     in

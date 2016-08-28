@@ -67,8 +67,4 @@ renderObjectDecoder name definition =
 
 renderObjectDecoderProperty : ( String, Property ) -> String
 renderObjectDecoderProperty ( name, property ) =
-    let
-        x =
-            Debug.log "mjau" property
-    in
-        "optional (\"" ++ name ++ "\" string)"
+    "optional (\"" ++ name ++ "\" string)"
