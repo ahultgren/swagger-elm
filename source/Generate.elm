@@ -8,6 +8,7 @@ import Swagger.Decode as Swagger exposing (Swagger, decodeSwagger)
 import Swagger.Parse exposing (parseDefinitions)
 import Generate.Type as Type
 import Generate.Decoder as Decoder
+import Generate.Headers as Headers
 
 
 generate : String -> Result String String
@@ -25,7 +26,8 @@ render swagger =
         definitions' =
             List.map (Swagger.Parse.toNewDefinition <| Dict.keys definitions) <| Dict.toList definitions
     in
-        [ Type.renderTypes definitions'
+        [ Headers.renderHeaders
+        , Type.renderTypes definitions'
         , Decoder.renderDecoders definitions'
         ]
             |> String.concat
