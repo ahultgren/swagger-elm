@@ -43,7 +43,12 @@ flattenProperties parentName properties =
                 (\( name, Decode.Property definition ) ->
                     case definition.properties of
                         Nothing ->
-                            ( name, Decode.Property definition )
+                            case definition.items of
+                                Nothing ->
+                                    ( name, Decode.Property definition )
+
+                                Just items ->
+                                    ( name, Decode.Property <| Decode.Definition (Just "array") [] Nothing (Just <| Decode.Property (makeRef parentName name)) Nothing )
 
                         Just props ->
                             ( name, Decode.Property (makeRef parentName name) )
