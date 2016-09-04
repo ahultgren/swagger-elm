@@ -11,6 +11,8 @@
   },
   "author": "Andreas Hultgren",
   "license": "ISC",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "elm-test": "^0.17.3"
   }
 }

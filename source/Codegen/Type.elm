@@ -39,7 +39,7 @@ unionType name tags =
 
 record : Properties -> String
 record properties =
-    "{\n  " ++ (String.join "\n  ," properties) ++ "}"
+    "\n  { " ++ (String.join "\n  , " properties) ++ "\n  }\n"
 
 
 recordField : Name -> Type -> String
