@@ -21,6 +21,7 @@ type alias Definition =
     , properties : Maybe Properties
     , items : Maybe Property
     , ref' : Maybe String
+    , enum : Maybe (List String)
     }
 
 
@@ -53,6 +54,8 @@ decodeDefinition =
                 |> maybe "properties" decodeProperties
                 |> maybe "items" (decodeDefinition |> map Property)
                 |> maybe "$ref" string
+                |> maybe "enum" (list string)
+         -- TODO Support other enums than string?
         )
 
 

@@ -28,6 +28,15 @@ typeAlias name body =
     "type alias " ++ name ++ " = " ++ body ++ "\n"
 
 
+unionType : Name -> Properties -> String
+unionType name tags =
+    "type "
+        ++ name
+        ++ "\n  = "
+        ++ (String.join "\n  | " tags)
+        ++ "\n"
+
+
 record : Properties -> String
 record properties =
     "{\n  " ++ (String.join "\n  ," properties) ++ "}"

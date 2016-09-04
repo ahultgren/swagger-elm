@@ -1,4 +1,4 @@
-module Codegen.Function exposing (Arg, function, pipeline)
+module Codegen.Function exposing (Arg, function, pipeline, letin, caseof)
 
 import String
 
@@ -68,3 +68,25 @@ pipeline init items =
         |> List.map ((++) "\n  |> ")
         |> String.concat
         |> (++) init
+
+
+letin : List ( Name, Body ) -> Body -> String
+letin declarations body =
+    let
+        lets =
+            declarations
+                |> List.map (\( name, body ) -> "      " ++ name ++ " = " ++ body)
+                |> String.join "\n"
+    in
+        "  let\n" ++ lets ++ "\n    in\n      " ++ body
+
+
+caseof : String -> List ( Name, Body ) -> String
+caseof case' conditions =
+    let
+        conds =
+            conditions
+                |> List.map (\( name, body ) -> "      " ++ name ++ " -> " ++ body)
+                |> String.join "\n"
+    in
+        "  case " ++ case' ++ " of\n" ++ conds
