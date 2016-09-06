@@ -5,13 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "elm-make example/Main.elm  --output dist/elm.js",
-    "dev": "nodemon -w source -w example -e 'elm' -x npm run build",
-    "example": "nodemon -w dist -x \"node bin/example.js | elm-format --stdin\""
+    "build": "elm-make source/Generate.elm  --output dist/elm.js",
+    "dev": "nodemon -w source -e 'elm' -x npm run build",
+    "example": "nodemon -w dist -x \"cat example/swagger.json | swagger-to-elm\""
+  },
+  "bin": {
+    "swagger-to-elm": "./bin/swagger-to-elm"
   },
   "author": "Andreas Hultgren",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "node-elm-stdio": "github:ahultgren/node-elm-stdio"
+  },
   "devDependencies": {
     "elm-test": "^0.17.3"
   }

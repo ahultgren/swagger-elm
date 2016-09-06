@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+elm-stdio ./dist/elm.js | elm-format --stdin
