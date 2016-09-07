@@ -2,7 +2,7 @@
   "name": "swagger-elm",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/elm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "elm-make source/Generate.elm  --output dist/elm.js",
