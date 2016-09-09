@@ -2,7 +2,7 @@ module Swagger.Decode exposing (..)
 
 import Dict exposing (Dict)
 import Json.Encode
-import Json.Decode exposing (Decoder, string, dict, list, map, customDecoder, value, decodeValue)
+import Json.Decode exposing (Decoder, string, int, dict, list, map, customDecoder, value, decodeValue, oneOf)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 
 
@@ -22,6 +22,7 @@ type alias Definition =
     , items : Maybe Property
     , ref' : Maybe String
     , enum : Maybe (List String)
+    , default : Maybe String
     }
 
 
@@ -55,6 +56,7 @@ decodeDefinition =
                 |> maybe "items" (decodeDefinition |> map Property)
                 |> maybe "$ref" string
                 |> maybe "enum" (list string)
+                |> maybe "default" decodeAlwaysString
          -- TODO Support other enums than string?
         )
 
@@ -71,6 +73,14 @@ decodeProperty =
 
 
 -- helpers
+
+
+decodeAlwaysString : Decoder String
+decodeAlwaysString =
+    oneOf
+        [ string |> map toString
+        , int |> map toString
+        ]
 
 
 lazy : (() -> Decoder a) -> Decoder a

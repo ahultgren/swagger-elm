@@ -29,8 +29,9 @@ type alias Name =
     String
 
 
-type alias IsRequired =
-    Bool
+type IsRequired
+    = IsRequired
+    | NotRequired (Maybe String)
 
 
 type alias Properties =
@@ -52,10 +53,10 @@ parseDefinitions definitions =
 
 
 toNewDefinition : List String -> ( String, Decode.Definition ) -> Definition
-toNewDefinition parentRequired ( name, { type', ref', items, properties, required, enum } ) =
+toNewDefinition parentRequired ( name, { type', ref', items, properties, required, enum, default } ) =
     let
         isRequired' =
-            isRequired parentRequired name
+            isRequired parentRequired name default
     in
         case ( type', ref' ) of
             ( _, Just ref' ) ->
@@ -103,15 +104,18 @@ toNewItems : Parser -> Maybe Decode.Property -> Definition
 toNewItems toNewDefinition' items =
     case items of
         Nothing ->
-            toNewDefinition' ( "TODO WTF", Decode.Definition Nothing [] Nothing Nothing Nothing Nothing )
+            toNewDefinition' ( "TODO WTF", Decode.Definition Nothing [] Nothing Nothing Nothing Nothing Nothing )
 
         Just items ->
             toNewDefinition' <| extractProperty ( "TODO FIX", items )
 
 
-isRequired : List String -> String -> Bool
-isRequired required name =
-    List.member name required
+isRequired : List String -> String -> Maybe String -> IsRequired
+isRequired required name default =
+    if List.member name required then
+        IsRequired
+    else
+        NotRequired default
 
 
 extractRefType : String -> String

@@ -2,7 +2,15 @@ module Generate.Type exposing (..)
 
 import String
 import Dict
-import Swagger.Parse as Parse exposing (Definitions, Definition, Definition(Definition), Enum(Enum, NotEnum), Type(Object', Array', Ref', Int', Float', String', Bool'))
+import Swagger.Parse as Parse
+    exposing
+        ( Definitions
+        , Definition
+        , Definition(Definition)
+        , Enum(Enum, NotEnum)
+        , IsRequired(IsRequired, NotRequired)
+        , Type(Object', Array', Ref', Int', Float', String', Bool')
+        )
 import Codegen.Type exposing (typeAlias, unionType, record, recordField, list, maybe)
 
 
@@ -18,7 +26,7 @@ renderRootType (Definition name isRequired type') =
     typeAlias name <| renderType isRequired type'
 
 
-renderType : Bool -> Type -> String
+renderType : IsRequired -> Type -> String
 renderType isRequired type' =
     maybeWrap isRequired (renderFieldType type')
 
@@ -58,12 +66,19 @@ renderProperty (Definition name isRequired type') =
     recordField name <| renderType isRequired type'
 
 
-maybeWrap : Bool -> String -> String
+maybeWrap : IsRequired -> String -> String
 maybeWrap isRequired body =
-    if isRequired then
-        body
-    else
-        maybe body
+    case isRequired of
+        IsRequired ->
+            body
+
+        NotRequired default ->
+            case default of
+                Just _ ->
+                    body
+
+                Nothing ->
+                    maybe body
 
 
 findEnums : Definitions -> Definitions

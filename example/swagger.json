@@ -111,8 +111,7 @@
         },
         "displaySize": {
           "type": "string",
-          "enum": ["large", "small"],
-          "default": "small"
+          "enum": ["large", "small"]
         },
         "rules": {
           "$ref": "#/definitions/Rules"
@@ -158,6 +157,14 @@
       "properties": {
         "message": {
           "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "default": 0
+        },
+        "test": {
+          "type": "string",
+          "default": "fail"
         }
       }
     }

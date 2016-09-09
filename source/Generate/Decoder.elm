@@ -3,7 +3,16 @@ module Generate.Decoder exposing (..)
 import String
 import Dict
 import Generate.Type exposing (findEnums, enumTagName)
-import Swagger.Parse as Parse exposing (Definitions, Definition, Definition(Definition), Enum(Enum, NotEnum), Properties, Type(Object', Array', Ref', Int', Float', String', Bool'))
+import Swagger.Parse as Parse
+    exposing
+        ( Definitions
+        , Definition
+        , Definition(Definition)
+        , Enum(Enum, NotEnum)
+        , IsRequired(IsRequired, NotRequired)
+        , Properties
+        , Type(Object', Array', Ref', Int', Float', String', Bool')
+        )
 import Codegen.Function as Fun exposing (function, pipeline, letin, caseof)
 
 
@@ -66,14 +75,22 @@ renderObjectDecoder name properties =
 
 renderObjectDecoderProperty : Definition -> String
 renderObjectDecoderProperty (Definition name isRequired type') =
-    let
-        callee =
-            if isRequired then
-                "required"
-            else
-                "maybe"
-    in
-        callee ++ " \"" ++ name ++ "\" " ++ (renderDecoderBody name type')
+    maybeDefaultWrap isRequired <| " \"" ++ name ++ "\" " ++ (renderDecoderBody name type')
+
+
+maybeDefaultWrap : IsRequired -> String -> String
+maybeDefaultWrap isRequired =
+    case isRequired of
+        IsRequired ->
+            (++) "required"
+
+        NotRequired default ->
+            case default of
+                Just default ->
+                    (++) "optional" << (flip (++)) (" " ++ default)
+
+                Nothing ->
+                    (++) "maybe"
 
 
 renderListDecoder : Definition -> String

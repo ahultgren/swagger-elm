@@ -7877,12 +7877,18 @@ var _user$project$Swagger_Decode$lazy = function (thunk) {
 				js);
 		});
 };
+var _user$project$Swagger_Decode$decodeAlwaysString = _elm_lang$core$Json_Decode$oneOf(
+	_elm_lang$core$Native_List.fromArray(
+		[
+			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Basics$toString, _elm_lang$core$Json_Decode$string),
+			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Basics$toString, _elm_lang$core$Json_Decode$int)
+		]));
 var _user$project$Swagger_Decode$Swagger = function (a) {
 	return {definitions: a};
 };
-var _user$project$Swagger_Decode$Definition = F6(
-	function (a, b, c, d, e, f) {
-		return {type$: a, required: b, properties: c, items: d, ref$: e, $enum: f};
+var _user$project$Swagger_Decode$Definition = F7(
+	function (a, b, c, d, e, f, g) {
+		return {type$: a, required: b, properties: c, items: d, ref$: e, $enum: f, $default: g};
 	});
 var _user$project$Swagger_Decode$Property = function (a) {
 	return {ctor: 'Property', _0: a};
@@ -7898,31 +7904,35 @@ var _user$project$Swagger_Decode$decodeDefinition = _user$project$Swagger_Decode
 	function (_p1) {
 		return A3(
 			_user$project$Swagger_Decode$maybe,
-			'enum',
-			_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
+			'default',
+			_user$project$Swagger_Decode$decodeAlwaysString,
 			A3(
 				_user$project$Swagger_Decode$maybe,
-				'$ref',
-				_elm_lang$core$Json_Decode$string,
+				'enum',
+				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
 				A3(
 					_user$project$Swagger_Decode$maybe,
-					'items',
-					A2(_elm_lang$core$Json_Decode$map, _user$project$Swagger_Decode$Property, _user$project$Swagger_Decode$decodeDefinition),
+					'$ref',
+					_elm_lang$core$Json_Decode$string,
 					A3(
 						_user$project$Swagger_Decode$maybe,
-						'properties',
-						_user$project$Swagger_Decode$decodeProperties,
-						A4(
-							_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
-							'required',
-							_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
-							_elm_lang$core$Native_List.fromArray(
-								[]),
-							A3(
-								_user$project$Swagger_Decode$maybe,
-								'type',
-								_elm_lang$core$Json_Decode$string,
-								_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Decode$Definition)))))));
+						'items',
+						A2(_elm_lang$core$Json_Decode$map, _user$project$Swagger_Decode$Property, _user$project$Swagger_Decode$decodeDefinition),
+						A3(
+							_user$project$Swagger_Decode$maybe,
+							'properties',
+							_user$project$Swagger_Decode$decodeProperties,
+							A4(
+								_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+								'required',
+								_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
+								_elm_lang$core$Native_List.fromArray(
+									[]),
+								A3(
+									_user$project$Swagger_Decode$maybe,
+									'type',
+									_elm_lang$core$Json_Decode$string,
+									_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Decode$Definition))))))));
 	});
 var _user$project$Swagger_Decode$decodeProperties = _elm_lang$core$Json_Decode$dict(_user$project$Swagger_Decode$decodeProperty);
 var _user$project$Swagger_Decode$decodeDefinitions = _elm_lang$core$Json_Decode$dict(_user$project$Swagger_Decode$decodeDefinition);
@@ -7969,7 +7979,7 @@ var _user$project$Swagger_Flatten$extractProperty = function (_p3) {
 };
 var _user$project$Swagger_Flatten$makeRef = F2(
 	function (parentName, name) {
-		return A6(
+		return A7(
 			_user$project$Swagger_Decode$Definition,
 			_elm_lang$core$Maybe$Nothing,
 			_elm_lang$core$Native_List.fromArray(
@@ -7981,6 +7991,7 @@ var _user$project$Swagger_Flatten$makeRef = F2(
 					_elm_lang$core$Basics_ops['++'],
 					'#/definitions/',
 					A2(_user$project$Swagger_Flatten$nestedTypeName, parentName, name))),
+			_elm_lang$core$Maybe$Nothing,
 			_elm_lang$core$Maybe$Nothing);
 	});
 var _user$project$Swagger_Flatten$flattenProperties = F2(
@@ -8007,7 +8018,7 @@ var _user$project$Swagger_Flatten$flattenProperties = F2(
 									ctor: '_Tuple2',
 									_0: _p10,
 									_1: _user$project$Swagger_Decode$Property(
-										A6(
+										A7(
 											_user$project$Swagger_Decode$Definition,
 											_elm_lang$core$Maybe$Just('array'),
 											_elm_lang$core$Native_List.fromArray(
@@ -8016,6 +8027,7 @@ var _user$project$Swagger_Flatten$flattenProperties = F2(
 											_elm_lang$core$Maybe$Just(
 												_user$project$Swagger_Decode$Property(
 													A2(_user$project$Swagger_Flatten$makeRef, parentName, _p10))),
+											_elm_lang$core$Maybe$Nothing,
 											_elm_lang$core$Maybe$Nothing,
 											_elm_lang$core$Maybe$Nothing))
 								};
@@ -8120,16 +8132,12 @@ var _user$project$Swagger_Parse$extractRefType = function (ref) {
 			_elm_lang$core$Native_Utils.crash(
 				'Swagger.Parse',
 				{
-					start: {line: 129, column: 17},
-					end: {line: 129, column: 28}
+					start: {line: 133, column: 17},
+					end: {line: 133, column: 28}
 				})('Unparseable reference '),
 			ref);
 	}
 };
-var _user$project$Swagger_Parse$isRequired = F2(
-	function (required, name) {
-		return A2(_elm_lang$core$List$member, name, required);
-	});
 var _user$project$Swagger_Parse$toNewItems = F2(
 	function (toNewDefinition$, items) {
 		var _p2 = items;
@@ -8138,11 +8146,12 @@ var _user$project$Swagger_Parse$toNewItems = F2(
 				{
 					ctor: '_Tuple2',
 					_0: 'TODO WTF',
-					_1: A6(
+					_1: A7(
 						_user$project$Swagger_Decode$Definition,
 						_elm_lang$core$Maybe$Nothing,
 						_elm_lang$core$Native_List.fromArray(
 							[]),
+						_elm_lang$core$Maybe$Nothing,
 						_elm_lang$core$Maybe$Nothing,
 						_elm_lang$core$Maybe$Nothing,
 						_elm_lang$core$Maybe$Nothing,
@@ -8192,6 +8201,14 @@ var _user$project$Swagger_Parse$Array$ = function (a) {
 var _user$project$Swagger_Parse$Object$ = function (a) {
 	return {ctor: 'Object\'', _0: a};
 };
+var _user$project$Swagger_Parse$NotRequired = function (a) {
+	return {ctor: 'NotRequired', _0: a};
+};
+var _user$project$Swagger_Parse$IsRequired = {ctor: 'IsRequired'};
+var _user$project$Swagger_Parse$isRequired = F3(
+	function (required, name, $default) {
+		return A2(_elm_lang$core$List$member, name, required) ? _user$project$Swagger_Parse$IsRequired : _user$project$Swagger_Parse$NotRequired($default);
+	});
 var _user$project$Swagger_Parse$NotEnum = {ctor: 'NotEnum'};
 var _user$project$Swagger_Parse$Enum = F2(
 	function (a, b) {
@@ -8215,7 +8232,7 @@ var _user$project$Swagger_Parse$toNewDefinition = F2(
 		var _p12 = _p7._1.required;
 		var _p11 = _p7._1.properties;
 		var _p10 = _p7._0;
-		var isRequired$ = A2(_user$project$Swagger_Parse$isRequired, parentRequired, _p10);
+		var isRequired$ = A3(_user$project$Swagger_Parse$isRequired, parentRequired, _p10, _p7._1.$default);
 		var _p8 = {ctor: '_Tuple2', _0: _p7._1.type$, _1: _p7._1.ref$};
 		_v5_2:
 		do {
@@ -8349,7 +8366,17 @@ var _user$project$Generate_Type$findEnums = function (definitions) {
 };
 var _user$project$Generate_Type$maybeWrap = F2(
 	function (isRequired, body) {
-		return isRequired ? body : _user$project$Codegen_Type$maybe(body);
+		var _p7 = isRequired;
+		if (_p7.ctor === 'IsRequired') {
+			return body;
+		} else {
+			var _p8 = _p7._0;
+			if (_p8.ctor === 'Just') {
+				return body;
+			} else {
+				return _user$project$Codegen_Type$maybe(body);
+			}
+		}
 	});
 var _user$project$Generate_Type$renderType = F2(
 	function (isRequired, type$) {
@@ -8359,12 +8386,12 @@ var _user$project$Generate_Type$renderType = F2(
 			_user$project$Generate_Type$renderFieldType(type$));
 	});
 var _user$project$Generate_Type$renderFieldType = function (type$) {
-	var _p7 = type$;
-	switch (_p7.ctor) {
+	var _p9 = type$;
+	switch (_p9.ctor) {
 		case 'String\'':
-			var _p8 = _p7._0;
-			if (_p8.ctor === 'Enum') {
-				return _p8._0;
+			var _p10 = _p9._0;
+			if (_p10.ctor === 'Enum') {
+				return _p10._0;
 			} else {
 				return 'String';
 			}
@@ -8376,27 +8403,27 @@ var _user$project$Generate_Type$renderFieldType = function (type$) {
 			return 'Bool';
 		case 'Object\'':
 			return _user$project$Codegen_Type$record(
-				A2(_elm_lang$core$List$map, _user$project$Generate_Type$renderProperty, _p7._0));
+				A2(_elm_lang$core$List$map, _user$project$Generate_Type$renderProperty, _p9._0));
 		case 'Array\'':
 			return _user$project$Codegen_Type$list(
-				_user$project$Generate_Type$renderFieldType(_p7._0._2));
+				_user$project$Generate_Type$renderFieldType(_p9._0._2));
 		default:
-			return _p7._0;
+			return _p9._0;
 	}
 };
-var _user$project$Generate_Type$renderProperty = function (_p9) {
-	var _p10 = _p9;
-	return A2(
-		_user$project$Codegen_Type$recordField,
-		_p10._0,
-		A2(_user$project$Generate_Type$renderType, _p10._1, _p10._2));
-};
-var _user$project$Generate_Type$renderRootType = function (_p11) {
+var _user$project$Generate_Type$renderProperty = function (_p11) {
 	var _p12 = _p11;
 	return A2(
-		_user$project$Codegen_Type$typeAlias,
+		_user$project$Codegen_Type$recordField,
 		_p12._0,
 		A2(_user$project$Generate_Type$renderType, _p12._1, _p12._2));
+};
+var _user$project$Generate_Type$renderRootType = function (_p13) {
+	var _p14 = _p13;
+	return A2(
+		_user$project$Codegen_Type$typeAlias,
+		_p14._0,
+		A2(_user$project$Generate_Type$renderType, _p14._1, _p14._2));
 };
 var _user$project$Generate_Type$renderTypes = function (definitions) {
 	return _elm_lang$core$String$concat(
@@ -8433,17 +8460,51 @@ var _user$project$Generate_Decoder$renderEnumEach = F2(
 				A2(_user$project$Generate_Type$enumTagName, enumName, value))
 		};
 	});
+var _user$project$Generate_Decoder$maybeDefaultWrap = function (isRequired) {
+	var _p0 = isRequired;
+	if (_p0.ctor === 'IsRequired') {
+		return F2(
+			function (x, y) {
+				return A2(_elm_lang$core$Basics_ops['++'], x, y);
+			})('required');
+	} else {
+		var _p1 = _p0._0;
+		if (_p1.ctor === 'Just') {
+			return function (_p2) {
+				return A2(
+					F2(
+						function (x, y) {
+							return A2(_elm_lang$core$Basics_ops['++'], x, y);
+						}),
+					'optional',
+					A3(
+						_elm_lang$core$Basics$flip,
+						F2(
+							function (x, y) {
+								return A2(_elm_lang$core$Basics_ops['++'], x, y);
+							}),
+						A2(_elm_lang$core$Basics_ops['++'], ' ', _p1._0),
+						_p2));
+			};
+		} else {
+			return F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Basics_ops['++'], x, y);
+				})('maybe');
+		}
+	}
+};
 var _user$project$Generate_Decoder$decoderName = function (name) {
 	return A2(_elm_lang$core$Basics_ops['++'], 'decode', name);
 };
 var _user$project$Generate_Decoder$renderDecoderBody = F2(
 	function (constructor, type$) {
-		var _p0 = type$;
-		switch (_p0.ctor) {
+		var _p3 = type$;
+		switch (_p3.ctor) {
 			case 'String\'':
-				var _p1 = _p0._0;
-				if (_p1.ctor === 'Enum') {
-					return _user$project$Generate_Decoder$decoderName(_p1._0);
+				var _p4 = _p3._0;
+				if (_p4.ctor === 'Enum') {
+					return _user$project$Generate_Decoder$decoderName(_p4._0);
 				} else {
 					return 'string';
 				}
@@ -8454,21 +8515,21 @@ var _user$project$Generate_Decoder$renderDecoderBody = F2(
 			case 'Bool\'':
 				return 'bool';
 			case 'Object\'':
-				return A2(_user$project$Generate_Decoder$renderObjectDecoder, constructor, _p0._0);
+				return A2(_user$project$Generate_Decoder$renderObjectDecoder, constructor, _p3._0);
 			case 'Array\'':
-				return _user$project$Generate_Decoder$renderListDecoder(_p0._0);
+				return _user$project$Generate_Decoder$renderListDecoder(_p3._0);
 			default:
-				return _user$project$Generate_Decoder$decoderName(_p0._0);
+				return _user$project$Generate_Decoder$decoderName(_p3._0);
 		}
 	});
-var _user$project$Generate_Decoder$renderListDecoder = function (_p2) {
-	var _p3 = _p2;
+var _user$project$Generate_Decoder$renderListDecoder = function (_p5) {
+	var _p6 = _p5;
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		'(list (',
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			A2(_user$project$Generate_Decoder$renderDecoderBody, _p3._0, _p3._2),
+			A2(_user$project$Generate_Decoder$renderDecoderBody, _p6._0, _p6._2),
 			'))'));
 };
 var _user$project$Generate_Decoder$renderObjectDecoder = F2(
@@ -8478,36 +8539,35 @@ var _user$project$Generate_Decoder$renderObjectDecoder = F2(
 			A2(_elm_lang$core$Basics_ops['++'], 'decode ', name),
 			A2(_elm_lang$core$List$map, _user$project$Generate_Decoder$renderObjectDecoderProperty, properties));
 	});
-var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (_p4) {
-	var _p5 = _p4;
-	var _p6 = _p5._0;
-	var callee = _p5._1 ? 'required' : 'maybe';
+var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (_p7) {
+	var _p8 = _p7;
+	var _p9 = _p8._0;
 	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		callee,
+		_user$project$Generate_Decoder$maybeDefaultWrap,
+		_p8._1,
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			' \"',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_p6,
+				_p9,
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					'\" ',
-					A2(_user$project$Generate_Decoder$renderDecoderBody, _p6, _p5._2)))));
+					A2(_user$project$Generate_Decoder$renderDecoderBody, _p9, _p8._2)))));
 };
-var _user$project$Generate_Decoder$renderEnum = function (_p7) {
-	var _p8 = _p7;
-	var _p9 = _p8._2;
-	if ((_p9.ctor === 'String\'') && (_p9._0.ctor === 'Enum')) {
-		var _p10 = _p9._0._0;
+var _user$project$Generate_Decoder$renderEnum = function (_p10) {
+	var _p11 = _p10;
+	var _p12 = _p11._2;
+	if ((_p12.ctor === 'String\'') && (_p12._0.ctor === 'Enum')) {
+		var _p13 = _p12._0._0;
 		return _elm_lang$core$Maybe$Just(
 			A4(
 				_user$project$Codegen_Function$function,
-				_user$project$Generate_Decoder$decoderName(_p10),
+				_user$project$Generate_Decoder$decoderName(_p13),
 				_elm_lang$core$Native_List.fromArray(
 					[]),
-				A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p10),
+				A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p13),
 				A2(
 					_user$project$Codegen_Function$letin,
 					_elm_lang$core$Native_List.fromArray(
@@ -8522,11 +8582,11 @@ var _user$project$Generate_Decoder$renderEnum = function (_p7) {
 									_elm_lang$core$Basics_ops['++'],
 									A2(
 										_elm_lang$core$List$map,
-										_user$project$Generate_Decoder$renderEnumEach(_p10),
-										_p9._0._1),
+										_user$project$Generate_Decoder$renderEnumEach(_p13),
+										_p12._0._1),
 									_elm_lang$core$Native_List.fromArray(
 										[
-											_user$project$Generate_Decoder$renderEnumFail(_p10)
+											_user$project$Generate_Decoder$renderEnumFail(_p13)
 										])))
 						}
 						]),
@@ -8535,16 +8595,16 @@ var _user$project$Generate_Decoder$renderEnum = function (_p7) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Generate_Decoder$renderDecoder = function (_p11) {
-	var _p12 = _p11;
-	var _p13 = _p12._0;
+var _user$project$Generate_Decoder$renderDecoder = function (_p14) {
+	var _p15 = _p14;
+	var _p16 = _p15._0;
 	return A4(
 		_user$project$Codegen_Function$function,
-		_user$project$Generate_Decoder$decoderName(_p13),
+		_user$project$Generate_Decoder$decoderName(_p16),
 		_elm_lang$core$Native_List.fromArray(
 			[]),
-		A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p13),
-		A2(_user$project$Generate_Decoder$renderDecoderBody, _p13, _p12._2));
+		A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p16),
+		A2(_user$project$Generate_Decoder$renderDecoderBody, _p16, _p15._2));
 };
 var _user$project$Generate_Decoder$renderDecoders = function (definitions) {
 	return _elm_lang$core$String$concat(
