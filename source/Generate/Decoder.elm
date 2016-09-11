@@ -2,6 +2,7 @@ module Generate.Decoder exposing (..)
 
 import String
 import Dict
+import Json.Decode exposing (decodeString, string)
 import Generate.Type exposing (findEnums, enumTagName)
 import Swagger.Parse as Parse
     exposing
@@ -75,11 +76,11 @@ renderObjectDecoder name properties =
 
 renderObjectDecoderProperty : Definition -> String
 renderObjectDecoderProperty (Definition name isRequired type') =
-    maybeDefaultWrap isRequired <| " \"" ++ name ++ "\" " ++ (renderDecoderBody name type')
+    maybeDefaultWrap isRequired type' <| " \"" ++ name ++ "\" " ++ (renderDecoderBody name type')
 
 
-maybeDefaultWrap : IsRequired -> String -> String
-maybeDefaultWrap isRequired =
+maybeDefaultWrap : IsRequired -> Type -> String -> String
+maybeDefaultWrap isRequired type' =
     case isRequired of
         IsRequired ->
             (++) "required"
@@ -87,10 +88,25 @@ maybeDefaultWrap isRequired =
         NotRequired default ->
             case default of
                 Just default ->
-                    (++) "optional" << (flip (++)) (" " ++ default)
+                    (++) "optional" << (flip (++)) (" " ++ defaultValue type' default)
 
                 Nothing ->
                     (++) "maybe"
+
+
+defaultValue : Type -> String -> String
+defaultValue type' default =
+    case type' of
+        String' (Enum name enum) ->
+            case decodeString string default of
+                Ok default ->
+                    (enumTagName name default)
+
+                Err err ->
+                    Debug.crash "Invalid default value" err default
+
+        _ ->
+            default
 
 
 renderListDecoder : Definition -> String

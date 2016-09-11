@@ -8462,51 +8462,78 @@ var _user$project$Generate_Decoder$renderEnumEach = F2(
 				A2(_user$project$Generate_Type$enumTagName, enumName, value))
 		};
 	});
-var _user$project$Generate_Decoder$maybeDefaultWrap = function (isRequired) {
-	var _p0 = isRequired;
-	if (_p0.ctor === 'IsRequired') {
-		return F2(
-			function (x, y) {
-				return A2(_elm_lang$core$Basics_ops['++'], x, y);
-			})('required');
-	} else {
-		var _p1 = _p0._0;
-		if (_p1.ctor === 'Just') {
-			return function (_p2) {
-				return A2(
-					F2(
-						function (x, y) {
-							return A2(_elm_lang$core$Basics_ops['++'], x, y);
+var _user$project$Generate_Decoder$defaultValue = F2(
+	function (type$, $default) {
+		var _p0 = type$;
+		if ((_p0.ctor === 'String\'') && (_p0._0.ctor === 'Enum')) {
+			var _p1 = A2(_elm_lang$core$Json_Decode$decodeString, _elm_lang$core$Json_Decode$string, $default);
+			if (_p1.ctor === 'Ok') {
+				return A2(_user$project$Generate_Type$enumTagName, _p0._0._0, _p1._0);
+			} else {
+				return A3(
+					_elm_lang$core$Native_Utils.crash(
+						'Generate.Decoder',
+						{
+							start: {line: 106, column: 21},
+							end: {line: 106, column: 32}
 						}),
-					'optional',
-					A3(
-						_elm_lang$core$Basics$flip,
+					'Invalid default value',
+					_p1._0,
+					$default);
+			}
+		} else {
+			return $default;
+		}
+	});
+var _user$project$Generate_Decoder$maybeDefaultWrap = F2(
+	function (isRequired, type$) {
+		var _p2 = isRequired;
+		if (_p2.ctor === 'IsRequired') {
+			return F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Basics_ops['++'], x, y);
+				})('required');
+		} else {
+			var _p3 = _p2._0;
+			if (_p3.ctor === 'Just') {
+				return function (_p4) {
+					return A2(
 						F2(
 							function (x, y) {
 								return A2(_elm_lang$core$Basics_ops['++'], x, y);
 							}),
-						A2(_elm_lang$core$Basics_ops['++'], ' ', _p1._0),
-						_p2));
-			};
-		} else {
-			return F2(
-				function (x, y) {
-					return A2(_elm_lang$core$Basics_ops['++'], x, y);
-				})('maybe');
+						'optional',
+						A3(
+							_elm_lang$core$Basics$flip,
+							F2(
+								function (x, y) {
+									return A2(_elm_lang$core$Basics_ops['++'], x, y);
+								}),
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								' ',
+								A2(_user$project$Generate_Decoder$defaultValue, type$, _p3._0)),
+							_p4));
+				};
+			} else {
+				return F2(
+					function (x, y) {
+						return A2(_elm_lang$core$Basics_ops['++'], x, y);
+					})('maybe');
+			}
 		}
-	}
-};
+	});
 var _user$project$Generate_Decoder$decoderName = function (name) {
 	return A2(_elm_lang$core$Basics_ops['++'], 'decode', name);
 };
 var _user$project$Generate_Decoder$renderDecoderBody = F2(
 	function (constructor, type$) {
-		var _p3 = type$;
-		switch (_p3.ctor) {
+		var _p5 = type$;
+		switch (_p5.ctor) {
 			case 'String\'':
-				var _p4 = _p3._0;
-				if (_p4.ctor === 'Enum') {
-					return _user$project$Generate_Decoder$decoderName(_p4._0);
+				var _p6 = _p5._0;
+				if (_p6.ctor === 'Enum') {
+					return _user$project$Generate_Decoder$decoderName(_p6._0);
 				} else {
 					return 'string';
 				}
@@ -8517,21 +8544,21 @@ var _user$project$Generate_Decoder$renderDecoderBody = F2(
 			case 'Bool\'':
 				return 'bool';
 			case 'Object\'':
-				return A2(_user$project$Generate_Decoder$renderObjectDecoder, constructor, _p3._0);
+				return A2(_user$project$Generate_Decoder$renderObjectDecoder, constructor, _p5._0);
 			case 'Array\'':
-				return _user$project$Generate_Decoder$renderListDecoder(_p3._0);
+				return _user$project$Generate_Decoder$renderListDecoder(_p5._0);
 			default:
-				return _user$project$Generate_Decoder$decoderName(_p3._0);
+				return _user$project$Generate_Decoder$decoderName(_p5._0);
 		}
 	});
-var _user$project$Generate_Decoder$renderListDecoder = function (_p5) {
-	var _p6 = _p5;
+var _user$project$Generate_Decoder$renderListDecoder = function (_p7) {
+	var _p8 = _p7;
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		'(list (',
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			A2(_user$project$Generate_Decoder$renderDecoderBody, _p6._0, _p6._2),
+			A2(_user$project$Generate_Decoder$renderDecoderBody, _p8._0, _p8._2),
 			'))'));
 };
 var _user$project$Generate_Decoder$renderObjectDecoder = F2(
@@ -8541,35 +8568,37 @@ var _user$project$Generate_Decoder$renderObjectDecoder = F2(
 			A2(_elm_lang$core$Basics_ops['++'], 'decode ', name),
 			A2(_elm_lang$core$List$map, _user$project$Generate_Decoder$renderObjectDecoderProperty, properties));
 	});
-var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (_p7) {
-	var _p8 = _p7;
-	var _p9 = _p8._0;
-	return A2(
+var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (_p9) {
+	var _p10 = _p9;
+	var _p12 = _p10._2;
+	var _p11 = _p10._0;
+	return A3(
 		_user$project$Generate_Decoder$maybeDefaultWrap,
-		_p8._1,
+		_p10._1,
+		_p12,
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			' \"',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_p9,
+				_p11,
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					'\" ',
-					A2(_user$project$Generate_Decoder$renderDecoderBody, _p9, _p8._2)))));
+					A2(_user$project$Generate_Decoder$renderDecoderBody, _p11, _p12)))));
 };
-var _user$project$Generate_Decoder$renderEnum = function (_p10) {
-	var _p11 = _p10;
-	var _p12 = _p11._2;
-	if ((_p12.ctor === 'String\'') && (_p12._0.ctor === 'Enum')) {
-		var _p13 = _p12._0._0;
+var _user$project$Generate_Decoder$renderEnum = function (_p13) {
+	var _p14 = _p13;
+	var _p15 = _p14._2;
+	if ((_p15.ctor === 'String\'') && (_p15._0.ctor === 'Enum')) {
+		var _p16 = _p15._0._0;
 		return _elm_lang$core$Maybe$Just(
 			A4(
 				_user$project$Codegen_Function$function,
-				_user$project$Generate_Decoder$decoderName(_p13),
+				_user$project$Generate_Decoder$decoderName(_p16),
 				_elm_lang$core$Native_List.fromArray(
 					[]),
-				A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p13),
+				A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p16),
 				A2(
 					_user$project$Codegen_Function$letin,
 					_elm_lang$core$Native_List.fromArray(
@@ -8584,11 +8613,11 @@ var _user$project$Generate_Decoder$renderEnum = function (_p10) {
 									_elm_lang$core$Basics_ops['++'],
 									A2(
 										_elm_lang$core$List$map,
-										_user$project$Generate_Decoder$renderEnumEach(_p13),
-										_p12._0._1),
+										_user$project$Generate_Decoder$renderEnumEach(_p16),
+										_p15._0._1),
 									_elm_lang$core$Native_List.fromArray(
 										[
-											_user$project$Generate_Decoder$renderEnumFail(_p13)
+											_user$project$Generate_Decoder$renderEnumFail(_p16)
 										])))
 						}
 						]),
@@ -8597,16 +8626,16 @@ var _user$project$Generate_Decoder$renderEnum = function (_p10) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Generate_Decoder$renderDecoder = function (_p14) {
-	var _p15 = _p14;
-	var _p16 = _p15._0;
+var _user$project$Generate_Decoder$renderDecoder = function (_p17) {
+	var _p18 = _p17;
+	var _p19 = _p18._0;
 	return A4(
 		_user$project$Codegen_Function$function,
-		_user$project$Generate_Decoder$decoderName(_p16),
+		_user$project$Generate_Decoder$decoderName(_p19),
 		_elm_lang$core$Native_List.fromArray(
 			[]),
-		A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p16),
-		A2(_user$project$Generate_Decoder$renderDecoderBody, _p16, _p15._2));
+		A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p19),
+		A2(_user$project$Generate_Decoder$renderDecoderBody, _p19, _p18._2));
 };
 var _user$project$Generate_Decoder$renderDecoders = function (definitions) {
 	return _elm_lang$core$String$concat(
@@ -8619,7 +8648,7 @@ var _user$project$Generate_Decoder$renderDecoders = function (definitions) {
 			A2(_elm_lang$core$List$map, _user$project$Generate_Decoder$renderDecoder, definitions)));
 };
 
-var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, dict, list, bool, map, customDecoder, value, decodeValue)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\nlazy : (() -> Decoder a) -> Decoder a\nlazy thunk =\n    customDecoder value\n        (\\js -> decodeValue (thunk ()) js)\n\n\n';
+var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, customDecoder, value, decodeValue, decodeString)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\nlazy : (() -> Decoder a) -> Decoder a\nlazy thunk =\n    customDecoder value\n        (\\js -> decodeValue (thunk ()) js)\n\n\n';
 
 var _user$project$Generate$render = function (swagger) {
 	var definitions = _user$project$Swagger_Parse$parseDefinitions(swagger.definitions);

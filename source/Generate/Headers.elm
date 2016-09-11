@@ -5,7 +5,7 @@ renderHeaders : String
 renderHeaders =
     """module Decoder exposing (..)
 
-import Json.Decode exposing (Decoder, string, int, dict, list, bool, map, customDecoder, value, decodeValue)
+import Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, customDecoder, value, decodeValue, decodeString)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 
 

@@ -111,7 +111,8 @@
         },
         "displaySize": {
           "type": "string",
-          "enum": ["large", "small"]
+          "enum": ["large", "small"],
+          "default": "small"
         },
         "rules": {
           "$ref": "#/definitions/Rules"
