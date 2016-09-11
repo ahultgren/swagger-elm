@@ -2,7 +2,7 @@ module Swagger.Decode exposing (..)
 
 import Dict exposing (Dict)
 import Json.Encode
-import Json.Decode exposing (Decoder, string, int, dict, list, map, customDecoder, value, decodeValue, oneOf)
+import Json.Decode exposing (Decoder, string, int, float, bool, dict, list, map, customDecoder, value, decodeValue, oneOf)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 
 
@@ -80,6 +80,8 @@ decodeAlwaysString =
     oneOf
         [ string |> map toString
         , int |> map toString
+        , float |> map toString
+        , bool |> map toString
         ]
 
 

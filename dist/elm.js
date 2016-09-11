@@ -7881,7 +7881,9 @@ var _user$project$Swagger_Decode$decodeAlwaysString = _elm_lang$core$Json_Decode
 	_elm_lang$core$Native_List.fromArray(
 		[
 			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Basics$toString, _elm_lang$core$Json_Decode$string),
-			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Basics$toString, _elm_lang$core$Json_Decode$int)
+			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Basics$toString, _elm_lang$core$Json_Decode$int),
+			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Basics$toString, _elm_lang$core$Json_Decode$float),
+			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Basics$toString, _elm_lang$core$Json_Decode$bool)
 		]));
 var _user$project$Swagger_Decode$Swagger = function (a) {
 	return {definitions: a};
