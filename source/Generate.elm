@@ -2,7 +2,6 @@ module Generate exposing (main, generate)
 
 import String
 import Dict
-import Regex exposing (regex)
 import Html exposing (text)
 import Html.App exposing (programWithFlags)
 import Json.Decode exposing (decodeString)

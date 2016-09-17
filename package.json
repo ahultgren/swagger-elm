@@ -5,7 +5,7 @@
   "main": "dist/elm.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "elm-make source/Generate.elm  --output dist/elm.js",
+    "build": "elm-make --warn source/Generate.elm  --output dist/elm.js",
     "dev": "nodemon -w source -e 'elm' -x npm run build",
     "example": "nodemon -w dist -x \"cat example/swagger.json | swagger-to-elm\""
   },
