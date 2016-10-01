@@ -1,0 +1,114 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Swagger elm test spec"
+  },
+  "basePath": "",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "not used": {}
+  },
+  "definitions": {
+    "Group": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Article"
+      }
+    },
+    "Article": {
+      "required": [
+        "id",
+        "title",
+        "category_id"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "category_id": {
+          "type": "string"
+        },
+        "sponsored": {
+          "type": "boolean",
+          "default": false
+        },
+        "displaySize": {
+          "type": "string",
+          "enum": ["large", "small"],
+          "default": "small"
+        },
+        "rules": {
+          "$ref": "#/definitions/Rules"
+        },
+        "nested": {
+          "type": "object",
+          "properties": {
+            "one": {
+              "type": "string"
+            },
+            "two": {
+              "type": "string"
+            },
+            "grandChildArray": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "grandAProp": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "grandChildObject": {
+              "type": "object",
+              "properties": {
+                "grandOProp": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "Rules": {
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "default": 0
+        },
+        "readbleCode": {
+          "type": "string",
+          "default": "fail"
+        },
+        "level": {
+          "type": "number",
+          "default": 1.1
+        }
+      }
+    }
+  }
+}
