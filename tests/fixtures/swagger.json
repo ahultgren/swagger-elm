@@ -100,7 +100,7 @@
           "type": "integer",
           "default": 0
         },
-        "readbleCode": {
+        "readableCode": {
           "type": "string",
           "default": "fail"
         },

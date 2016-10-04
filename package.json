@@ -4,13 +4,13 @@
   "description": "",
   "main": "dist/elm.js",
   "scripts": {
-    "test-prepare": "cat tests/fixtures/swagger.json | swagger-to-elm > tests/Decoder.elm",
-    "test-compile": "cd tests && elm-make --warn Integration.elm --output integration.js",
-    "test-integration": "npm run test-prepare -s && npm run test-compile -s && cat tests/fixtures/data.json | elm-stdio --name=Integration tests/integration.js",
-    "test": "elm-test && npm run test-integration -s",
-    "build": "elm-make --warn source/Generate.elm  --output dist/elm.js",
-    "dev": "nodemon -w source -w tests/Tests.elm -e 'elm' -x \"npm run build && npm run test -s\"",
-    "debug": "nodemon -w dist -x \"cat example/swagger.json | swagger-to-elm\""
+    "test-build": "cat tests/fixtures/swagger.json | swagger-to-elm > tests/Decoder.elm",
+    "test": "npm run test-build -s && elm-test",
+    "build": "elm-make --warn source/Generate.elm --output dist/elm.js",
+    "dev-build": "npm run test -s && npm run build -s",
+    "dev": "nodemon -i tests/Decoder.elm -e 'elm' -x npm run dev-build -s",
+    "debug-build": "cat tests/fixtures/swagger.json | swagger-to-elm",
+    "debug": "nodemon -w dist -x npm run debug-build -s"
   },
   "bin": {
     "swagger-to-elm": "./bin/swagger-to-elm"
