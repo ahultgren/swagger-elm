@@ -77,7 +77,7 @@
               "type": "object",
               "properties": {
                 "grandOProp": {
-                  "type": "string"
+                  "type": "number"
                 }
               }
             }

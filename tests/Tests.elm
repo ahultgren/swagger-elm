@@ -3,7 +3,7 @@ module Tests exposing (..)
 import Test exposing (..)
 import Expect exposing (Expectation, fail)
 import Json.Decode exposing (decodeString)
-import Decoder exposing (Article, decodeArticle, decodeErrorResponse, Enum'displaySize(Enum'displaySizelarge, Enum'displaySizesmall))
+import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, Enum'displaySize(Enum'displaySizelarge, Enum'displaySizesmall))
 
 
 articleJson =
@@ -24,7 +24,7 @@ articleJson =
       }
     ],
     "grandChildObject": {
-      "grandOProp": "not a float"
+      "grandOProp": 1.1
     }
   }
 }
@@ -46,7 +46,7 @@ expectedArticle =
                      , { grandAProp = Just "Array child two" }
                      ]
                     )
-            , grandChildObject = Just { grandOProp = Just "not a float" }
+            , grandChildObject = Just { grandOProp = Just 1.1 }
             }
     , rules = Nothing
     , sponsored = False
@@ -70,13 +70,53 @@ expectedErrorResponse =
     }
 
 
+groupJson =
+    """
+[{
+    "id": "article1",
+    "title": "Article one",
+    "category_id": "blog"
+}]
+"""
+
+
+expectedGroup =
+    [ { id = "article1"
+      , title = "Article one"
+      , category_id = "blog"
+      , displaySize = Enum'displaySizesmall
+      , nested = Nothing
+      , rules = Nothing
+      , sponsored = False
+      }
+    ]
+
+
+rulesJson =
+    """
+{
+    "unknownField": "secret"
+}
+"""
+
+
+expectedRules =
+    {}
+
+
 all : Test
 all =
     describe "Decoder"
-        [ test "should decode article" <|
+        [ test "should decode Article" <|
             always <|
                 Expect.equal (Ok expectedArticle) (decodeString decodeArticle articleJson)
-        , test "should decode error response" <|
+        , test "should decode ErrorResponse" <|
             always <|
                 Expect.equal (Ok expectedErrorResponse) (decodeString decodeErrorResponse errorResponseJson)
+        , test "should decode Group" <|
+            always <|
+                Expect.equal (Ok expectedGroup) (decodeString decodeGroup groupJson)
+        , test "should decode Rules" <|
+            always <|
+                Expect.equal (Ok expectedRules) (decodeString decodeRules rulesJson)
         ]
