@@ -4,12 +4,12 @@
   "description": "",
   "main": "dist/elm.js",
   "scripts": {
-    "test-build": "cat tests/fixtures/swagger.json | swagger-to-elm > tests/Decoder.elm",
+    "test-build": "cat tests/fixtures/swagger.json | swagger-to-elm | elm-format --stdin > tests/Decoder.elm",
     "test": "npm run test-build -s && elm-test",
     "build": "elm-make --warn source/Generate.elm --output dist/elm.js",
     "dev-build": "npm run build -s && npm run test -s",
     "dev": "nodemon -i tests/Decoder.elm -e 'elm' -x npm run dev-build -s",
-    "debug-build": "cat tests/fixtures/swagger.json | swagger-to-elm",
+    "debug-build": "cat tests/fixtures/swagger.json | swagger-to-elm | elm-format --stdin",
     "debug": "nodemon -w dist -x npm run debug-build -s"
   },
   "bin": {

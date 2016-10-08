@@ -9,12 +9,20 @@ promised. However I'm happy for any testing and feedback I can get._
 ## Installation
 
 1. `npm install ahultgren/swagger-elm -g`
-2. Install [elm format][elm-format]
+2. Optionally install [elm format][elm-format]
 
 ## Usage (unix)
 
+Using elm-format:
+
 ```sh
-cat swagger.json | swagger-to-elm
+cat swagger.json | swagger-to-elm | elm-format --stdin
+```
+
+Unformatted (no guarantee it will work):
+
+```sh
+cat swagger.json | swagger-to-elm | elm-format --stdin
 ```
 
 ## Contribution
