@@ -7795,6 +7795,31 @@ var _user$project$Codegen_Function$Arg = F2(
 		return {ctor: 'Arg', _0: a, _1: b};
 	});
 
+var _user$project$Codegen_Utils$uncapitalize = function (str) {
+	var _p0 = _elm_lang$core$String$uncons(str);
+	if (_p0.ctor === 'Just') {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$String$toLower(
+				_elm_lang$core$String$fromChar(_p0._0._0)),
+			_p0._0._1);
+	} else {
+		return '';
+	}
+};
+var _user$project$Codegen_Utils$capitalize = function (str) {
+	var _p1 = _elm_lang$core$String$uncons(str);
+	if (_p1.ctor === 'Just') {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$String$toUpper(
+				_elm_lang$core$String$fromChar(_p1._0._0)),
+			_p1._0._1);
+	} else {
+		return '';
+	}
+};
+
 var _user$project$Codegen_Type$wrap = F2(
 	function (name, body) {
 		return A2(
@@ -7815,7 +7840,7 @@ var _user$project$Codegen_Type$recordField = F2(
 	function (name, type$) {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			name,
+			_user$project$Codegen_Utils$uncapitalize(name),
 			A2(_elm_lang$core$Basics_ops['++'], ' : ', type$));
 	});
 var _user$project$Codegen_Type$record = function (properties) {
@@ -7834,7 +7859,7 @@ var _user$project$Codegen_Type$unionType = F2(
 			'type ',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				name,
+				_user$project$Codegen_Utils$capitalize(name),
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					'\n  = ',
@@ -7850,7 +7875,7 @@ var _user$project$Codegen_Type$typeAlias = F2(
 			'type alias ',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				name,
+				_user$project$Codegen_Utils$capitalize(name),
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					' = ',
@@ -7944,18 +7969,6 @@ var _user$project$Swagger_Decode$decodeSwagger = A3(
 	_user$project$Swagger_Decode$decodeDefinitions,
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Decode$Swagger));
 
-var _user$project$Swagger_Flatten$capitalize = function (str) {
-	var _p0 = _elm_lang$core$String$uncons(str);
-	if (_p0.ctor === 'Just') {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$String$toUpper(
-				_elm_lang$core$String$fromChar(_p0._0._0)),
-			_p0._0._1);
-	} else {
-		return '';
-	}
-};
 var _user$project$Swagger_Flatten$nestedTypeName = F2(
 	function (parentName, name) {
 		return A2(
@@ -7964,20 +7977,20 @@ var _user$project$Swagger_Flatten$nestedTypeName = F2(
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				'\'',
-				_user$project$Swagger_Flatten$capitalize(name)));
+				_user$project$Codegen_Utils$capitalize(name)));
 	});
 var _user$project$Swagger_Flatten$fstNestedTypeName = F2(
-	function (parentName, _p1) {
-		var _p2 = _p1;
+	function (parentName, _p0) {
+		var _p1 = _p0;
 		return {
 			ctor: '_Tuple2',
-			_0: A2(_user$project$Swagger_Flatten$nestedTypeName, parentName, _p2._0),
-			_1: _p2._1
+			_0: A2(_user$project$Swagger_Flatten$nestedTypeName, parentName, _p1._0),
+			_1: _p1._1
 		};
 	});
-var _user$project$Swagger_Flatten$extractProperty = function (_p3) {
-	var _p4 = _p3;
-	return {ctor: '_Tuple2', _0: _p4._0, _1: _p4._1._0};
+var _user$project$Swagger_Flatten$extractProperty = function (_p2) {
+	var _p3 = _p2;
+	return {ctor: '_Tuple2', _0: _p3._0, _1: _p3._1._0};
 };
 var _user$project$Swagger_Flatten$makeRef = F2(
 	function (parentName, name) {
@@ -8002,23 +8015,23 @@ var _user$project$Swagger_Flatten$flattenProperties = F2(
 			_elm_lang$core$Dict$fromList(
 				A2(
 					_elm_lang$core$List$map,
-					function (_p5) {
-						var _p6 = _p5;
-						var _p10 = _p6._0;
-						var _p9 = _p6._1._0;
-						var _p7 = _p9.properties;
-						if (_p7.ctor === 'Nothing') {
-							var _p8 = _p9.items;
-							if (_p8.ctor === 'Nothing') {
+					function (_p4) {
+						var _p5 = _p4;
+						var _p9 = _p5._0;
+						var _p8 = _p5._1._0;
+						var _p6 = _p8.properties;
+						if (_p6.ctor === 'Nothing') {
+							var _p7 = _p8.items;
+							if (_p7.ctor === 'Nothing') {
 								return {
 									ctor: '_Tuple2',
-									_0: _p10,
-									_1: _user$project$Swagger_Decode$Property(_p9)
+									_0: _p9,
+									_1: _user$project$Swagger_Decode$Property(_p8)
 								};
 							} else {
 								return {
 									ctor: '_Tuple2',
-									_0: _p10,
+									_0: _p9,
 									_1: _user$project$Swagger_Decode$Property(
 										A7(
 											_user$project$Swagger_Decode$Definition,
@@ -8028,7 +8041,7 @@ var _user$project$Swagger_Flatten$flattenProperties = F2(
 											_elm_lang$core$Maybe$Nothing,
 											_elm_lang$core$Maybe$Just(
 												_user$project$Swagger_Decode$Property(
-													A2(_user$project$Swagger_Flatten$makeRef, parentName, _p10))),
+													A2(_user$project$Swagger_Flatten$makeRef, parentName, _p9))),
 											_elm_lang$core$Maybe$Nothing,
 											_elm_lang$core$Maybe$Nothing,
 											_elm_lang$core$Maybe$Nothing))
@@ -8037,65 +8050,65 @@ var _user$project$Swagger_Flatten$flattenProperties = F2(
 						} else {
 							return {
 								ctor: '_Tuple2',
-								_0: _p10,
+								_0: _p9,
 								_1: _user$project$Swagger_Decode$Property(
-									A2(_user$project$Swagger_Flatten$makeRef, parentName, _p10))
+									A2(_user$project$Swagger_Flatten$makeRef, parentName, _p9))
 							};
 						}
 					},
 					_elm_lang$core$Dict$toList(properties))));
 	});
 var _user$project$Swagger_Flatten$flattenNestedDefinition = F2(
-	function (isToplevel, _p11) {
+	function (isToplevel, _p10) {
 		flattenNestedDefinition:
 		while (true) {
-			var _p12 = _p11;
-			var _p18 = _p12._0;
-			var _p17 = _p12._1;
-			var _p13 = _p17.properties;
-			if (_p13.ctor === 'Nothing') {
+			var _p11 = _p10;
+			var _p17 = _p11._0;
+			var _p16 = _p11._1;
+			var _p12 = _p16.properties;
+			if (_p12.ctor === 'Nothing') {
 				if (isToplevel) {
 					return _elm_lang$core$Native_List.fromArray(
 						[
-							{ctor: '_Tuple2', _0: _p18, _1: _p17}
+							{ctor: '_Tuple2', _0: _p17, _1: _p16}
 						]);
 				} else {
-					var _p14 = _p17.items;
-					if (_p14.ctor === 'Nothing') {
+					var _p13 = _p16.items;
+					if (_p13.ctor === 'Nothing') {
 						return _elm_lang$core$Native_List.fromArray(
 							[]);
 					} else {
-						var _v9 = false,
-							_v10 = {ctor: '_Tuple2', _0: _p18, _1: _p14._0._0};
-						isToplevel = _v9;
-						_p11 = _v10;
+						var _v8 = false,
+							_v9 = {ctor: '_Tuple2', _0: _p17, _1: _p13._0._0};
+						isToplevel = _v8;
+						_p10 = _v9;
 						continue flattenNestedDefinition;
 					}
 				}
 			} else {
-				var _p16 = _p13._0;
-				var children = A2(_user$project$Swagger_Flatten$flattenProperties, _p18, _p16);
+				var _p15 = _p12._0;
+				var children = A2(_user$project$Swagger_Flatten$flattenProperties, _p17, _p15);
 				return A2(
 					_elm_lang$core$List_ops['::'],
 					{
 						ctor: '_Tuple2',
-						_0: _p18,
+						_0: _p17,
 						_1: _elm_lang$core$Native_Utils.update(
-							_p17,
+							_p16,
 							{properties: children})
 					},
 					A2(
 						_elm_lang$core$List$concatMap,
-						function (_p15) {
+						function (_p14) {
 							return A2(
 								_user$project$Swagger_Flatten$flattenNestedDefinition,
 								false,
 								A2(
 									_user$project$Swagger_Flatten$fstNestedTypeName,
-									_p18,
-									_user$project$Swagger_Flatten$extractProperty(_p15)));
+									_p17,
+									_user$project$Swagger_Flatten$extractProperty(_p14)));
 						},
-						_elm_lang$core$Dict$toList(_p16)));
+						_elm_lang$core$Dict$toList(_p15)));
 			}
 		}
 	});
@@ -8134,8 +8147,8 @@ var _user$project$Swagger_Parse$extractRefType = function (ref) {
 			_elm_lang$core$Native_Utils.crash(
 				'Swagger.Parse',
 				{
-					start: {line: 133, column: 17},
-					end: {line: 133, column: 28}
+					start: {line: 132, column: 17},
+					end: {line: 132, column: 28}
 				})('Unparseable reference '),
 			ref);
 	}
@@ -8410,7 +8423,7 @@ var _user$project$Generate_Type$renderFieldType = function (type$) {
 			return _user$project$Codegen_Type$list(
 				_user$project$Generate_Type$renderFieldType(_p9._0._2));
 		default:
-			return _p9._0;
+			return _user$project$Codegen_Utils$capitalize(_p9._0);
 	}
 };
 var _user$project$Generate_Type$renderProperty = function (_p11) {
@@ -8524,7 +8537,10 @@ var _user$project$Generate_Decoder$maybeDefaultWrap = F2(
 		}
 	});
 var _user$project$Generate_Decoder$decoderName = function (name) {
-	return A2(_elm_lang$core$Basics_ops['++'], 'decode', name);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'decode',
+		_user$project$Codegen_Utils$capitalize(name));
 };
 var _user$project$Generate_Decoder$renderDecoderBody = F2(
 	function (constructor, type$) {
@@ -8634,7 +8650,10 @@ var _user$project$Generate_Decoder$renderDecoder = function (_p17) {
 		_user$project$Generate_Decoder$decoderName(_p19),
 		_elm_lang$core$Native_List.fromArray(
 			[]),
-		A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p19),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Decoder ',
+			_user$project$Codegen_Utils$capitalize(_p19)),
 		A2(_user$project$Generate_Decoder$renderDecoderBody, _p19, _p18._2));
 };
 var _user$project$Generate_Decoder$renderDecoders = function (definitions) {

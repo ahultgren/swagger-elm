@@ -29,7 +29,8 @@
       "required": [
         "id",
         "title",
-        "category_id"
+        "category_id",
+        "UpperCasedField"
       ],
       "properties": {
         "id": {
@@ -82,6 +83,18 @@
               }
             }
           }
+        },
+        "UpperCasedField": {
+          "type": "object",
+          "required": ["UpperCasedFieldSubfield"],
+          "properties": {
+            "UpperCasedFieldSubfield": {
+              "type": "string"
+            }
+          }
+        },
+        "lowerCaseDefinitionRef": {
+          "$ref": "#/definitions/lowerCaseDefinition"
         }
       }
     },
@@ -109,6 +122,10 @@
           "default": 1.1
         }
       }
+    },
+    "lowerCaseDefinition": {
+      "type": "boolean",
+      "description": "I know, but it's still allowed..."
     }
   }
 }

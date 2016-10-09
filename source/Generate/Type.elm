@@ -1,7 +1,6 @@
 module Generate.Type exposing (..)
 
 import String
-import Dict
 import Swagger.Parse as Parse
     exposing
         ( Definitions
@@ -12,6 +11,7 @@ import Swagger.Parse as Parse
         , Type(Object', Array', Ref', Int', Float', String', Bool')
         )
 import Codegen.Type exposing (typeAlias, unionType, record, recordField, list, maybe)
+import Codegen.Utils exposing (capitalize)
 
 
 renderTypes : Definitions -> String
@@ -58,7 +58,7 @@ renderFieldType type' =
             list <| renderFieldType type'
 
         Ref' ref ->
-            ref
+            (capitalize ref)
 
 
 renderProperty : Definition -> String

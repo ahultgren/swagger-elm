@@ -1,7 +1,6 @@
 module Swagger.Parse exposing (..)
 
 import Dict
-import String
 import Regex exposing (regex)
 import Swagger.Decode as Decode
 import Swagger.Flatten exposing (flattenNestedDefinitions, extractProperty)

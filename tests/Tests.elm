@@ -26,7 +26,11 @@ articleJson =
     "grandChildObject": {
       "grandOProp": 1.1
     }
-  }
+  },
+  "UpperCasedField": {
+    "UpperCasedFieldSubfield": "test"
+  },
+  "lowerCaseDefinitionRef": true
 }
 """
 
@@ -50,6 +54,10 @@ expectedArticle =
             }
     , rules = Nothing
     , sponsored = False
+    , upperCasedField =
+        { upperCasedFieldSubfield = "test"
+        }
+    , lowerCaseDefinitionRef = Just True
     }
 
 
@@ -75,7 +83,10 @@ groupJson =
 [{
     "id": "article1",
     "title": "Article one",
-    "category_id": "blog"
+    "category_id": "blog",
+    "UpperCasedField": {
+      "UpperCasedFieldSubfield": "test"
+    }
 }]
 """
 
@@ -88,6 +99,10 @@ expectedGroup =
       , nested = Nothing
       , rules = Nothing
       , sponsored = False
+      , upperCasedField =
+            { upperCasedFieldSubfield = "test"
+            }
+      , lowerCaseDefinitionRef = Nothing
       }
     ]
 

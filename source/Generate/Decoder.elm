@@ -1,7 +1,6 @@
 module Generate.Decoder exposing (..)
 
 import String
-import Dict
 import Json.Decode exposing (decodeString, string)
 import Generate.Type exposing (findEnums, enumTagName)
 import Swagger.Parse as Parse
@@ -15,6 +14,7 @@ import Swagger.Parse as Parse
         , Type(Object', Array', Ref', Int', Float', String', Bool')
         )
 import Codegen.Function as Fun exposing (function, pipeline, letin, caseof)
+import Codegen.Utils exposing (capitalize)
 
 
 renderDecoders : Definitions -> String
@@ -28,13 +28,13 @@ renderDecoder : Definition -> String
 renderDecoder (Definition name isRequired type') =
     function (decoderName name)
         []
-        ("Decoder " ++ name)
+        ("Decoder " ++ (capitalize name))
         (renderDecoderBody name type')
 
 
 decoderName : String -> String
 decoderName name =
-    "decode" ++ name
+    "decode" ++ (capitalize name)
 
 
 renderDecoderBody : String -> Type -> String

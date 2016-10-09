@@ -1,8 +1,8 @@
 module Swagger.Flatten exposing (..)
 
 import Dict
-import String
 import Swagger.Decode as Decode
+import Codegen.Utils exposing (capitalize)
 
 
 flattenNestedDefinitions : Decode.Definitions -> Decode.Definitions
@@ -75,13 +75,3 @@ fstNestedTypeName parentName ( name, a ) =
 nestedTypeName : String -> String -> String
 nestedTypeName parentName name =
     parentName ++ "'" ++ (capitalize name)
-
-
-capitalize : String -> String
-capitalize str =
-    case String.uncons str of
-        Just ( head, tail ) ->
-            (String.toUpper <| String.fromChar head) ++ tail
-
-        Nothing ->
-            ""
