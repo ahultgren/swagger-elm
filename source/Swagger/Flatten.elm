@@ -74,4 +74,4 @@ fstNestedTypeName parentName ( name, a ) =
 
 nestedTypeName : String -> String -> String
 nestedTypeName parentName name =
-    parentName ++ "'" ++ (capitalize name)
+    parentName ++ (capitalize name)

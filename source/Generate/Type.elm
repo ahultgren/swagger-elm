@@ -11,7 +11,7 @@ import Swagger.Parse as Parse
         , Type(Object', Array', Ref', Int', Float', String', Bool')
         )
 import Codegen.Type exposing (typeAlias, unionType, record, recordField, list, maybe)
-import Codegen.Utils exposing (capitalize)
+import Codegen.Utils exposing (capitalize, sanitize)
 
 
 renderTypes : Definitions -> String
@@ -23,7 +23,7 @@ renderTypes definitions =
 
 renderRootType : Definition -> String
 renderRootType (Definition name isRequired type') =
-    typeAlias name <| renderType isRequired type'
+    typeAlias (sanitize name) <| renderType isRequired type'
 
 
 renderType : IsRequired -> Type -> String
@@ -37,7 +37,7 @@ renderFieldType type' =
         String' enum ->
             case enum of
                 Enum name _ ->
-                    name
+                    sanitize name
 
                 NotEnum ->
                     "String"
@@ -58,12 +58,12 @@ renderFieldType type' =
             list <| renderFieldType type'
 
         Ref' ref ->
-            (capitalize ref)
+            (capitalize <| sanitize ref)
 
 
 renderProperty : Definition -> String
 renderProperty (Definition name isRequired type') =
-    recordField name <| renderType isRequired type'
+    recordField (sanitize name) <| renderType isRequired type'
 
 
 maybeWrap : IsRequired -> String -> String
@@ -103,7 +103,7 @@ renderEnum : Definition -> Maybe String
 renderEnum (Definition _ isRequired type') =
     case type' of
         String' (Enum name enum) ->
-            Just <| unionType name (List.map (enumTagName name) enum)
+            Just <| unionType (sanitize name) (List.map (sanitize << enumTagName name) enum)
 
         _ ->
             Nothing
@@ -111,4 +111,4 @@ renderEnum (Definition _ isRequired type') =
 
 enumTagName : String -> String -> String
 enumTagName typeName tagName =
-    typeName ++ tagName
+    typeName ++ capitalize tagName

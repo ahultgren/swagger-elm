@@ -7795,26 +7795,89 @@ var _user$project$Codegen_Function$Arg = F2(
 		return {ctor: 'Arg', _0: a, _1: b};
 	});
 
+var _user$project$Codegen_Utils$validUnicodeSymbols = '_';
+var _user$project$Codegen_Utils$validUnicodeNumerals = '0-9٠-٩۰-۹߀-߉०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯๐-๙໐-໙༠-༩၀-၉႐-႙០-៩᠐-᠙᥆-᥏᧐-᧙᪀-᪉᪐-᪙᭐-᭙᮰-᮹᱀-᱉᱐-᱙꘠-꘩꣐-꣙꤀-꤉꧐-꧙꩐-꩙꯰-꯹０-９ᛮ-ᛰⅠ-ↂↅ-ↈ〇〡-〩〸-〺ꛦ-ꛯ';
+var _user$project$Codegen_Utils$validFirstUnicodeCharacters = 'A-ZÀ-ÖØ-ÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĲĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŦŨŪŬŮŰŲŴŶŸŹŻŽƁƂƄƆƇƉ-ƋƎ-ƑƓƔƖ-ƘƜƝƟƠƢƤƦƧƩƬƮƯƱ-ƳƵƷƸƼǄǇǊǍǏǑǓǕǗǙǛǞǠǢǤǦǨǪǬǮǱǴǶ-ǸǺǼǾȀȂȄȆȈȊȌȎȐȒȔȖȘȚȜȞȠȢȤȦȨȪȬȮȰȲȺȻȽȾɁɃ-ɆɈɊɌɎͰͲͶΆΈ-ΊΌΎΏΑ-ΡΣ-ΫϏϒ-ϔϘϚϜϞϠϢϤϦϨϪϬϮϴϷϹϺϽ-ЯѠѢѤѦѨѪѬѮѰѲѴѶѸѺѼѾҀҊҌҎҐҒҔҖҘҚҜҞҠҢҤҦҨҪҬҮҰҲҴҶҸҺҼҾӀӁӃӅӇӉӋӍӐӒӔӖӘӚӜӞӠӢӤӦӨӪӬӮӰӲӴӶӸӺӼӾԀԂԄԆԈԊԌԎԐԒԔԖԘԚԜԞԠԢԤԦԱ-ՖႠ-ჅḀḂḄḆḈḊḌḎḐḒḔḖḘḚḜḞḠḢḤḦḨḪḬḮḰḲḴḶḸḺḼḾṀṂṄṆṈṊṌṎṐṒṔṖṘṚṜṞṠṢṤṦṨṪṬṮṰṲṴṶṸṺṼṾẀẂẄẆẈẊẌẎẐẒẔẞẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸỺỼỾἈ-ἏἘ-ἝἨ-ἯἸ-ἿὈ-ὍὙὛὝὟὨ-ὯᾸ-ΆῈ-ΉῘ-ΊῨ-ῬῸ-Ώℂℇℋ-ℍℐ-ℒℕℙ-ℝℤΩℨK-ℭℰ-ℳℾℿⅅↃⰀ-ⰮⱠⱢ-ⱤⱧⱩⱫⱭ-ⱰⱲⱵⱾ-ⲀⲂⲄⲆⲈⲊⲌⲎⲐⲒⲔⲖⲘⲚⲜⲞⲠⲢⲤⲦⲨⲪⲬⲮⲰⲲⲴⲶⲸⲺⲼⲾⳀⳂⳄⳆⳈⳊⳌⳎⳐⳒⳔⳖⳘⳚⳜⳞⳠⳢⳫⳭꙀꙂꙄꙆꙈꙊꙌꙎꙐꙒꙔꙖꙘꙚꙜꙞꙠꙢꙤꙦꙨꙪꙬꚀꚂꚄꚆꚈꚊꚌꚎꚐꚒꚔꚖꜢꜤꜦꜨꜪꜬꜮꜲꜴꜶꜸꜺꜼꜾꝀꝂꝄꝆꝈꝊꝌꝎꝐꝒꝔꝖꝘꝚꝜꝞꝠꝢꝤꝦꝨꝪꝬꝮꝹꝻꝽꝾꞀꞂꞄꞆꞋꞍꞐꞠꞢꞤꞦꞨＡ-Ｚa-zªµºß-öø-ÿāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıĳĵķĸĺļľŀłńņňŉŋōŏőœŕŗřśŝşšţťŧũūŭůűųŵŷźżž-ƀƃƅƈƌƍƒƕƙ-ƛƞơƣƥƨƪƫƭưƴƶƹƺƽ-ƿǆǉǌǎǐǒǔǖǘǚǜǝǟǡǣǥǧǩǫǭǯǰǳǵǹǻǽǿȁȃȅȇȉȋȍȏȑȓȕȗșțȝȟȡȣȥȧȩȫȭȯȱȳ-ȹȼȿɀɂɇɉɋɍɏ-ʓʕ-ʯͱͳͷͻ-ͽΐά-ώϐϑϕ-ϗϙϛϝϟϡϣϥϧϩϫϭϯ-ϳϵϸϻϼа-џѡѣѥѧѩѫѭѯѱѳѵѷѹѻѽѿҁҋҍҏґғҕҗҙқҝҟҡңҥҧҩҫҭүұҳҵҷҹһҽҿӂӄӆӈӊӌӎӏӑӓӕӗәӛӝӟӡӣӥӧөӫӭӯӱӳӵӷӹӻӽӿԁԃԅԇԉԋԍԏԑԓԕԗԙԛԝԟԡԣԥԧա-ևᴀ-ᴫᵢ-ᵷᵹ-ᶚḁḃḅḇḉḋḍḏḑḓḕḗḙḛḝḟḡḣḥḧḩḫḭḯḱḳḵḷḹḻḽḿṁṃṅṇṉṋṍṏṑṓṕṗṙṛṝṟṡṣṥṧṩṫṭṯṱṳṵṷṹṻṽṿẁẃẅẇẉẋẍẏẑẓẕ-ẝẟạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹỻỽỿ-ἇἐ-ἕἠ-ἧἰ-ἷὀ-ὅὐ-ὗὠ-ὧὰ-ώᾀ-ᾇᾐ-ᾗᾠ-ᾧᾰ-ᾴᾶᾷιῂ-ῄῆῇῐ-ΐῖῗῠ-ῧῲ-ῴῶῷℊℎℏℓℯℴℹℼℽⅆ-ⅉⅎↄⰰ-ⱞⱡⱥⱦⱨⱪⱬⱱⱳⱴⱶ-ⱼⲁⲃⲅⲇⲉⲋⲍⲏⲑⲓⲕⲗⲙⲛⲝⲟⲡⲣⲥⲧⲩⲫⲭⲯⲱⲳⲵⲷⲹⲻⲽⲿⳁⳃⳅⳇⳉⳋⳍⳏⳑⳓⳕⳗⳙⳛⳝⳟⳡⳣⳤⳬⳮⴀ-ⴥꙁꙃꙅꙇꙉꙋꙍꙏꙑꙓꙕꙗꙙꙛꙝꙟꙡꙣꙥꙧꙩꙫꙭꚁꚃꚅꚇꚉꚋꚍꚏꚑꚓꚕꚗꜣꜥꜧꜩꜫꜭꜯ-ꜱꜳꜵꜷꜹꜻꜽꜿꝁꝃꝅꝇꝉꝋꝍꝏꝑꝓꝕꝗꝙꝛꝝꝟꝡꝣꝥꝧꝩꝫꝭꝯꝱ-ꝸꝺꝼꝿꞁꞃꞅꞇꞌꞎꞑꞡꞣꞥꞧꞩꟺﬀ-ﬆﬓ-ﬗａ-ｚǅǈǋǲᾈ-ᾏᾘ-ᾟᾨ-ᾯᾼῌῼ';
+var _user$project$Codegen_Utils$validRestUnicodeCharacters = A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validFirstUnicodeCharacters, 'ʰ-ˁˆ-ˑˠ-ˤˬˮʹͺՙـۥۦߴߵߺࠚࠤࠨॱๆໆჼៗᡃᪧᱸ-ᱽᴬ-ᵡᵸᶛ-ᶿⁱⁿₐ-ₜⱽⵯⸯ々〱-〵〻ゝゞー-ヾꀕꓸ-ꓽꘌꙿꜗ-ꜟꝰꞈꧏꩰꫝｰﾞﾟƻǀ-ǃʔא-תװ-ײؠ-ؿف-يٮٯٱ-ۓەۮۯۺ-ۼۿܐܒ-ܯݍ-ޥޱߊ-ߪࠀ-ࠕࡀ-ࡘऄ-हऽॐक़-ॡॲ-ॷॹ-ॿঅ-ঌএঐও-নপ-রলশ-হঽৎড়ঢ়য়-ৡৰৱਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹਖ਼-ੜਫ਼ੲ-ੴઅ-ઍએ-ઑઓ-નપ-રલળવ-હઽૐૠૡଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହଽଡ଼ଢ଼ୟ-ୡୱஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹௐఅ-ఌఎ-ఐఒ-నప-ళవ-హఽౘౙౠౡಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹಽೞೠೡೱೲഅ-ഌഎ-ഐഒ-ഺഽൎൠൡൺ-ൿඅ-ඖක-නඳ-රලව-ෆก-ะาำเ-ๅກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ະາຳຽເ-ໄໜໝༀཀ-ཇཉ-ཬྈ-ྌက-ဪဿၐ-ၕၚ-ၝၡၥၦၮ-ၰၵ-ႁႎა-ჺᄀ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚᎀ-ᎏᎠ-Ᏼᐁ-ᙬᙯ-ᙿᚁ-ᚚᚠ-ᛪᜀ-ᜌᜎ-ᜑᜠ-ᜱᝀ-ᝑᝠ-ᝬᝮ-ᝰក-ឳៜᠠ-ᡂᡄ-ᡷᢀ-ᢨᢪᢰ-ᣵᤀ-ᤜᥐ-ᥭᥰ-ᥴᦀ-ᦫᧁ-ᧇᨀ-ᨖᨠ-ᩔᬅ-ᬳᭅ-ᭋᮃ-ᮠᮮᮯᯀ-ᯥᰀ-ᰣᱍ-ᱏᱚ-ᱷᳩ-ᳬᳮ-ᳱℵ-ℸⴰ-ⵥⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞ〆〼ぁ-ゖゟァ-ヺヿㄅ-ㄭㄱ-ㆎㆠ-ㆺㇰ-ㇿ㐀-䶵一-鿋ꀀ-ꀔꀖ-ꒌꓐ-ꓷꔀ-ꘋꘐ-ꘟꘪꘫꙮꚠ-ꛥꟻ-ꠁꠃ-ꠅꠇ-ꠊꠌ-ꠢꡀ-ꡳꢂ-ꢳꣲ-ꣷꣻꤊ-ꤥꤰ-ꥆꥠ-ꥼꦄ-ꦲꨀ-ꨨꩀ-ꩂꩄ-ꩋꩠ-ꩯꩱ-ꩶꩺꪀ-ꪯꪱꪵꪶꪹ-ꪽꫀꫂꫛꫜꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮꯀ-ꯢ가-힣ힰ-ퟆퟋ-ퟻ豈-鶴侮-舘並-龎יִײַ-ﬨשׁ-זּטּ-לּמּנּסּףּפּצּ-ﮱﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-ﷻﹰ-ﹴﹶ-ﻼｦ-ｯｱ-ﾝﾠ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ');
+var _user$project$Codegen_Utils$validChars = A2(
+	_elm_lang$core$Basics_ops['++'],
+	'[',
+	A2(
+		_elm_lang$core$Basics_ops['++'],
+		_user$project$Codegen_Utils$validFirstUnicodeCharacters,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_user$project$Codegen_Utils$validRestUnicodeCharacters,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$Codegen_Utils$validUnicodeSymbols,
+				A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validUnicodeNumerals, ']')))));
+var _user$project$Codegen_Utils$sanitizeRest = function (str) {
+	return _elm_lang$core$String$concat(
+		A2(
+			_elm_lang$core$List$map,
+			function (_) {
+				return _.match;
+			},
+			A3(
+				_elm_lang$core$Regex$find,
+				_elm_lang$core$Regex$All,
+				_elm_lang$core$Regex$regex(_user$project$Codegen_Utils$validChars),
+				str)));
+};
+var _user$project$Codegen_Utils$validLeadingChars = A2(
+	_elm_lang$core$Basics_ops['++'],
+	'[',
+	A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validFirstUnicodeCharacters, ']'));
+var _user$project$Codegen_Utils$isValidFirst = function (str) {
+	return A2(
+		_elm_lang$core$Regex$contains,
+		_elm_lang$core$Regex$regex(_user$project$Codegen_Utils$validLeadingChars),
+		_elm_lang$core$String$fromChar(str));
+};
+var _user$project$Codegen_Utils$sanitizeFirst = function (str) {
+	sanitizeFirst:
+	while (true) {
+		var _p0 = _elm_lang$core$String$uncons(str);
+		if (_p0.ctor === 'Just') {
+			var _p2 = _p0._0._1;
+			var _p1 = _p0._0._0;
+			if (_user$project$Codegen_Utils$isValidFirst(_p1)) {
+				return A2(_elm_lang$core$String$cons, _p1, _p2);
+			} else {
+				var _v1 = _p2;
+				str = _v1;
+				continue sanitizeFirst;
+			}
+		} else {
+			return '';
+		}
+	}
+};
+var _user$project$Codegen_Utils$sanitize = function (_p3) {
+	return _user$project$Codegen_Utils$sanitizeRest(
+		_user$project$Codegen_Utils$sanitizeFirst(_p3));
+};
 var _user$project$Codegen_Utils$uncapitalize = function (str) {
-	var _p0 = _elm_lang$core$String$uncons(str);
-	if (_p0.ctor === 'Just') {
+	var _p4 = _elm_lang$core$String$uncons(str);
+	if (_p4.ctor === 'Just') {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$String$toLower(
-				_elm_lang$core$String$fromChar(_p0._0._0)),
-			_p0._0._1);
+				_elm_lang$core$String$fromChar(_p4._0._0)),
+			_p4._0._1);
 	} else {
 		return '';
 	}
 };
 var _user$project$Codegen_Utils$capitalize = function (str) {
-	var _p1 = _elm_lang$core$String$uncons(str);
-	if (_p1.ctor === 'Just') {
+	var _p5 = _elm_lang$core$String$uncons(str);
+	if (_p5.ctor === 'Just') {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$String$toUpper(
-				_elm_lang$core$String$fromChar(_p1._0._0)),
-			_p1._0._1);
+				_elm_lang$core$String$fromChar(_p5._0._0)),
+			_p5._0._1);
 	} else {
 		return '';
 	}
@@ -7974,10 +8037,7 @@ var _user$project$Swagger_Flatten$nestedTypeName = F2(
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
 			parentName,
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				'\'',
-				_user$project$Codegen_Utils$capitalize(name)));
+			_user$project$Codegen_Utils$capitalize(name));
 	});
 var _user$project$Swagger_Flatten$fstNestedTypeName = F2(
 	function (parentName, _p0) {
@@ -8121,7 +8181,10 @@ var _user$project$Swagger_Flatten$flattenNestedDefinitions = function (definitio
 };
 
 var _user$project$Swagger_Parse$enumName = function (name) {
-	return A2(_elm_lang$core$Basics_ops['++'], 'Enum\'', name);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'Enum',
+		_user$project$Codegen_Utils$capitalize(name));
 };
 var _user$project$Swagger_Parse$extractRefType = function (ref) {
 	var parsed = A2(
@@ -8147,8 +8210,8 @@ var _user$project$Swagger_Parse$extractRefType = function (ref) {
 			_elm_lang$core$Native_Utils.crash(
 				'Swagger.Parse',
 				{
-					start: {line: 132, column: 17},
-					end: {line: 132, column: 28}
+					start: {line: 133, column: 17},
+					end: {line: 133, column: 28}
 				})('Unparseable reference '),
 			ref);
 	}
@@ -8328,20 +8391,26 @@ var _user$project$Swagger_Parse$toNewDefinition = F2(
 
 var _user$project$Generate_Type$enumTagName = F2(
 	function (typeName, tagName) {
-		return A2(_elm_lang$core$Basics_ops['++'], typeName, tagName);
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			typeName,
+			_user$project$Codegen_Utils$capitalize(tagName));
 	});
 var _user$project$Generate_Type$renderEnum = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1._2;
 	if ((_p2.ctor === 'String\'') && (_p2._0.ctor === 'Enum')) {
-		var _p3 = _p2._0._0;
+		var _p4 = _p2._0._0;
 		return _elm_lang$core$Maybe$Just(
 			A2(
 				_user$project$Codegen_Type$unionType,
-				_p3,
+				_user$project$Codegen_Utils$sanitize(_p4),
 				A2(
 					_elm_lang$core$List$map,
-					_user$project$Generate_Type$enumTagName(_p3),
+					function (_p3) {
+						return _user$project$Codegen_Utils$sanitize(
+							A2(_user$project$Generate_Type$enumTagName, _p4, _p3));
+					},
 					_p2._0._1)));
 	} else {
 		return _elm_lang$core$Maybe$Nothing;
@@ -8353,24 +8422,24 @@ var _user$project$Generate_Type$findEnums = function (definitions) {
 		_elm_lang$core$Basics$identity,
 		A2(
 			_elm_lang$core$List$concatMap,
-			function (_p4) {
-				var _p5 = _p4;
-				var _p6 = _p5._2;
-				switch (_p6.ctor) {
+			function (_p5) {
+				var _p6 = _p5;
+				var _p7 = _p6._2;
+				switch (_p7.ctor) {
 					case 'Object\'':
 						return A2(
 							_elm_lang$core$List$map,
 							_elm_lang$core$Maybe$Just,
-							_user$project$Generate_Type$findEnums(_p6._0));
+							_user$project$Generate_Type$findEnums(_p7._0));
 					case 'String\'':
 						return _elm_lang$core$Native_List.fromArray(
 							[
 								_elm_lang$core$Maybe$Just(
 								A3(
 									_user$project$Swagger_Parse$Definition,
-									_p5._0,
-									_p5._1,
-									_user$project$Swagger_Parse$String$(_p6._0)))
+									_p6._0,
+									_p6._1,
+									_user$project$Swagger_Parse$String$(_p7._0)))
 							]);
 					default:
 						return _elm_lang$core$Native_List.fromArray(
@@ -8381,12 +8450,12 @@ var _user$project$Generate_Type$findEnums = function (definitions) {
 };
 var _user$project$Generate_Type$maybeWrap = F2(
 	function (isRequired, body) {
-		var _p7 = isRequired;
-		if (_p7.ctor === 'IsRequired') {
+		var _p8 = isRequired;
+		if (_p8.ctor === 'IsRequired') {
 			return body;
 		} else {
-			var _p8 = _p7._0;
-			if (_p8.ctor === 'Just') {
+			var _p9 = _p8._0;
+			if (_p9.ctor === 'Just') {
 				return body;
 			} else {
 				return _user$project$Codegen_Type$maybe(body);
@@ -8401,12 +8470,12 @@ var _user$project$Generate_Type$renderType = F2(
 			_user$project$Generate_Type$renderFieldType(type$));
 	});
 var _user$project$Generate_Type$renderFieldType = function (type$) {
-	var _p9 = type$;
-	switch (_p9.ctor) {
+	var _p10 = type$;
+	switch (_p10.ctor) {
 		case 'String\'':
-			var _p10 = _p9._0;
-			if (_p10.ctor === 'Enum') {
-				return _p10._0;
+			var _p11 = _p10._0;
+			if (_p11.ctor === 'Enum') {
+				return _user$project$Codegen_Utils$sanitize(_p11._0);
 			} else {
 				return 'String';
 			}
@@ -8418,27 +8487,28 @@ var _user$project$Generate_Type$renderFieldType = function (type$) {
 			return 'Bool';
 		case 'Object\'':
 			return _user$project$Codegen_Type$record(
-				A2(_elm_lang$core$List$map, _user$project$Generate_Type$renderProperty, _p9._0));
+				A2(_elm_lang$core$List$map, _user$project$Generate_Type$renderProperty, _p10._0));
 		case 'Array\'':
 			return _user$project$Codegen_Type$list(
-				_user$project$Generate_Type$renderFieldType(_p9._0._2));
+				_user$project$Generate_Type$renderFieldType(_p10._0._2));
 		default:
-			return _user$project$Codegen_Utils$capitalize(_p9._0);
+			return _user$project$Codegen_Utils$capitalize(
+				_user$project$Codegen_Utils$sanitize(_p10._0));
 	}
 };
-var _user$project$Generate_Type$renderProperty = function (_p11) {
-	var _p12 = _p11;
+var _user$project$Generate_Type$renderProperty = function (_p12) {
+	var _p13 = _p12;
 	return A2(
 		_user$project$Codegen_Type$recordField,
-		_p12._0,
-		A2(_user$project$Generate_Type$renderType, _p12._1, _p12._2));
+		_user$project$Codegen_Utils$sanitize(_p13._0),
+		A2(_user$project$Generate_Type$renderType, _p13._1, _p13._2));
 };
-var _user$project$Generate_Type$renderRootType = function (_p13) {
-	var _p14 = _p13;
+var _user$project$Generate_Type$renderRootType = function (_p14) {
+	var _p15 = _p14;
 	return A2(
 		_user$project$Codegen_Type$typeAlias,
-		_p14._0,
-		A2(_user$project$Generate_Type$renderType, _p14._1, _p14._2));
+		_user$project$Codegen_Utils$sanitize(_p15._0),
+		A2(_user$project$Generate_Type$renderType, _p15._1, _p15._2));
 };
 var _user$project$Generate_Type$renderTypes = function (definitions) {
 	return _elm_lang$core$String$concat(
@@ -8472,7 +8542,8 @@ var _user$project$Generate_Decoder$renderEnumEach = F2(
 			_1: A2(
 				_elm_lang$core$Basics_ops['++'],
 				'Result.Ok ',
-				A2(_user$project$Generate_Type$enumTagName, enumName, value))
+				_user$project$Codegen_Utils$sanitize(
+					A2(_user$project$Generate_Type$enumTagName, enumName, value)))
 		};
 	});
 var _user$project$Generate_Decoder$defaultValue = F2(
@@ -8487,8 +8558,8 @@ var _user$project$Generate_Decoder$defaultValue = F2(
 					_elm_lang$core$Native_Utils.crash(
 						'Generate.Decoder',
 						{
-							start: {line: 106, column: 21},
-							end: {line: 106, column: 32}
+							start: {line: 110, column: 21},
+							end: {line: 110, column: 32}
 						}),
 					'Invalid default value',
 					_p1._0,
@@ -8549,7 +8620,8 @@ var _user$project$Generate_Decoder$renderDecoderBody = F2(
 			case 'String\'':
 				var _p6 = _p5._0;
 				if (_p6.ctor === 'Enum') {
-					return _user$project$Generate_Decoder$decoderName(_p6._0);
+					return _user$project$Generate_Decoder$decoderName(
+						_user$project$Codegen_Utils$sanitize(_p6._0));
 				} else {
 					return 'string';
 				}
@@ -8564,7 +8636,8 @@ var _user$project$Generate_Decoder$renderDecoderBody = F2(
 			case 'Array\'':
 				return _user$project$Generate_Decoder$renderListDecoder(_p5._0);
 			default:
-				return _user$project$Generate_Decoder$decoderName(_p5._0);
+				return _user$project$Generate_Decoder$decoderName(
+					_user$project$Codegen_Utils$sanitize(_p5._0));
 		}
 	});
 var _user$project$Generate_Decoder$renderListDecoder = function (_p7) {
@@ -8578,10 +8651,10 @@ var _user$project$Generate_Decoder$renderListDecoder = function (_p7) {
 			'))'));
 };
 var _user$project$Generate_Decoder$renderObjectDecoder = F2(
-	function (name, properties) {
+	function (safeName, properties) {
 		return A2(
 			_user$project$Codegen_Function$pipeline,
-			A2(_elm_lang$core$Basics_ops['++'], 'decode ', name),
+			A2(_elm_lang$core$Basics_ops['++'], 'decode ', safeName),
 			A2(_elm_lang$core$List$map, _user$project$Generate_Decoder$renderObjectDecoderProperty, properties));
 	});
 var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (_p9) {
@@ -8601,20 +8674,23 @@ var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (_p9) 
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					'\" ',
-					A2(_user$project$Generate_Decoder$renderDecoderBody, _p11, _p12)))));
+					A2(
+						_user$project$Generate_Decoder$renderDecoderBody,
+						_user$project$Codegen_Utils$sanitize(_p11),
+						_p12)))));
 };
 var _user$project$Generate_Decoder$renderEnum = function (_p13) {
 	var _p14 = _p13;
 	var _p15 = _p14._2;
 	if ((_p15.ctor === 'String\'') && (_p15._0.ctor === 'Enum')) {
-		var _p16 = _p15._0._0;
+		var safeName = _user$project$Codegen_Utils$sanitize(_p15._0._0);
 		return _elm_lang$core$Maybe$Just(
 			A4(
 				_user$project$Codegen_Function$function,
-				_user$project$Generate_Decoder$decoderName(_p16),
+				_user$project$Generate_Decoder$decoderName(safeName),
 				_elm_lang$core$Native_List.fromArray(
 					[]),
-				A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', _p16),
+				A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', safeName),
 				A2(
 					_user$project$Codegen_Function$letin,
 					_elm_lang$core$Native_List.fromArray(
@@ -8629,11 +8705,11 @@ var _user$project$Generate_Decoder$renderEnum = function (_p13) {
 									_elm_lang$core$Basics_ops['++'],
 									A2(
 										_elm_lang$core$List$map,
-										_user$project$Generate_Decoder$renderEnumEach(_p16),
+										_user$project$Generate_Decoder$renderEnumEach(safeName),
 										_p15._0._1),
 									_elm_lang$core$Native_List.fromArray(
 										[
-											_user$project$Generate_Decoder$renderEnumFail(_p16)
+											_user$project$Generate_Decoder$renderEnumFail(safeName)
 										])))
 						}
 						]),
@@ -8642,19 +8718,19 @@ var _user$project$Generate_Decoder$renderEnum = function (_p13) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Generate_Decoder$renderDecoder = function (_p17) {
-	var _p18 = _p17;
-	var _p19 = _p18._0;
+var _user$project$Generate_Decoder$renderDecoder = function (_p16) {
+	var _p17 = _p16;
+	var safeName = _user$project$Codegen_Utils$sanitize(_p17._0);
 	return A4(
 		_user$project$Codegen_Function$function,
-		_user$project$Generate_Decoder$decoderName(_p19),
+		_user$project$Generate_Decoder$decoderName(safeName),
 		_elm_lang$core$Native_List.fromArray(
 			[]),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			'Decoder ',
-			_user$project$Codegen_Utils$capitalize(_p19)),
-		A2(_user$project$Generate_Decoder$renderDecoderBody, _p19, _p18._2));
+			_user$project$Codegen_Utils$capitalize(safeName)),
+		A2(_user$project$Generate_Decoder$renderDecoderBody, safeName, _p17._2));
 };
 var _user$project$Generate_Decoder$renderDecoders = function (definitions) {
 	return _elm_lang$core$String$concat(

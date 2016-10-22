@@ -14,7 +14,7 @@ import Swagger.Parse as Parse
         , Type(Object', Array', Ref', Int', Float', String', Bool')
         )
 import Codegen.Function as Fun exposing (function, pipeline, letin, caseof)
-import Codegen.Utils exposing (capitalize)
+import Codegen.Utils exposing (capitalize, sanitize)
 
 
 renderDecoders : Definitions -> String
@@ -26,10 +26,14 @@ renderDecoders definitions =
 
 renderDecoder : Definition -> String
 renderDecoder (Definition name isRequired type') =
-    function (decoderName name)
-        []
-        ("Decoder " ++ (capitalize name))
-        (renderDecoderBody name type')
+    let
+        safeName =
+            sanitize name
+    in
+        function (decoderName safeName)
+            []
+            ("Decoder " ++ (capitalize safeName))
+            (renderDecoderBody safeName type')
 
 
 decoderName : String -> String
@@ -43,7 +47,7 @@ renderDecoderBody constructor type' =
         String' enum ->
             case enum of
                 Enum name enum ->
-                    decoderName name
+                    decoderName <| sanitize name
 
                 NotEnum ->
                     "string"
@@ -64,19 +68,19 @@ renderDecoderBody constructor type' =
             renderListDecoder definition
 
         Ref' ref' ->
-            decoderName ref'
+            decoderName <| sanitize ref'
 
 
 renderObjectDecoder : String -> Properties -> String
-renderObjectDecoder name properties =
+renderObjectDecoder safeName properties =
     properties
         |> List.map renderObjectDecoderProperty
-        |> pipeline ("decode " ++ name)
+        |> pipeline ("decode " ++ safeName)
 
 
 renderObjectDecoderProperty : Definition -> String
 renderObjectDecoderProperty (Definition name isRequired type') =
-    maybeDefaultWrap isRequired type' <| " \"" ++ name ++ "\" " ++ (renderDecoderBody name type')
+    maybeDefaultWrap isRequired type' <| " \"" ++ name ++ "\" " ++ (renderDecoderBody (sanitize name) type')
 
 
 maybeDefaultWrap : IsRequired -> Type -> String -> String
@@ -118,18 +122,22 @@ renderEnum : Definition -> Maybe String
 renderEnum (Definition _ isRequired type') =
     case type' of
         String' (Enum name enum) ->
-            Just <|
-                function (decoderName name)
-                    []
-                    ("Decoder " ++ name)
-                    (letin
-                        [ ( "decodeToType string"
-                          , caseof "string"
-                                ((List.map (renderEnumEach name) enum) ++ [ renderEnumFail name ])
-                          )
-                        ]
-                        "customDecoder string decodeToType"
-                    )
+            let
+                safeName =
+                    sanitize name
+            in
+                Just <|
+                    function (decoderName safeName)
+                        []
+                        ("Decoder " ++ safeName)
+                        (letin
+                            [ ( "decodeToType string"
+                              , caseof "string"
+                                    ((List.map (renderEnumEach safeName) enum) ++ [ renderEnumFail safeName ])
+                              )
+                            ]
+                            "customDecoder string decodeToType"
+                        )
 
         _ ->
             Nothing
@@ -137,7 +145,7 @@ renderEnum (Definition _ isRequired type') =
 
 renderEnumEach : String -> String -> ( String, String )
 renderEnumEach enumName value =
-    ( "\"" ++ value ++ "\"", "Result.Ok " ++ (enumTagName enumName value) )
+    ( "\"" ++ value ++ "\"", "Result.Ok " ++ (sanitize <| enumTagName enumName value) )
 
 
 renderEnumFail : String -> ( String, String )

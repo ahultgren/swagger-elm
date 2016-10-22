@@ -4,6 +4,7 @@ import Dict
 import Regex exposing (regex)
 import Swagger.Decode as Decode
 import Swagger.Flatten exposing (flattenNestedDefinitions, extractProperty)
+import Codegen.Utils exposing (capitalize)
 
 
 type alias Definitions =
@@ -144,4 +145,4 @@ makeEnum name enum =
 
 enumName : String -> String
 enumName name =
-    "Enum'" ++ name
+    "Enum" ++ capitalize name

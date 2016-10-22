@@ -22,10 +22,10 @@
     "Group": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/Article"
+        "$ref": "#/definitions/Article$"
       }
     },
-    "Article": {
+    "Article$": {
       "required": [
         "id",
         "title",
@@ -33,6 +33,9 @@
         "UpperCasedField"
       ],
       "properties": {
+        "$ref": {
+          "type": "string"
+        },
         "id": {
           "type": "string"
         },
