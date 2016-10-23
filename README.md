@@ -22,7 +22,7 @@ cat swagger.json | swagger-to-elm | elm-format --stdin
 Unformatted (no guarantee it will work):
 
 ```sh
-cat swagger.json | swagger-to-elm | elm-format --stdin
+cat swagger.json | swagger-to-elm
 ```
 
 ## Contribution
@@ -38,13 +38,14 @@ Help and feedback would be gladly appreciated, but please just drop me a line
   - [ ] Other types (if meaningful)
 - [x] Default values for Integer, Float, String, Boolean
   - [ ] Complex types (if meaningful)
+- [x] Sanitization of identifiers
+- [x] Unit tests
 - [ ] Dicts (additionalProperties)
 - [ ] Polymorphism (allOf and discriminator)
 - [ ] Recursive types and decoders
 - [ ] Formats? (datetime, uuid, etc)
 - [ ] Encoders
-- [ ] Sanitization and deduplication of type and field names
-- [ ] Unit tests
+- [ ] Deduplication of types and fields
 
 ## License
 
