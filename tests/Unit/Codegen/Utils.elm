@@ -6,6 +6,48 @@ import Json.Decode exposing (decodeString)
 import Codegen.Utils exposing (sanitize)
 
 
+dirtyKeywords =
+    [ "if"
+    , "then"
+    , "else"
+    , "case"
+    , "of"
+    , "let"
+    , "in"
+    , "type"
+    , "module"
+    , "where"
+    , "import"
+    , "exposing"
+    , "as"
+    , "port"
+    , "infix"
+    , "infixl"
+    , "infixr"
+    ]
+
+
+cleanKeywords =
+    [ "if_"
+    , "then_"
+    , "else_"
+    , "case_"
+    , "of_"
+    , "let_"
+    , "in_"
+    , "type_"
+    , "module_"
+    , "where_"
+    , "import_"
+    , "exposing_"
+    , "as_"
+    , "port_"
+    , "infix_"
+    , "infixl_"
+    , "infixr_"
+    ]
+
+
 all : Test
 all =
     describe "Decoder"
@@ -42,5 +84,9 @@ all =
                 always <|
                     Expect.equal "AAAARGGHHH" <|
                         sanitize "AAAARGGHHH!"
+            , test "appends _ to keywords" <|
+                always <|
+                    Expect.equal cleanKeywords <|
+                        List.map sanitize dirtyKeywords
             ]
         ]

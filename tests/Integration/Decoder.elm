@@ -9,6 +9,7 @@ import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGrou
 articleJson =
     """
 {
+  "type": "article",
   "id": "article1",
   "title": "Article one",
   "category_id": "blog",
@@ -38,6 +39,7 @@ articleJson =
 
 expectedArticle =
     { id = "article1"
+    , type_ = Just "article"
     , title = "Article one"
     , category_id = "blog"
     , displaySize = EnumDisplaySizeLarge
@@ -95,6 +97,7 @@ groupJson =
 
 expectedGroup =
     [ { id = "article1"
+      , type_ = Nothing
       , title = "Article one"
       , category_id = "blog"
       , displaySize = EnumDisplaySizeSmall

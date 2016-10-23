@@ -58,6 +58,7 @@ sanitize : String -> String
 sanitize =
     sanitizeFirst
         >> sanitizeRest
+        >> santizeKeywords
 
 
 sanitizeFirst : String -> String
@@ -83,3 +84,33 @@ sanitizeRest str =
     Regex.find All (regex validChars) str
         |> List.map .match
         |> String.concat
+
+
+keywords : List String
+keywords =
+    [ "if"
+    , "then"
+    , "else"
+    , "case"
+    , "of"
+    , "let"
+    , "in"
+    , "type"
+    , "module"
+    , "where"
+    , "import"
+    , "exposing"
+    , "as"
+    , "port"
+    , "infix"
+    , "infixl"
+    , "infixr"
+    ]
+
+
+santizeKeywords : String -> String
+santizeKeywords str =
+    if List.member str keywords then
+        str ++ "_"
+    else
+        str

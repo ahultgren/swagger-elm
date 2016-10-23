@@ -33,6 +33,9 @@
         "UpperCasedField"
       ],
       "properties": {
+        "type": {
+          "type": "string"
+        },
         "$ref": {
           "type": "string"
         },
