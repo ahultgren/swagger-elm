@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-elm-stdio --name=Generate ./dist/elm.js
+DIR="${BASH_SOURCE%/*}/$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
+elm-stdio --name=Generate "$DIR/../dist/elm.js"
