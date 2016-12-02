@@ -1,8 +1,7 @@
 module Swagger.Decode exposing (..)
 
 import Dict exposing (Dict)
-import Json.Encode
-import Json.Decode exposing (Decoder, string, int, float, bool, dict, list, map, customDecoder, value, decodeValue, oneOf)
+import Json.Decode as Json exposing (Decoder, string, int, float, bool, dict, list, map, value, decodeValue, oneOf)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 
 
@@ -16,11 +15,11 @@ type alias Definitions =
 
 
 type alias Definition =
-    { type' : Maybe String
+    { type_ : Maybe String
     , required : List String
     , properties : Maybe Properties
     , items : Maybe Property
-    , ref' : Maybe String
+    , ref_ : Maybe String
     , enum : Maybe (List String)
     , default : Maybe String
     }
@@ -73,6 +72,20 @@ decodeProperty =
 
 
 -- helpers
+
+
+customDecoder : Decoder a -> (a -> Result String b) -> Decoder b
+customDecoder decoder toResult =
+    Json.andThen
+        (\a ->
+            case toResult a of
+                Ok b ->
+                    Json.succeed b
+
+                Err err ->
+                    Json.fail err
+        )
+        decoder
 
 
 decodeAlwaysString : Decoder String

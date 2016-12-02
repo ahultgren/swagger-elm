@@ -8,7 +8,7 @@ import Swagger.Parse as Parse
         , Definition(Definition)
         , Enum(Enum, NotEnum)
         , IsRequired(IsRequired, NotRequired)
-        , Type(Object', Array', Ref', Int', Float', String', Bool')
+        , Type(Object_, Array_, Ref_, Int_, Float_, String_, Bool_)
         )
 import Codegen.Type exposing (typeAlias, unionType, record, recordField, list, maybe)
 import Codegen.Utils exposing (capitalize, sanitize)
@@ -22,19 +22,19 @@ renderTypes definitions =
 
 
 renderRootType : Definition -> String
-renderRootType (Definition name isRequired type') =
-    typeAlias (sanitize name) <| renderType isRequired type'
+renderRootType (Definition name isRequired type_) =
+    typeAlias (sanitize name) <| renderType isRequired type_
 
 
 renderType : IsRequired -> Type -> String
-renderType isRequired type' =
-    maybeWrap isRequired (renderFieldType type')
+renderType isRequired type_ =
+    maybeWrap isRequired (renderFieldType type_)
 
 
 renderFieldType : Type -> String
-renderFieldType type' =
-    case type' of
-        String' enum ->
+renderFieldType type_ =
+    case type_ of
+        String_ enum ->
             case enum of
                 Enum name _ ->
                     sanitize name
@@ -42,28 +42,28 @@ renderFieldType type' =
                 NotEnum ->
                     "String"
 
-        Int' ->
+        Int_ ->
             "Int"
 
-        Float' ->
+        Float_ ->
             "Float"
 
-        Bool' ->
+        Bool_ ->
             "Bool"
 
-        Object' properties ->
+        Object_ properties ->
             record <| List.map renderProperty properties
 
-        Array' (Definition name isRequired type') ->
-            list <| renderFieldType type'
+        Array_ (Definition name isRequired type_) ->
+            list <| renderFieldType type_
 
-        Ref' ref ->
+        Ref_ ref ->
             (capitalize <| sanitize ref)
 
 
 renderProperty : Definition -> String
-renderProperty (Definition name isRequired type') =
-    recordField (sanitize name) <| renderType isRequired type'
+renderProperty (Definition name isRequired type_) =
+    recordField (sanitize name) <| renderType isRequired type_
 
 
 maybeWrap : IsRequired -> String -> String
@@ -85,13 +85,13 @@ findEnums : Definitions -> Definitions
 findEnums definitions =
     definitions
         |> List.concatMap
-            (\(Definition name isRequired type') ->
-                case type' of
-                    Object' properties ->
+            (\(Definition name isRequired type_) ->
+                case type_ of
+                    Object_ properties ->
                         List.map Just <| findEnums properties
 
-                    String' enum ->
-                        [ Just (Definition name isRequired (String' enum)) ]
+                    String_ enum ->
+                        [ Just (Definition name isRequired (String_ enum)) ]
 
                     _ ->
                         []
@@ -100,9 +100,9 @@ findEnums definitions =
 
 
 renderEnum : Definition -> Maybe String
-renderEnum (Definition _ isRequired type') =
-    case type' of
-        String' (Enum name enum) ->
+renderEnum (Definition _ isRequired type_) =
+    case type_ of
+        String_ (Enum name enum) ->
             Just <| unionType (sanitize name) (List.map (sanitize << enumTagName name) enum)
 
         _ ->

@@ -44,8 +44,8 @@ record properties =
 
 
 recordField : Name -> Type -> String
-recordField name type' =
-    (uncapitalize name) ++ " : " ++ type'
+recordField name type_ =
+    (uncapitalize name) ++ " : " ++ type_
 
 
 list : Body -> String

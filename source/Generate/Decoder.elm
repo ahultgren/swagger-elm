@@ -11,7 +11,7 @@ import Swagger.Parse as Parse
         , Enum(Enum, NotEnum)
         , IsRequired(IsRequired, NotRequired)
         , Properties
-        , Type(Object', Array', Ref', Int', Float', String', Bool')
+        , Type(Object_, Array_, Ref_, Int_, Float_, String_, Bool_)
         )
 import Codegen.Function as Fun exposing (function, pipeline, letin, caseof)
 import Codegen.Utils exposing (capitalize, sanitize)
@@ -25,7 +25,7 @@ renderDecoders definitions =
 
 
 renderDecoder : Definition -> String
-renderDecoder (Definition name isRequired type') =
+renderDecoder (Definition name isRequired type_) =
     let
         safeName =
             sanitize name
@@ -33,7 +33,7 @@ renderDecoder (Definition name isRequired type') =
         function (decoderName safeName)
             []
             ("Decoder " ++ (capitalize safeName))
-            (renderDecoderBody safeName type')
+            (renderDecoderBody safeName type_)
 
 
 decoderName : String -> String
@@ -42,9 +42,9 @@ decoderName name =
 
 
 renderDecoderBody : String -> Type -> String
-renderDecoderBody constructor type' =
-    case type' of
-        String' enum ->
+renderDecoderBody constructor type_ =
+    case type_ of
+        String_ enum ->
             case enum of
                 Enum name enum ->
                     decoderName <| sanitize name
@@ -52,23 +52,23 @@ renderDecoderBody constructor type' =
                 NotEnum ->
                     "string"
 
-        Int' ->
+        Int_ ->
             "int"
 
-        Float' ->
+        Float_ ->
             "float"
 
-        Bool' ->
+        Bool_ ->
             "bool"
 
-        Object' properties ->
+        Object_ properties ->
             renderObjectDecoder constructor properties
 
-        Array' definition ->
+        Array_ definition ->
             renderListDecoder definition
 
-        Ref' ref' ->
-            decoderName <| sanitize ref'
+        Ref_ ref_ ->
+            decoderName <| sanitize ref_
 
 
 renderObjectDecoder : String -> Properties -> String
@@ -79,12 +79,12 @@ renderObjectDecoder safeName properties =
 
 
 renderObjectDecoderProperty : Definition -> String
-renderObjectDecoderProperty (Definition name isRequired type') =
-    maybeDefaultWrap isRequired type' <| " \"" ++ name ++ "\" " ++ (renderDecoderBody (sanitize name) type')
+renderObjectDecoderProperty (Definition name isRequired type_) =
+    maybeDefaultWrap isRequired type_ <| " \"" ++ name ++ "\" " ++ (renderDecoderBody (sanitize name) type_)
 
 
 maybeDefaultWrap : IsRequired -> Type -> String -> String
-maybeDefaultWrap isRequired type' =
+maybeDefaultWrap isRequired type_ =
     case isRequired of
         IsRequired ->
             (++) "required"
@@ -92,16 +92,16 @@ maybeDefaultWrap isRequired type' =
         NotRequired default ->
             case default of
                 Just default ->
-                    (++) "optional" << (flip (++)) (" " ++ defaultValue type' default)
+                    (++) "optional" << (flip (++)) (" " ++ defaultValue type_ default)
 
                 Nothing ->
                     (++) "maybe"
 
 
 defaultValue : Type -> String -> String
-defaultValue type' default =
-    case type' of
-        String' (Enum name enum) ->
+defaultValue type_ default =
+    case type_ of
+        String_ (Enum name enum) ->
             case decodeString string default of
                 Ok default ->
                     (enumTagName name default)
@@ -114,14 +114,14 @@ defaultValue type' default =
 
 
 renderListDecoder : Definition -> String
-renderListDecoder (Definition name isRequired type') =
-    "(list (" ++ (renderDecoderBody name type') ++ "))"
+renderListDecoder (Definition name isRequired type_) =
+    "(list (" ++ (renderDecoderBody name type_) ++ "))"
 
 
 renderEnum : Definition -> Maybe String
-renderEnum (Definition _ isRequired type') =
-    case type' of
-        String' (Enum name enum) ->
+renderEnum (Definition _ isRequired type_) =
+    case type_ of
+        String_ (Enum name enum) ->
             let
                 safeName =
                     sanitize name

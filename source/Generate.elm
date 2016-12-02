@@ -3,7 +3,7 @@ module Generate exposing (main, generate)
 import String
 import Dict
 import Html exposing (text)
-import Html.App exposing (programWithFlags)
+import Html exposing (programWithFlags)
 import Json.Decode exposing (decodeString)
 import Swagger.Decode as Swagger exposing (Swagger, decodeSwagger)
 import Swagger.Parse exposing (parseDefinitions)
@@ -12,7 +12,7 @@ import Generate.Decoder as Decoder
 import Generate.Headers as Headers
 
 
-main : Program String
+main : Program String String x
 main =
     programWithFlags
         { init = init
@@ -49,11 +49,11 @@ render swagger =
         definitions =
             parseDefinitions swagger.definitions
 
-        definitions' =
+        definitions_ =
             List.map (Swagger.Parse.toNewDefinition <| Dict.keys definitions) <| Dict.toList definitions
     in
         [ Headers.renderHeaders
-        , Type.renderTypes definitions'
-        , Decoder.renderDecoders definitions'
+        , Type.renderTypes definitions_
+        , Decoder.renderDecoders definitions_
         ]
             |> String.concat

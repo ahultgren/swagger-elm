@@ -16,13 +16,13 @@ type Definition
 
 
 type Type
-    = Object' Properties
-    | Array' Definition
-    | Ref' Name
-    | String' Enum
-    | Int'
-    | Float'
-    | Bool'
+    = Object_ Properties
+    | Array_ Definition
+    | Ref_ Name
+    | String_ Enum
+    | Int_
+    | Float_
+    | Bool_
 
 
 type alias Name =
@@ -53,61 +53,61 @@ parseDefinitions definitions =
 
 
 toNewDefinition : List String -> ( String, Decode.Definition ) -> Definition
-toNewDefinition parentRequired ( name, { type', ref', items, properties, required, enum, default } ) =
+toNewDefinition parentRequired ( name, { type_, ref_, items, properties, required, enum, default } ) =
     let
-        isRequired' =
+        isRequired_ =
             isRequired parentRequired name default
     in
-        case ( type', ref' ) of
-            ( _, Just ref' ) ->
-                Definition name isRequired' (Ref' <| extractRefType ref')
+        case ( type_, ref_ ) of
+            ( _, Just ref_ ) ->
+                Definition name isRequired_ (Ref_ <| extractRefType ref_)
 
-            ( Just type', Nothing ) ->
-                case type' of
+            ( Just type_, Nothing ) ->
+                case type_ of
                     "string" ->
-                        Definition name isRequired' <| String' (makeEnum name enum)
+                        Definition name isRequired_ <| String_ (makeEnum name enum)
 
                     "integer" ->
-                        Definition name isRequired' Int'
+                        Definition name isRequired_ Int_
 
                     "number" ->
-                        Definition name isRequired' Float'
+                        Definition name isRequired_ Float_
 
                     "boolean" ->
-                        Definition name isRequired' Bool'
+                        Definition name isRequired_ Bool_
 
                     "array" ->
-                        Definition name isRequired' <| Array' <| toNewItems (toNewDefinition required) items
+                        Definition name isRequired_ <| Array_ <| toNewItems (toNewDefinition required) items
 
                     "object" ->
-                        Definition name isRequired' <| Object' <| toNewProperties (toNewDefinition required) properties
+                        Definition name isRequired_ <| Object_ <| toNewProperties (toNewDefinition required) properties
 
                     _ ->
-                        Definition name isRequired' <| Object' <| toNewProperties (toNewDefinition required) properties
+                        Definition name isRequired_ <| Object_ <| toNewProperties (toNewDefinition required) properties
 
             _ ->
-                Definition name isRequired' <| Object' <| toNewProperties (toNewDefinition required) properties
+                Definition name isRequired_ <| Object_ <| toNewProperties (toNewDefinition required) properties
 
 
 toNewProperties : Parser -> Maybe Decode.Properties -> Definitions
-toNewProperties toNewDefinition' properties =
+toNewProperties toNewDefinition_ properties =
     case properties of
         Nothing ->
             []
 
         Just properties ->
             Dict.toList properties
-                |> List.map (toNewDefinition' << extractProperty)
+                |> List.map (toNewDefinition_ << extractProperty)
 
 
 toNewItems : Parser -> Maybe Decode.Property -> Definition
-toNewItems toNewDefinition' items =
+toNewItems toNewDefinition_ items =
     case items of
         Nothing ->
-            toNewDefinition' ( "TODO WTF", Decode.Definition Nothing [] Nothing Nothing Nothing Nothing Nothing )
+            toNewDefinition_ ( "TODO WTF", Decode.Definition Nothing [] Nothing Nothing Nothing Nothing Nothing )
 
         Just items ->
-            toNewDefinition' <| extractProperty ( "TODO FIX", items )
+            toNewDefinition_ <| extractProperty ( "TODO FIX", items )
 
 
 isRequired : List String -> String -> Maybe String -> IsRequired
@@ -123,11 +123,11 @@ extractRefType ref =
     let
         parsed =
             (List.head (Regex.find (Regex.AtMost 1) (regex "^#/definitions/(.+)$") ref))
-                `Maybe.andThen` (List.head << .submatches)
+                |> Maybe.andThen (List.head << .submatches)
     in
         case parsed of
-            Just (Just ref') ->
-                ref'
+            Just (Just ref_) ->
+                ref_
 
             _ ->
                 Debug.crash "Unparseable reference " ++ ref

@@ -24,33 +24,33 @@ type alias Body =
 
 
 function : Name -> Args -> Type -> Body -> String
-function name args type' body =
-    (functionType name args type' body)
+function name args type_ body =
+    (functionType name args type_ body)
         ++ "\n"
-        ++ (functionDeclaration name args type' body)
+        ++ (functionDeclaration name args type_ body)
         ++ "\n"
 
 
 functionType : Name -> Args -> Type -> Body -> String
-functionType name args type' body =
+functionType name args type_ body =
     name
         ++ " : "
         ++ (String.concat <| List.map ((flip (++) " -> ") << argType) args)
-        ++ type'
+        ++ type_
 
 
 functionDeclaration : Name -> Args -> Type -> Body -> String
-functionDeclaration name args type' body =
+functionDeclaration name args type_ body =
     name ++ (String.join " " <| List.map argName args) ++ " = \n" ++ body
 
 
 argType : Arg -> Type
-argType (Arg type' name) =
-    type'
+argType (Arg type_ name) =
+    type_
 
 
 argName : Arg -> Name
-argName (Arg type' name) =
+argName (Arg type_ name) =
     name
 
 
@@ -82,11 +82,11 @@ letin declarations body =
 
 
 caseof : String -> List ( Name, Body ) -> String
-caseof case' conditions =
+caseof case_ conditions =
     let
         conds =
             conditions
                 |> List.map (\( name, body ) -> "      " ++ name ++ " -> " ++ body)
                 |> String.join "\n"
     in
-        "  case " ++ case' ++ " of\n" ++ conds
+        "  case " ++ case_ ++ " of\n" ++ conds
