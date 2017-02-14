@@ -1,4 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/env node
 
-DIR="${BASH_SOURCE%/*}/$(dirname "$(readlink "${BASH_SOURCE[0]}")")"
-elm-stdio --name=Generate "$DIR/../dist/elm.js"
+var path = require("path");
+var stdio = require("node-elm-stdio/stdio/stdin");
+var Elm = require("../dist/elm.js");
+
+stdio(path.resolve(__dirname, "../dist/elm.js"), "Generate", false);
