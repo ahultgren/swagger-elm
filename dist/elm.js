@@ -8012,363 +8012,6 @@ var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
 
-var _user$project$Codegen_Function$caseof = F2(
-	function (case_, conditions) {
-		var conds = A2(
-			_elm_lang$core$String$join,
-			'\n',
-			A2(
-				_elm_lang$core$List$map,
-				function (_p0) {
-					var _p1 = _p0;
-					return A2(
-						_elm_lang$core$Basics_ops['++'],
-						'      ',
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_p1._0,
-							A2(_elm_lang$core$Basics_ops['++'], ' -> ', _p1._1)));
-				},
-				conditions));
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'  case ',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				case_,
-				A2(_elm_lang$core$Basics_ops['++'], ' of\n', conds)));
-	});
-var _user$project$Codegen_Function$letin = F2(
-	function (declarations, body) {
-		var lets = A2(
-			_elm_lang$core$String$join,
-			'\n',
-			A2(
-				_elm_lang$core$List$map,
-				function (_p2) {
-					var _p3 = _p2;
-					return A2(
-						_elm_lang$core$Basics_ops['++'],
-						'      ',
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							_p3._0,
-							A2(_elm_lang$core$Basics_ops['++'], ' = ', _p3._1)));
-				},
-				declarations));
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'  let\n',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				lets,
-				A2(_elm_lang$core$Basics_ops['++'], '\n    in\n      ', body)));
-	});
-var _user$project$Codegen_Function$pipeline = F2(
-	function (init, items) {
-		return A2(
-			F2(
-				function (x, y) {
-					return A2(_elm_lang$core$Basics_ops['++'], x, y);
-				}),
-			init,
-			_elm_lang$core$String$concat(
-				A2(
-					_elm_lang$core$List$map,
-					F2(
-						function (x, y) {
-							return A2(_elm_lang$core$Basics_ops['++'], x, y);
-						})('\n  |> '),
-					items)));
-	});
-var _user$project$Codegen_Function$argName = function (_p4) {
-	var _p5 = _p4;
-	return _p5._1;
-};
-var _user$project$Codegen_Function$argType = function (_p6) {
-	var _p7 = _p6;
-	return _p7._0;
-};
-var _user$project$Codegen_Function$functionDeclaration = F4(
-	function (name, args, type_, body) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			name,
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A2(
-					_elm_lang$core$String$join,
-					' ',
-					A2(_elm_lang$core$List$map, _user$project$Codegen_Function$argName, args)),
-				A2(_elm_lang$core$Basics_ops['++'], ' = \n', body)));
-	});
-var _user$project$Codegen_Function$functionType = F4(
-	function (name, args, type_, body) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			name,
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				' : ',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$String$concat(
-						A2(
-							_elm_lang$core$List$map,
-							function (_p8) {
-								return A3(
-									_elm_lang$core$Basics$flip,
-									F2(
-										function (x, y) {
-											return A2(_elm_lang$core$Basics_ops['++'], x, y);
-										}),
-									' -> ',
-									_user$project$Codegen_Function$argType(_p8));
-							},
-							args)),
-					type_)));
-	});
-var _user$project$Codegen_Function$function = F4(
-	function (name, args, type_, body) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			A4(_user$project$Codegen_Function$functionType, name, args, type_, body),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				'\n',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					A4(_user$project$Codegen_Function$functionDeclaration, name, args, type_, body),
-					'\n')));
-	});
-var _user$project$Codegen_Function$Arg = F2(
-	function (a, b) {
-		return {ctor: 'Arg', _0: a, _1: b};
-	});
-
-var _user$project$Codegen_Utils$keywords = {
-	ctor: '::',
-	_0: 'if',
-	_1: {
-		ctor: '::',
-		_0: 'then',
-		_1: {
-			ctor: '::',
-			_0: 'else',
-			_1: {
-				ctor: '::',
-				_0: 'case',
-				_1: {
-					ctor: '::',
-					_0: 'of',
-					_1: {
-						ctor: '::',
-						_0: 'let',
-						_1: {
-							ctor: '::',
-							_0: 'in',
-							_1: {
-								ctor: '::',
-								_0: 'type',
-								_1: {
-									ctor: '::',
-									_0: 'module',
-									_1: {
-										ctor: '::',
-										_0: 'where',
-										_1: {
-											ctor: '::',
-											_0: 'import',
-											_1: {
-												ctor: '::',
-												_0: 'exposing',
-												_1: {
-													ctor: '::',
-													_0: 'as',
-													_1: {
-														ctor: '::',
-														_0: 'port',
-														_1: {
-															ctor: '::',
-															_0: 'infix',
-															_1: {
-																ctor: '::',
-																_0: 'infixl',
-																_1: {
-																	ctor: '::',
-																	_0: 'infixr',
-																	_1: {ctor: '[]'}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-};
-var _user$project$Codegen_Utils$santizeKeywords = function (str) {
-	return A2(_elm_lang$core$List$member, str, _user$project$Codegen_Utils$keywords) ? A2(_elm_lang$core$Basics_ops['++'], str, '_') : str;
-};
-var _user$project$Codegen_Utils$validUnicodeSymbols = '_';
-var _user$project$Codegen_Utils$validUnicodeNumerals = '0-9٠-٩۰-۹߀-߉०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯๐-๙໐-໙༠-༩၀-၉႐-႙០-៩᠐-᠙᥆-᥏᧐-᧙᪀-᪉᪐-᪙᭐-᭙᮰-᮹᱀-᱉᱐-᱙꘠-꘩꣐-꣙꤀-꤉꧐-꧙꩐-꩙꯰-꯹０-９ᛮ-ᛰⅠ-ↂↅ-ↈ〇〡-〩〸-〺ꛦ-ꛯ';
-var _user$project$Codegen_Utils$validFirstUnicodeCharacters = 'A-ZÀ-ÖØ-ÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĲĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŦŨŪŬŮŰŲŴŶŸŹŻŽƁƂƄƆƇƉ-ƋƎ-ƑƓƔƖ-ƘƜƝƟƠƢƤƦƧƩƬƮƯƱ-ƳƵƷƸƼǄǇǊǍǏǑǓǕǗǙǛǞǠǢǤǦǨǪǬǮǱǴǶ-ǸǺǼǾȀȂȄȆȈȊȌȎȐȒȔȖȘȚȜȞȠȢȤȦȨȪȬȮȰȲȺȻȽȾɁɃ-ɆɈɊɌɎͰͲͶΆΈ-ΊΌΎΏΑ-ΡΣ-ΫϏϒ-ϔϘϚϜϞϠϢϤϦϨϪϬϮϴϷϹϺϽ-ЯѠѢѤѦѨѪѬѮѰѲѴѶѸѺѼѾҀҊҌҎҐҒҔҖҘҚҜҞҠҢҤҦҨҪҬҮҰҲҴҶҸҺҼҾӀӁӃӅӇӉӋӍӐӒӔӖӘӚӜӞӠӢӤӦӨӪӬӮӰӲӴӶӸӺӼӾԀԂԄԆԈԊԌԎԐԒԔԖԘԚԜԞԠԢԤԦԱ-ՖႠ-ჅḀḂḄḆḈḊḌḎḐḒḔḖḘḚḜḞḠḢḤḦḨḪḬḮḰḲḴḶḸḺḼḾṀṂṄṆṈṊṌṎṐṒṔṖṘṚṜṞṠṢṤṦṨṪṬṮṰṲṴṶṸṺṼṾẀẂẄẆẈẊẌẎẐẒẔẞẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸỺỼỾἈ-ἏἘ-ἝἨ-ἯἸ-ἿὈ-ὍὙὛὝὟὨ-ὯᾸ-ΆῈ-ΉῘ-ΊῨ-ῬῸ-Ώℂℇℋ-ℍℐ-ℒℕℙ-ℝℤΩℨK-ℭℰ-ℳℾℿⅅↃⰀ-ⰮⱠⱢ-ⱤⱧⱩⱫⱭ-ⱰⱲⱵⱾ-ⲀⲂⲄⲆⲈⲊⲌⲎⲐⲒⲔⲖⲘⲚⲜⲞⲠⲢⲤⲦⲨⲪⲬⲮⲰⲲⲴⲶⲸⲺⲼⲾⳀⳂⳄⳆⳈⳊⳌⳎⳐⳒⳔⳖⳘⳚⳜⳞⳠⳢⳫⳭꙀꙂꙄꙆꙈꙊꙌꙎꙐꙒꙔꙖꙘꙚꙜꙞꙠꙢꙤꙦꙨꙪꙬꚀꚂꚄꚆꚈꚊꚌꚎꚐꚒꚔꚖꜢꜤꜦꜨꜪꜬꜮꜲꜴꜶꜸꜺꜼꜾꝀꝂꝄꝆꝈꝊꝌꝎꝐꝒꝔꝖꝘꝚꝜꝞꝠꝢꝤꝦꝨꝪꝬꝮꝹꝻꝽꝾꞀꞂꞄꞆꞋꞍꞐꞠꞢꞤꞦꞨＡ-Ｚa-zªµºß-öø-ÿāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıĳĵķĸĺļľŀłńņňŉŋōŏőœŕŗřśŝşšţťŧũūŭůűųŵŷźżž-ƀƃƅƈƌƍƒƕƙ-ƛƞơƣƥƨƪƫƭưƴƶƹƺƽ-ƿǆǉǌǎǐǒǔǖǘǚǜǝǟǡǣǥǧǩǫǭǯǰǳǵǹǻǽǿȁȃȅȇȉȋȍȏȑȓȕȗșțȝȟȡȣȥȧȩȫȭȯȱȳ-ȹȼȿɀɂɇɉɋɍɏ-ʓʕ-ʯͱͳͷͻ-ͽΐά-ώϐϑϕ-ϗϙϛϝϟϡϣϥϧϩϫϭϯ-ϳϵϸϻϼа-џѡѣѥѧѩѫѭѯѱѳѵѷѹѻѽѿҁҋҍҏґғҕҗҙқҝҟҡңҥҧҩҫҭүұҳҵҷҹһҽҿӂӄӆӈӊӌӎӏӑӓӕӗәӛӝӟӡӣӥӧөӫӭӯӱӳӵӷӹӻӽӿԁԃԅԇԉԋԍԏԑԓԕԗԙԛԝԟԡԣԥԧա-ևᴀ-ᴫᵢ-ᵷᵹ-ᶚḁḃḅḇḉḋḍḏḑḓḕḗḙḛḝḟḡḣḥḧḩḫḭḯḱḳḵḷḹḻḽḿṁṃṅṇṉṋṍṏṑṓṕṗṙṛṝṟṡṣṥṧṩṫṭṯṱṳṵṷṹṻṽṿẁẃẅẇẉẋẍẏẑẓẕ-ẝẟạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹỻỽỿ-ἇἐ-ἕἠ-ἧἰ-ἷὀ-ὅὐ-ὗὠ-ὧὰ-ώᾀ-ᾇᾐ-ᾗᾠ-ᾧᾰ-ᾴᾶᾷιῂ-ῄῆῇῐ-ΐῖῗῠ-ῧῲ-ῴῶῷℊℎℏℓℯℴℹℼℽⅆ-ⅉⅎↄⰰ-ⱞⱡⱥⱦⱨⱪⱬⱱⱳⱴⱶ-ⱼⲁⲃⲅⲇⲉⲋⲍⲏⲑⲓⲕⲗⲙⲛⲝⲟⲡⲣⲥⲧⲩⲫⲭⲯⲱⲳⲵⲷⲹⲻⲽⲿⳁⳃⳅⳇⳉⳋⳍⳏⳑⳓⳕⳗⳙⳛⳝⳟⳡⳣⳤⳬⳮⴀ-ⴥꙁꙃꙅꙇꙉꙋꙍꙏꙑꙓꙕꙗꙙꙛꙝꙟꙡꙣꙥꙧꙩꙫꙭꚁꚃꚅꚇꚉꚋꚍꚏꚑꚓꚕꚗꜣꜥꜧꜩꜫꜭꜯ-ꜱꜳꜵꜷꜹꜻꜽꜿꝁꝃꝅꝇꝉꝋꝍꝏꝑꝓꝕꝗꝙꝛꝝꝟꝡꝣꝥꝧꝩꝫꝭꝯꝱ-ꝸꝺꝼꝿꞁꞃꞅꞇꞌꞎꞑꞡꞣꞥꞧꞩꟺﬀ-ﬆﬓ-ﬗａ-ｚǅǈǋǲᾈ-ᾏᾘ-ᾟᾨ-ᾯᾼῌῼ';
-var _user$project$Codegen_Utils$validRestUnicodeCharacters = A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validFirstUnicodeCharacters, 'ʰ-ˁˆ-ˑˠ-ˤˬˮʹͺՙـۥۦߴߵߺࠚࠤࠨॱๆໆჼៗᡃᪧᱸ-ᱽᴬ-ᵡᵸᶛ-ᶿⁱⁿₐ-ₜⱽⵯⸯ々〱-〵〻ゝゞー-ヾꀕꓸ-ꓽꘌꙿꜗ-ꜟꝰꞈꧏꩰꫝｰﾞﾟƻǀ-ǃʔא-תװ-ײؠ-ؿف-يٮٯٱ-ۓەۮۯۺ-ۼۿܐܒ-ܯݍ-ޥޱߊ-ߪࠀ-ࠕࡀ-ࡘऄ-हऽॐक़-ॡॲ-ॷॹ-ॿঅ-ঌএঐও-নপ-রলশ-হঽৎড়ঢ়য়-ৡৰৱਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹਖ਼-ੜਫ਼ੲ-ੴઅ-ઍએ-ઑઓ-નપ-રલળવ-હઽૐૠૡଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହଽଡ଼ଢ଼ୟ-ୡୱஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹௐఅ-ఌఎ-ఐఒ-నప-ళవ-హఽౘౙౠౡಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹಽೞೠೡೱೲഅ-ഌഎ-ഐഒ-ഺഽൎൠൡൺ-ൿඅ-ඖක-නඳ-රලව-ෆก-ะาำเ-ๅກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ະາຳຽເ-ໄໜໝༀཀ-ཇཉ-ཬྈ-ྌက-ဪဿၐ-ၕၚ-ၝၡၥၦၮ-ၰၵ-ႁႎა-ჺᄀ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚᎀ-ᎏᎠ-Ᏼᐁ-ᙬᙯ-ᙿᚁ-ᚚᚠ-ᛪᜀ-ᜌᜎ-ᜑᜠ-ᜱᝀ-ᝑᝠ-ᝬᝮ-ᝰក-ឳៜᠠ-ᡂᡄ-ᡷᢀ-ᢨᢪᢰ-ᣵᤀ-ᤜᥐ-ᥭᥰ-ᥴᦀ-ᦫᧁ-ᧇᨀ-ᨖᨠ-ᩔᬅ-ᬳᭅ-ᭋᮃ-ᮠᮮᮯᯀ-ᯥᰀ-ᰣᱍ-ᱏᱚ-ᱷᳩ-ᳬᳮ-ᳱℵ-ℸⴰ-ⵥⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞ〆〼ぁ-ゖゟァ-ヺヿㄅ-ㄭㄱ-ㆎㆠ-ㆺㇰ-ㇿ㐀-䶵一-鿋ꀀ-ꀔꀖ-ꒌꓐ-ꓷꔀ-ꘋꘐ-ꘟꘪꘫꙮꚠ-ꛥꟻ-ꠁꠃ-ꠅꠇ-ꠊꠌ-ꠢꡀ-ꡳꢂ-ꢳꣲ-ꣷꣻꤊ-ꤥꤰ-ꥆꥠ-ꥼꦄ-ꦲꨀ-ꨨꩀ-ꩂꩄ-ꩋꩠ-ꩯꩱ-ꩶꩺꪀ-ꪯꪱꪵꪶꪹ-ꪽꫀꫂꫛꫜꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮꯀ-ꯢ가-힣ힰ-ퟆퟋ-ퟻ豈-鶴侮-舘並-龎יִײַ-ﬨשׁ-זּטּ-לּמּנּסּףּפּצּ-ﮱﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-ﷻﹰ-ﹴﹶ-ﻼｦ-ｯｱ-ﾝﾠ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ');
-var _user$project$Codegen_Utils$validChars = A2(
-	_elm_lang$core$Basics_ops['++'],
-	'[',
-	A2(
-		_elm_lang$core$Basics_ops['++'],
-		_user$project$Codegen_Utils$validFirstUnicodeCharacters,
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			_user$project$Codegen_Utils$validRestUnicodeCharacters,
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_user$project$Codegen_Utils$validUnicodeSymbols,
-				A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validUnicodeNumerals, ']')))));
-var _user$project$Codegen_Utils$sanitizeRest = function (str) {
-	return _elm_lang$core$String$concat(
-		A2(
-			_elm_lang$core$List$map,
-			function (_) {
-				return _.match;
-			},
-			A3(
-				_elm_lang$core$Regex$find,
-				_elm_lang$core$Regex$All,
-				_elm_lang$core$Regex$regex(_user$project$Codegen_Utils$validChars),
-				str)));
-};
-var _user$project$Codegen_Utils$validLeadingChars = A2(
-	_elm_lang$core$Basics_ops['++'],
-	'[',
-	A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validFirstUnicodeCharacters, ']'));
-var _user$project$Codegen_Utils$isValidFirst = function (str) {
-	return A2(
-		_elm_lang$core$Regex$contains,
-		_elm_lang$core$Regex$regex(_user$project$Codegen_Utils$validLeadingChars),
-		_elm_lang$core$String$fromChar(str));
-};
-var _user$project$Codegen_Utils$sanitizeFirst = function (str) {
-	sanitizeFirst:
-	while (true) {
-		var _p0 = _elm_lang$core$String$uncons(str);
-		if (_p0.ctor === 'Just') {
-			var _p2 = _p0._0._1;
-			var _p1 = _p0._0._0;
-			if (_user$project$Codegen_Utils$isValidFirst(_p1)) {
-				return A2(_elm_lang$core$String$cons, _p1, _p2);
-			} else {
-				var _v1 = _p2;
-				str = _v1;
-				continue sanitizeFirst;
-			}
-		} else {
-			return '';
-		}
-	}
-};
-var _user$project$Codegen_Utils$sanitize = function (_p3) {
-	return _user$project$Codegen_Utils$santizeKeywords(
-		_user$project$Codegen_Utils$sanitizeRest(
-			_user$project$Codegen_Utils$sanitizeFirst(_p3)));
-};
-var _user$project$Codegen_Utils$uncapitalize = function (str) {
-	var _p4 = _elm_lang$core$String$uncons(str);
-	if (_p4.ctor === 'Just') {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$String$toLower(
-				_elm_lang$core$String$fromChar(_p4._0._0)),
-			_p4._0._1);
-	} else {
-		return '';
-	}
-};
-var _user$project$Codegen_Utils$capitalize = function (str) {
-	var _p5 = _elm_lang$core$String$uncons(str);
-	if (_p5.ctor === 'Just') {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$String$toUpper(
-				_elm_lang$core$String$fromChar(_p5._0._0)),
-			_p5._0._1);
-	} else {
-		return '';
-	}
-};
-
-var _user$project$Codegen_Type$wrap = F2(
-	function (name, body) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			name,
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				' (',
-				A2(_elm_lang$core$Basics_ops['++'], body, ')')));
-	});
-var _user$project$Codegen_Type$maybe = function (body) {
-	return A2(_user$project$Codegen_Type$wrap, 'Maybe', body);
-};
-var _user$project$Codegen_Type$list = function (body) {
-	return A2(_user$project$Codegen_Type$wrap, 'List', body);
-};
-var _user$project$Codegen_Type$recordField = F2(
-	function (name, type_) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			_user$project$Codegen_Utils$uncapitalize(name),
-			A2(_elm_lang$core$Basics_ops['++'], ' : ', type_));
-	});
-var _user$project$Codegen_Type$record = function (properties) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		'\n  { ',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			A2(_elm_lang$core$String$join, '\n  , ', properties),
-			'\n  }\n'));
-};
-var _user$project$Codegen_Type$unionType = F2(
-	function (name, tags) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'type ',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_user$project$Codegen_Utils$capitalize(name),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'\n  = ',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						A2(_elm_lang$core$String$join, '\n  | ', tags),
-						'\n'))));
-	});
-var _user$project$Codegen_Type$typeAlias = F2(
-	function (name, body) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'type alias ',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_user$project$Codegen_Utils$capitalize(name),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					' = ',
-					A2(_elm_lang$core$Basics_ops['++'], body, '\n'))));
-	});
-
 var _user$project$Swagger_Decode$maybe = F2(
 	function (name, decoder) {
 		return A3(
@@ -8395,251 +8038,29 @@ var _user$project$Swagger_Decode$decodeAlwaysString = _elm_lang$core$Json_Decode
 			}
 		}
 	});
-var _user$project$Swagger_Decode$customDecoder = F2(
-	function (decoder, toResult) {
-		return A2(
-			_elm_lang$core$Json_Decode$andThen,
-			function (a) {
-				var _p0 = toResult(a);
-				if (_p0.ctor === 'Ok') {
-					return _elm_lang$core$Json_Decode$succeed(_p0._0);
-				} else {
-					return _elm_lang$core$Json_Decode$fail(_p0._0);
-				}
-			},
-			decoder);
+var _user$project$Swagger_Decode$apply2 = F2(
+	function (fn, _p0) {
+		var _p1 = _p0;
+		return A2(fn, _p1._0, _p1._1);
 	});
-var _user$project$Swagger_Decode$lazy = function (thunk) {
+var _user$project$Swagger_Decode$decodePrimitive = function (constructor) {
 	return A2(
-		_user$project$Swagger_Decode$customDecoder,
-		_elm_lang$core$Json_Decode$value,
-		function (js) {
-			return A2(
-				_elm_lang$core$Json_Decode$decodeValue,
-				thunk(
-					{ctor: '_Tuple0'}),
-				js);
-		});
-};
-var _user$project$Swagger_Decode$Swagger = function (a) {
-	return {definitions: a};
-};
-var _user$project$Swagger_Decode$Definition = F7(
-	function (a, b, c, d, e, f, g) {
-		return {type_: a, required: b, properties: c, items: d, ref_: e, $enum: f, $default: g};
-	});
-var _user$project$Swagger_Decode$Property = function (a) {
-	return {ctor: 'Property', _0: a};
-};
-var _user$project$Swagger_Decode$decodeProperty = A2(
-	_elm_lang$core$Json_Decode$map,
-	_user$project$Swagger_Decode$Property,
-	_user$project$Swagger_Decode$lazy(
-		function (_p1) {
-			return _user$project$Swagger_Decode$decodeDefinition;
-		}));
-var _user$project$Swagger_Decode$decodeDefinition = _user$project$Swagger_Decode$lazy(
-	function (_p2) {
-		return A3(
+		_elm_lang$core$Json_Decode$map,
+		constructor,
+		A3(
 			_user$project$Swagger_Decode$maybe,
 			'default',
 			_user$project$Swagger_Decode$decodeAlwaysString,
-			A3(
-				_user$project$Swagger_Decode$maybe,
-				'enum',
-				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
-				A3(
-					_user$project$Swagger_Decode$maybe,
-					'$ref',
-					_elm_lang$core$Json_Decode$string,
-					A3(
-						_user$project$Swagger_Decode$maybe,
-						'items',
-						A2(_elm_lang$core$Json_Decode$map, _user$project$Swagger_Decode$Property, _user$project$Swagger_Decode$decodeDefinition),
-						A3(
-							_user$project$Swagger_Decode$maybe,
-							'properties',
-							_user$project$Swagger_Decode$decodeProperties,
-							A4(
-								_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
-								'required',
-								_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
-								{ctor: '[]'},
-								A3(
-									_user$project$Swagger_Decode$maybe,
-									'type',
-									_elm_lang$core$Json_Decode$string,
-									_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Decode$Definition))))))));
-	});
-var _user$project$Swagger_Decode$decodeProperties = _elm_lang$core$Json_Decode$dict(_user$project$Swagger_Decode$decodeProperty);
-var _user$project$Swagger_Decode$decodeDefinitions = _elm_lang$core$Json_Decode$dict(_user$project$Swagger_Decode$decodeDefinition);
-var _user$project$Swagger_Decode$decodeSwagger = A3(
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-	'definitions',
-	_user$project$Swagger_Decode$decodeDefinitions,
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Decode$Swagger));
-
-var _user$project$Swagger_Flatten$nestedTypeName = F2(
-	function (parentName, name) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			parentName,
-			_user$project$Codegen_Utils$capitalize(name));
-	});
-var _user$project$Swagger_Flatten$fstNestedTypeName = F2(
-	function (parentName, _p0) {
-		var _p1 = _p0;
-		return {
-			ctor: '_Tuple2',
-			_0: A2(_user$project$Swagger_Flatten$nestedTypeName, parentName, _p1._0),
-			_1: _p1._1
-		};
-	});
-var _user$project$Swagger_Flatten$extractProperty = function (_p2) {
-	var _p3 = _p2;
-	return {ctor: '_Tuple2', _0: _p3._0, _1: _p3._1._0};
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
 };
-var _user$project$Swagger_Flatten$makeRef = F2(
-	function (parentName, name) {
-		return A7(
-			_user$project$Swagger_Decode$Definition,
-			_elm_lang$core$Maybe$Nothing,
-			{ctor: '[]'},
-			_elm_lang$core$Maybe$Nothing,
-			_elm_lang$core$Maybe$Nothing,
-			_elm_lang$core$Maybe$Just(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'#/definitions/',
-					A2(_user$project$Swagger_Flatten$nestedTypeName, parentName, name))),
-			_elm_lang$core$Maybe$Nothing,
-			_elm_lang$core$Maybe$Nothing);
-	});
-var _user$project$Swagger_Flatten$flattenProperties = F2(
-	function (parentName, properties) {
-		return _elm_lang$core$Maybe$Just(
-			_elm_lang$core$Dict$fromList(
-				A2(
-					_elm_lang$core$List$map,
-					function (_p4) {
-						var _p5 = _p4;
-						var _p9 = _p5._0;
-						var _p8 = _p5._1._0;
-						var _p6 = _p8.properties;
-						if (_p6.ctor === 'Nothing') {
-							var _p7 = _p8.items;
-							if (_p7.ctor === 'Nothing') {
-								return {
-									ctor: '_Tuple2',
-									_0: _p9,
-									_1: _user$project$Swagger_Decode$Property(_p8)
-								};
-							} else {
-								return {
-									ctor: '_Tuple2',
-									_0: _p9,
-									_1: _user$project$Swagger_Decode$Property(
-										A7(
-											_user$project$Swagger_Decode$Definition,
-											_elm_lang$core$Maybe$Just('array'),
-											{ctor: '[]'},
-											_elm_lang$core$Maybe$Nothing,
-											_elm_lang$core$Maybe$Just(
-												_user$project$Swagger_Decode$Property(
-													A2(_user$project$Swagger_Flatten$makeRef, parentName, _p9))),
-											_elm_lang$core$Maybe$Nothing,
-											_elm_lang$core$Maybe$Nothing,
-											_elm_lang$core$Maybe$Nothing))
-								};
-							}
-						} else {
-							return {
-								ctor: '_Tuple2',
-								_0: _p9,
-								_1: _user$project$Swagger_Decode$Property(
-									A2(_user$project$Swagger_Flatten$makeRef, parentName, _p9))
-							};
-						}
-					},
-					_elm_lang$core$Dict$toList(properties))));
-	});
-var _user$project$Swagger_Flatten$flattenNestedDefinition = F2(
-	function (isToplevel, _p10) {
-		flattenNestedDefinition:
-		while (true) {
-			var _p11 = _p10;
-			var _p17 = _p11._0;
-			var _p16 = _p11._1;
-			var _p12 = _p16.properties;
-			if (_p12.ctor === 'Nothing') {
-				if (isToplevel) {
-					return {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: _p17, _1: _p16},
-						_1: {ctor: '[]'}
-					};
-				} else {
-					var _p13 = _p16.items;
-					if (_p13.ctor === 'Nothing') {
-						return {ctor: '[]'};
-					} else {
-						var _v8 = false,
-							_v9 = {ctor: '_Tuple2', _0: _p17, _1: _p13._0._0};
-						isToplevel = _v8;
-						_p10 = _v9;
-						continue flattenNestedDefinition;
-					}
-				}
-			} else {
-				var _p15 = _p12._0;
-				var children = A2(_user$project$Swagger_Flatten$flattenProperties, _p17, _p15);
-				return {
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: _p17,
-						_1: _elm_lang$core$Native_Utils.update(
-							_p16,
-							{properties: children})
-					},
-					_1: A2(
-						_elm_lang$core$List$concatMap,
-						function (_p14) {
-							return A2(
-								_user$project$Swagger_Flatten$flattenNestedDefinition,
-								false,
-								A2(
-									_user$project$Swagger_Flatten$fstNestedTypeName,
-									_p17,
-									_user$project$Swagger_Flatten$extractProperty(_p14)));
-						},
-						_elm_lang$core$Dict$toList(_p15))
-				};
-			}
-		}
-	});
-var _user$project$Swagger_Flatten$flattenNestedDefinitions = function (definitions) {
-	return _elm_lang$core$Dict$fromList(
-		A2(
-			_elm_lang$core$List$concatMap,
-			_user$project$Swagger_Flatten$flattenNestedDefinition(true),
-			_elm_lang$core$Dict$toList(definitions)));
-};
-
-var _user$project$Swagger_Parse$enumName = function (name) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		'Enum',
-		_user$project$Codegen_Utils$capitalize(name));
-};
-var _user$project$Swagger_Parse$extractRefType = function (ref) {
+var _user$project$Swagger_Decode$extractRef = function (ref) {
 	var parsed = A2(
 		_elm_lang$core$Maybe$andThen,
-		function (_p0) {
+		function (_p2) {
 			return _elm_lang$core$List$head(
 				function (_) {
 					return _.submatches;
-				}(_p0));
+				}(_p2));
 		},
 		_elm_lang$core$List$head(
 			A3(
@@ -8647,577 +8068,227 @@ var _user$project$Swagger_Parse$extractRefType = function (ref) {
 				_elm_lang$core$Regex$AtMost(1),
 				_elm_lang$core$Regex$regex('^#/definitions/(.+)$'),
 				ref)));
-	var _p1 = parsed;
-	if ((_p1.ctor === 'Just') && (_p1._0.ctor === 'Just')) {
-		return _p1._0._0;
+	var _p3 = parsed;
+	if ((_p3.ctor === 'Just') && (_p3._0.ctor === 'Just')) {
+		return _p3._0._0;
 	} else {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$Native_Utils.crash(
-				'Swagger.Parse',
+				'Swagger.Decode',
 				{
-					start: {line: 133, column: 17},
-					end: {line: 133, column: 28}
+					start: {line: 130, column: 17},
+					end: {line: 130, column: 28}
 				})('Unparseable reference '),
 			ref);
 	}
 };
-var _user$project$Swagger_Parse$toNewItems = F2(
-	function (toNewDefinition_, items) {
-		var _p2 = items;
-		if (_p2.ctor === 'Nothing') {
-			return toNewDefinition_(
-				{
-					ctor: '_Tuple2',
-					_0: 'TODO WTF',
-					_1: A7(
-						_user$project$Swagger_Decode$Definition,
-						_elm_lang$core$Maybe$Nothing,
-						{ctor: '[]'},
-						_elm_lang$core$Maybe$Nothing,
-						_elm_lang$core$Maybe$Nothing,
-						_elm_lang$core$Maybe$Nothing,
-						_elm_lang$core$Maybe$Nothing,
-						_elm_lang$core$Maybe$Nothing)
-				});
-		} else {
-			return toNewDefinition_(
-				_user$project$Swagger_Flatten$extractProperty(
-					{ctor: '_Tuple2', _0: 'TODO FIX', _1: _p2._0}));
-		}
-	});
-var _user$project$Swagger_Parse$toNewProperties = F2(
-	function (toNewDefinition_, properties) {
-		var _p3 = properties;
-		if (_p3.ctor === 'Nothing') {
-			return {ctor: '[]'};
-		} else {
-			return A2(
-				_elm_lang$core$List$map,
-				function (_p4) {
-					return toNewDefinition_(
-						_user$project$Swagger_Flatten$extractProperty(_p4));
-				},
-				_elm_lang$core$Dict$toList(_p3._0));
-		}
-	});
-var _user$project$Swagger_Parse$parseDefinitions = function (definitions) {
-	return _user$project$Swagger_Flatten$flattenNestedDefinitions(definitions);
+var _user$project$Swagger_Decode$Swagger = function (a) {
+	return {definitions: a};
 };
-var _user$project$Swagger_Parse$Definition = F3(
-	function (a, b, c) {
-		return {ctor: 'Definition', _0: a, _1: b, _2: c};
-	});
-var _user$project$Swagger_Parse$Bool_ = {ctor: 'Bool_'};
-var _user$project$Swagger_Parse$Float_ = {ctor: 'Float_'};
-var _user$project$Swagger_Parse$Int_ = {ctor: 'Int_'};
-var _user$project$Swagger_Parse$String_ = function (a) {
-	return {ctor: 'String_', _0: a};
+var _user$project$Swagger_Decode$Definitions = function (a) {
+	return {ctor: 'Definitions', _0: a};
 };
-var _user$project$Swagger_Parse$Ref_ = function (a) {
+var _user$project$Swagger_Decode$Definition = F2(
+	function (a, b) {
+		return {ctor: 'Definition', _0: a, _1: b};
+	});
+var _user$project$Swagger_Decode$Ref_ = function (a) {
 	return {ctor: 'Ref_', _0: a};
 };
-var _user$project$Swagger_Parse$Array_ = function (a) {
+var _user$project$Swagger_Decode$decodeRef = A2(
+	_elm_lang$core$Json_Decode$map,
+	function (_p4) {
+		return _user$project$Swagger_Decode$Ref_(
+			_user$project$Swagger_Decode$extractRef(_p4));
+	},
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'$ref',
+		_elm_lang$core$Json_Decode$string,
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
+var _user$project$Swagger_Decode$Bool_ = function (a) {
+	return {ctor: 'Bool_', _0: a};
+};
+var _user$project$Swagger_Decode$Float_ = function (a) {
+	return {ctor: 'Float_', _0: a};
+};
+var _user$project$Swagger_Decode$Int_ = function (a) {
+	return {ctor: 'Int_', _0: a};
+};
+var _user$project$Swagger_Decode$String_ = F2(
+	function (a, b) {
+		return {ctor: 'String_', _0: a, _1: b};
+	});
+var _user$project$Swagger_Decode$decodeString = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Swagger_Decode$apply2(_user$project$Swagger_Decode$String_),
+	A3(
+		_user$project$Swagger_Decode$maybe,
+		'enum',
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
+		A3(
+			_user$project$Swagger_Decode$maybe,
+			'default',
+			_user$project$Swagger_Decode$decodeAlwaysString,
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(
+				F2(
+					function (v0, v1) {
+						return {ctor: '_Tuple2', _0: v0, _1: v1};
+					})))));
+var _user$project$Swagger_Decode$Array_ = function (a) {
 	return {ctor: 'Array_', _0: a};
 };
-var _user$project$Swagger_Parse$Object_ = function (a) {
+var _user$project$Swagger_Decode$Object_ = function (a) {
 	return {ctor: 'Object_', _0: a};
 };
-var _user$project$Swagger_Parse$NotRequired = function (a) {
-	return {ctor: 'NotRequired', _0: a};
+var _user$project$Swagger_Decode$Properties = function (a) {
+	return {ctor: 'Properties', _0: a};
 };
-var _user$project$Swagger_Parse$IsRequired = {ctor: 'IsRequired'};
-var _user$project$Swagger_Parse$isRequired = F3(
-	function (required, name, $default) {
-		return A2(_elm_lang$core$List$member, name, required) ? _user$project$Swagger_Parse$IsRequired : _user$project$Swagger_Parse$NotRequired($default);
-	});
-var _user$project$Swagger_Parse$NotEnum = {ctor: 'NotEnum'};
-var _user$project$Swagger_Parse$Enum = F2(
+var _user$project$Swagger_Decode$Optional = F2(
 	function (a, b) {
-		return {ctor: 'Enum', _0: a, _1: b};
+		return {ctor: 'Optional', _0: a, _1: b};
 	});
-var _user$project$Swagger_Parse$makeEnum = F2(
-	function (name, $enum) {
-		var _p5 = $enum;
-		if (_p5.ctor === 'Just') {
-			return A2(
-				_user$project$Swagger_Parse$Enum,
-				_user$project$Swagger_Parse$enumName(name),
-				_p5._0);
-		} else {
-			return _user$project$Swagger_Parse$NotEnum;
-		}
+var _user$project$Swagger_Decode$Required = F2(
+	function (a, b) {
+		return {ctor: 'Required', _0: a, _1: b};
 	});
-var _user$project$Swagger_Parse$toNewDefinition = F2(
-	function (parentRequired, _p6) {
-		var _p7 = _p6;
-		var _p12 = _p7._1.required;
-		var _p11 = _p7._1.properties;
-		var _p10 = _p7._0;
-		var isRequired_ = A3(_user$project$Swagger_Parse$isRequired, parentRequired, _p10, _p7._1.$default);
-		var _p8 = {ctor: '_Tuple2', _0: _p7._1.type_, _1: _p7._1.ref_};
-		_v5_2:
-		do {
-			if (_p8.ctor === '_Tuple2') {
-				if (_p8._1.ctor === 'Just') {
-					return A3(
-						_user$project$Swagger_Parse$Definition,
-						_p10,
-						isRequired_,
-						_user$project$Swagger_Parse$Ref_(
-							_user$project$Swagger_Parse$extractRefType(_p8._1._0)));
-				} else {
-					if (_p8._0.ctor === 'Just') {
-						var _p9 = _p8._0._0;
-						switch (_p9) {
-							case 'string':
-								return A3(
-									_user$project$Swagger_Parse$Definition,
-									_p10,
-									isRequired_,
-									_user$project$Swagger_Parse$String_(
-										A2(_user$project$Swagger_Parse$makeEnum, _p10, _p7._1.$enum)));
-							case 'integer':
-								return A3(_user$project$Swagger_Parse$Definition, _p10, isRequired_, _user$project$Swagger_Parse$Int_);
-							case 'number':
-								return A3(_user$project$Swagger_Parse$Definition, _p10, isRequired_, _user$project$Swagger_Parse$Float_);
-							case 'boolean':
-								return A3(_user$project$Swagger_Parse$Definition, _p10, isRequired_, _user$project$Swagger_Parse$Bool_);
-							case 'array':
-								return A3(
-									_user$project$Swagger_Parse$Definition,
-									_p10,
-									isRequired_,
-									_user$project$Swagger_Parse$Array_(
-										A2(
-											_user$project$Swagger_Parse$toNewItems,
-											_user$project$Swagger_Parse$toNewDefinition(_p12),
-											_p7._1.items)));
-							case 'object':
-								return A3(
-									_user$project$Swagger_Parse$Definition,
-									_p10,
-									isRequired_,
-									_user$project$Swagger_Parse$Object_(
-										A2(
-											_user$project$Swagger_Parse$toNewProperties,
-											_user$project$Swagger_Parse$toNewDefinition(_p12),
-											_p11)));
-							default:
-								return A3(
-									_user$project$Swagger_Parse$Definition,
-									_p10,
-									isRequired_,
-									_user$project$Swagger_Parse$Object_(
-										A2(
-											_user$project$Swagger_Parse$toNewProperties,
-											_user$project$Swagger_Parse$toNewDefinition(_p12),
-											_p11)));
-						}
-					} else {
-						break _v5_2;
-					}
-				}
-			} else {
-				break _v5_2;
-			}
-		} while(false);
-		return A3(
-			_user$project$Swagger_Parse$Definition,
-			_p10,
-			isRequired_,
-			_user$project$Swagger_Parse$Object_(
-				A2(
-					_user$project$Swagger_Parse$toNewProperties,
-					_user$project$Swagger_Parse$toNewDefinition(_p12),
-					_p11)));
-	});
-
-var _user$project$Generate_Type$enumTagName = F2(
-	function (typeName, tagName) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			typeName,
-			_user$project$Codegen_Utils$capitalize(tagName));
-	});
-var _user$project$Generate_Type$renderEnum = function (_p0) {
-	var _p1 = _p0;
-	var _p2 = _p1._2;
-	if ((_p2.ctor === 'String_') && (_p2._0.ctor === 'Enum')) {
-		var _p4 = _p2._0._0;
-		return _elm_lang$core$Maybe$Just(
-			A2(
-				_user$project$Codegen_Type$unionType,
-				_user$project$Codegen_Utils$sanitize(_p4),
-				A2(
-					_elm_lang$core$List$map,
-					function (_p3) {
-						return _user$project$Codegen_Utils$sanitize(
-							A2(_user$project$Generate_Type$enumTagName, _p4, _p3));
-					},
-					_p2._0._1)));
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _user$project$Generate_Type$findEnums = function (definitions) {
-	return A2(
-		_elm_lang$core$List$filterMap,
-		_elm_lang$core$Basics$identity,
-		A2(
-			_elm_lang$core$List$concatMap,
-			function (_p5) {
-				var _p6 = _p5;
-				var _p7 = _p6._2;
-				switch (_p7.ctor) {
-					case 'Object_':
-						return A2(
-							_elm_lang$core$List$map,
-							_elm_lang$core$Maybe$Just,
-							_user$project$Generate_Type$findEnums(_p7._0));
-					case 'String_':
-						return {
-							ctor: '::',
-							_0: _elm_lang$core$Maybe$Just(
-								A3(
-									_user$project$Swagger_Parse$Definition,
-									_p6._0,
-									_p6._1,
-									_user$project$Swagger_Parse$String_(_p7._0))),
-							_1: {ctor: '[]'}
-						};
-					default:
-						return {ctor: '[]'};
-				}
-			},
-			definitions));
-};
-var _user$project$Generate_Type$maybeWrap = F2(
-	function (isRequired, body) {
-		var _p8 = isRequired;
-		if (_p8.ctor === 'IsRequired') {
-			return body;
-		} else {
-			var _p9 = _p8._0;
-			if (_p9.ctor === 'Just') {
-				return body;
-			} else {
-				return _user$project$Codegen_Type$maybe(body);
-			}
-		}
-	});
-var _user$project$Generate_Type$renderType = F2(
-	function (isRequired, type_) {
-		return A2(
-			_user$project$Generate_Type$maybeWrap,
-			isRequired,
-			_user$project$Generate_Type$renderFieldType(type_));
-	});
-var _user$project$Generate_Type$renderFieldType = function (type_) {
-	var _p10 = type_;
-	switch (_p10.ctor) {
-		case 'String_':
-			var _p11 = _p10._0;
-			if (_p11.ctor === 'Enum') {
-				return _user$project$Codegen_Utils$sanitize(_p11._0);
-			} else {
-				return 'String';
-			}
-		case 'Int_':
-			return 'Int';
-		case 'Float_':
-			return 'Float';
-		case 'Bool_':
-			return 'Bool';
-		case 'Object_':
-			return _user$project$Codegen_Type$record(
-				A2(_elm_lang$core$List$map, _user$project$Generate_Type$renderProperty, _p10._0));
-		case 'Array_':
-			return _user$project$Codegen_Type$list(
-				_user$project$Generate_Type$renderFieldType(_p10._0._2));
-		default:
-			return _user$project$Codegen_Utils$capitalize(
-				_user$project$Codegen_Utils$sanitize(_p10._0));
-	}
-};
-var _user$project$Generate_Type$renderProperty = function (_p12) {
-	var _p13 = _p12;
-	return A2(
-		_user$project$Codegen_Type$recordField,
-		_user$project$Codegen_Utils$sanitize(_p13._0),
-		A2(_user$project$Generate_Type$renderType, _p13._1, _p13._2));
-};
-var _user$project$Generate_Type$renderRootType = function (_p14) {
-	var _p15 = _p14;
-	return A2(
-		_user$project$Codegen_Type$typeAlias,
-		_user$project$Codegen_Utils$sanitize(_p15._0),
-		A2(_user$project$Generate_Type$renderType, _p15._1, _p15._2));
-};
-var _user$project$Generate_Type$renderTypes = function (definitions) {
-	return _elm_lang$core$String$concat(
-		A2(
-			_elm_lang$core$List$append,
-			A2(
-				_elm_lang$core$List$filterMap,
-				_user$project$Generate_Type$renderEnum,
-				_user$project$Generate_Type$findEnums(definitions)),
-			A2(_elm_lang$core$List$map, _user$project$Generate_Type$renderRootType, definitions)));
-};
-
-var _user$project$Generate_Decoder$renderEnumFail = function (enumName) {
-	return {
-		ctor: '_Tuple2',
-		_0: '_',
-		_1: A2(
-			_elm_lang$core$Basics_ops['++'],
-			'Result.Err (\"Invalid value for ',
-			A2(_elm_lang$core$Basics_ops['++'], enumName, '. Value: \" ++ string)'))
-	};
-};
-var _user$project$Generate_Decoder$renderEnumEach = F2(
-	function (enumName, value) {
-		return {
-			ctor: '_Tuple2',
-			_0: A2(
-				_elm_lang$core$Basics_ops['++'],
-				'\"',
-				A2(_elm_lang$core$Basics_ops['++'], value, '\"')),
-			_1: A2(
-				_elm_lang$core$Basics_ops['++'],
-				'Result.Ok ',
-				_user$project$Codegen_Utils$sanitize(
-					A2(_user$project$Generate_Type$enumTagName, enumName, value)))
-		};
-	});
-var _user$project$Generate_Decoder$defaultValue = F2(
-	function (type_, $default) {
-		var _p0 = type_;
-		if ((_p0.ctor === 'String_') && (_p0._0.ctor === 'Enum')) {
-			var _p1 = A2(_elm_lang$core$Json_Decode$decodeString, _elm_lang$core$Json_Decode$string, $default);
-			if (_p1.ctor === 'Ok') {
-				return A2(_user$project$Generate_Type$enumTagName, _p0._0._0, _p1._0);
-			} else {
-				return A3(
-					_elm_lang$core$Native_Utils.crash(
-						'Generate.Decoder',
-						{
-							start: {line: 110, column: 21},
-							end: {line: 110, column: 32}
-						}),
-					'Invalid default value',
-					_p1._0,
-					$default);
-			}
-		} else {
-			return $default;
-		}
-	});
-var _user$project$Generate_Decoder$maybeDefaultWrap = F2(
-	function (isRequired, type_) {
-		var _p2 = isRequired;
-		if (_p2.ctor === 'IsRequired') {
-			return F2(
+var _user$project$Swagger_Decode$property = F2(
+	function (required, _p5) {
+		var _p6 = _p5;
+		var _p9 = _p6._1;
+		var _p8 = _p6._0;
+		var _p7 = A2(
+			_elm_lang$core$List$any,
+			F2(
 				function (x, y) {
-					return A2(_elm_lang$core$Basics_ops['++'], x, y);
-				})('required');
+					return _elm_lang$core$Native_Utils.eq(x, y);
+				})(_p8),
+			required);
+		if (_p7 === true) {
+			return A2(_user$project$Swagger_Decode$Required, _p8, _p9);
 		} else {
-			var _p3 = _p2._0;
-			if (_p3.ctor === 'Just') {
-				return function (_p4) {
-					return A2(
-						F2(
-							function (x, y) {
-								return A2(_elm_lang$core$Basics_ops['++'], x, y);
-							}),
-						'optional',
-						A3(
-							_elm_lang$core$Basics$flip,
-							F2(
-								function (x, y) {
-									return A2(_elm_lang$core$Basics_ops['++'], x, y);
-								}),
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								' ',
-								A2(_user$project$Generate_Decoder$defaultValue, type_, _p3._0)),
-							_p4));
-				};
-			} else {
-				return F2(
-					function (x, y) {
-						return A2(_elm_lang$core$Basics_ops['++'], x, y);
-					})('maybe');
-			}
+			return A2(_user$project$Swagger_Decode$Optional, _p8, _p9);
 		}
 	});
-var _user$project$Generate_Decoder$decoderName = function (name) {
+var _user$project$Swagger_Decode$decodeProperties = function (_p10) {
+	var _p11 = _p10;
 	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		'decode',
-		_user$project$Codegen_Utils$capitalize(name));
+		_elm_lang$core$List$map,
+		_user$project$Swagger_Decode$property(_p11._0),
+		_p11._1);
 };
-var _user$project$Generate_Decoder$renderDecoderBody = F2(
-	function (constructor, type_) {
-		var _p5 = type_;
-		switch (_p5.ctor) {
-			case 'String_':
-				var _p6 = _p5._0;
-				if (_p6.ctor === 'Enum') {
-					return _user$project$Generate_Decoder$decoderName(
-						_user$project$Codegen_Utils$sanitize(_p6._0));
-				} else {
-					return 'string';
-				}
-			case 'Int_':
-				return 'int';
-			case 'Float_':
-				return 'float';
-			case 'Bool_':
-				return 'bool';
-			case 'Object_':
-				return A2(_user$project$Generate_Decoder$renderObjectDecoder, constructor, _p5._0);
-			case 'Array_':
-				return _user$project$Generate_Decoder$renderListDecoder(_p5._0);
-			default:
-				return _user$project$Generate_Decoder$decoderName(
-					_user$project$Codegen_Utils$sanitize(_p5._0));
-		}
-	});
-var _user$project$Generate_Decoder$renderListDecoder = function (_p7) {
-	var _p8 = _p7;
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		'(list (',
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			A2(_user$project$Generate_Decoder$renderDecoderBody, _p8._0, _p8._2),
-			'))'));
+var _user$project$Swagger_Decode$Items = function (a) {
+	return {ctor: 'Items', _0: a};
 };
-var _user$project$Generate_Decoder$renderObjectDecoder = F2(
-	function (safeName, properties) {
+var _user$project$Swagger_Decode$decodeArray = A2(
+	_elm_lang$core$Json_Decode$map,
+	function (_p12) {
+		return _user$project$Swagger_Decode$Array_(
+			_user$project$Swagger_Decode$Items(_p12));
+	},
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'items',
+		_elm_lang$core$Json_Decode$lazy(
+			function (_p13) {
+				return _user$project$Swagger_Decode$decodeType;
+			}),
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
+var _user$project$Swagger_Decode$decodeType = _elm_lang$core$Json_Decode$lazy(
+	function (_p14) {
 		return A2(
-			_user$project$Codegen_Function$pipeline,
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				'decode ',
-				_user$project$Codegen_Utils$capitalize(safeName)),
-			A2(_elm_lang$core$List$map, _user$project$Generate_Decoder$renderObjectDecoderProperty, properties));
+			_elm_lang$core$Json_Decode$andThen,
+			_user$project$Swagger_Decode$decodeTypeByType,
+			A3(
+				_user$project$Swagger_Decode$maybe,
+				'$ref',
+				_elm_lang$core$Json_Decode$string,
+				A4(
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+					'type',
+					_elm_lang$core$Json_Decode$string,
+					'',
+					_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(
+						F2(
+							function (v0, v1) {
+								return {ctor: '_Tuple2', _0: v0, _1: v1};
+							})))));
 	});
-var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (_p9) {
-	var _p10 = _p9;
-	var _p12 = _p10._2;
-	var _p11 = _p10._0;
-	return A3(
-		_user$project$Generate_Decoder$maybeDefaultWrap,
-		_p10._1,
-		_p12,
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			' \"',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_p11,
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'\" ',
-					A2(
-						_user$project$Generate_Decoder$renderDecoderBody,
-						_user$project$Codegen_Utils$sanitize(_p11),
-						_p12)))));
-};
-var _user$project$Generate_Decoder$renderEnum = function (_p13) {
-	var _p14 = _p13;
-	var _p15 = _p14._2;
-	if ((_p15.ctor === 'String_') && (_p15._0.ctor === 'Enum')) {
-		var safeName = _user$project$Codegen_Utils$sanitize(_p15._0._0);
-		return _elm_lang$core$Maybe$Just(
-			A4(
-				_user$project$Codegen_Function$function,
-				_user$project$Generate_Decoder$decoderName(safeName),
-				{ctor: '[]'},
-				A2(_elm_lang$core$Basics_ops['++'], 'Decoder ', safeName),
-				A2(
-					_user$project$Codegen_Function$letin,
-					{
-						ctor: '::',
-						_0: {
-							ctor: '_Tuple2',
-							_0: 'decodeToType string',
-							_1: A2(
-								_user$project$Codegen_Function$caseof,
-								'string',
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									A2(
-										_elm_lang$core$List$map,
-										_user$project$Generate_Decoder$renderEnumEach(safeName),
-										_p15._0._1),
-									{
-										ctor: '::',
-										_0: _user$project$Generate_Decoder$renderEnumFail(safeName),
-										_1: {ctor: '[]'}
-									}))
-						},
-						_1: {ctor: '[]'}
-					},
-					'customDecoder string decodeToType')));
+var _user$project$Swagger_Decode$decodeTypeByType = function (_p15) {
+	var _p16 = _p15;
+	var _p17 = _p16._1;
+	if (_p17.ctor === 'Just') {
+		return _user$project$Swagger_Decode$decodeRef;
 	} else {
-		return _elm_lang$core$Maybe$Nothing;
+		var _p18 = _p16._0;
+		switch (_p18) {
+			case 'string':
+				return _user$project$Swagger_Decode$decodeString;
+			case 'integer':
+				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Decode$Int_);
+			case 'number':
+				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Decode$Int_);
+			case 'bool':
+				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Decode$Int_);
+			case 'array':
+				return _user$project$Swagger_Decode$decodeArray;
+			default:
+				return _elm_lang$core$Json_Decode$lazy(
+					function (_p19) {
+						return _user$project$Swagger_Decode$decodeObject;
+					});
+		}
 	}
 };
-var _user$project$Generate_Decoder$renderDecoder = function (_p16) {
-	var _p17 = _p16;
-	var safeName = _user$project$Codegen_Utils$sanitize(_p17._0);
-	return A4(
-		_user$project$Codegen_Function$function,
-		_user$project$Generate_Decoder$decoderName(safeName),
-		{ctor: '[]'},
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			'Decoder ',
-			_user$project$Codegen_Utils$capitalize(safeName)),
-		A2(_user$project$Generate_Decoder$renderDecoderBody, safeName, _p17._2));
-};
-var _user$project$Generate_Decoder$renderDecoders = function (definitions) {
-	return _elm_lang$core$String$concat(
-		A2(
-			_elm_lang$core$List$append,
-			A2(
-				_elm_lang$core$List$filterMap,
-				_user$project$Generate_Decoder$renderEnum,
-				_user$project$Generate_Type$findEnums(definitions)),
-			A2(_elm_lang$core$List$map, _user$project$Generate_Decoder$renderDecoder, definitions)));
-};
+var _user$project$Swagger_Decode$decodeObject = A2(
+	_elm_lang$core$Json_Decode$map,
+	function (_p20) {
+		return _user$project$Swagger_Decode$Object_(
+			_user$project$Swagger_Decode$Properties(_p20));
+	},
+	A2(
+		_elm_lang$core$Json_Decode$map,
+		_user$project$Swagger_Decode$decodeProperties,
+		A4(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+			'properties',
+			_elm_lang$core$Json_Decode$lazy(
+				function (_p21) {
+					return _elm_lang$core$Json_Decode$keyValuePairs(_user$project$Swagger_Decode$decodeType);
+				}),
+			{ctor: '[]'},
+			A4(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+				'required',
+				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
+				{ctor: '[]'},
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(
+					F2(
+						function (v0, v1) {
+							return {ctor: '_Tuple2', _0: v0, _1: v1};
+						}))))));
+var _user$project$Swagger_Decode$decodeTypes = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Swagger_Decode$Definitions,
+	A2(
+		_elm_lang$core$Json_Decode$map,
+		_elm_lang$core$List$map(
+			function (_p22) {
+				var _p23 = _p22;
+				return A2(_user$project$Swagger_Decode$Definition, _p23._0, _p23._1);
+			}),
+		_elm_lang$core$Json_Decode$keyValuePairs(_user$project$Swagger_Decode$decodeType)));
+var _user$project$Swagger_Decode$decodeSwagger = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'definitions',
+	_user$project$Swagger_Decode$decodeTypes,
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Decode$Swagger));
 
-var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\nlazy : (() -> Decoder a) -> Decoder a\nlazy thunk =\n    customDecoder value\n        (\\js -> decodeValue (thunk ()) js)\n\n\ncustomDecoder : Decoder a -> (a -> Result String b) -> Decoder b\ncustomDecoder decoder toResult =\n    Json.Decode.andThen\n        (\\a ->\n            case toResult a of\n                Ok b ->\n                    Json.Decode.succeed b\n\n                Err err ->\n                    Json.Decode.fail err\n        )\n        decoder\n\n\n';
-
-var _user$project$Generate$render = function (swagger) {
-	var definitions = _user$project$Swagger_Parse$parseDefinitions(swagger.definitions);
-	var definitions_ = A2(
-		_elm_lang$core$List$map,
-		_user$project$Swagger_Parse$toNewDefinition(
-			_elm_lang$core$Dict$keys(definitions)),
-		_elm_lang$core$Dict$toList(definitions));
-	return _elm_lang$core$String$concat(
-		{
-			ctor: '::',
-			_0: _user$project$Generate_Headers$renderHeaders,
-			_1: {
-				ctor: '::',
-				_0: _user$project$Generate_Type$renderTypes(definitions_),
-				_1: {
-					ctor: '::',
-					_0: _user$project$Generate_Decoder$renderDecoders(definitions_),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
 var _user$project$Generate$generate = function (json) {
 	return A2(
 		_elm_lang$core$Result$map,
-		_user$project$Generate$render,
+		_elm_lang$core$Basics$toString,
 		A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Swagger_Decode$decodeSwagger, json));
 };
 var _user$project$Generate$toOutput = function (result) {

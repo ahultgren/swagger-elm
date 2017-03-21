@@ -80,6 +80,12 @@
                 }
               }
             },
+            "arrayOfStrings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
             "grandChildObject": {
               "type": "object",
               "properties": {

@@ -1,15 +1,9 @@
 module Generate exposing (main, generate)
 
-import String
-import Dict
 import Html exposing (text)
 import Html exposing (programWithFlags)
 import Json.Decode exposing (decodeString)
 import Swagger.Decode as Swagger exposing (Swagger, decodeSwagger)
-import Swagger.Parse exposing (parseDefinitions)
-import Generate.Type as Type
-import Generate.Decoder as Decoder
-import Generate.Headers as Headers
 
 
 main : Program String String x
@@ -40,20 +34,4 @@ toOutput result =
 generate : String -> Result String String
 generate json =
     decodeString decodeSwagger json
-        |> Result.map render
-
-
-render : Swagger -> String
-render swagger =
-    let
-        definitions =
-            parseDefinitions swagger.definitions
-
-        definitions_ =
-            List.map (Swagger.Parse.toNewDefinition <| Dict.keys definitions) <| Dict.toList definitions
-    in
-        [ Headers.renderHeaders
-        , Type.renderTypes definitions_
-        , Decoder.renderDecoders definitions_
-        ]
-            |> String.concat
+        |> Result.map toString

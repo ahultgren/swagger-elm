@@ -1,8 +1,8 @@
 module Swagger.Decode exposing (..)
 
-import Dict exposing (Dict)
-import Json.Decode as Json exposing (Decoder, string, int, float, bool, dict, list, map, value, decodeValue, oneOf)
+import Json.Decode as Json exposing (Decoder, string, int, float, bool, keyValuePairs, list, map, value, decodeValue, oneOf, lazy, andThen)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
+import Regex exposing (regex)
 
 
 type alias Swagger =
@@ -10,82 +10,179 @@ type alias Swagger =
     }
 
 
-type alias Definitions =
-    Dict String Definition
+type Definitions
+    = Definitions (List Definition)
 
 
-type alias Definition =
-    { type_ : Maybe String
-    , required : List String
-    , properties : Maybe Properties
-    , items : Maybe Property
-    , ref_ : Maybe String
-    , enum : Maybe (List String)
-    , default : Maybe String
-    }
+type Definition
+    = Definition Name Type
 
 
-type alias Properties =
-    Dict String Property
+type Type
+    = Object_ Properties
+    | Array_ Items
+    | String_ Default Enum
+    | Int_ Default
+    | Float_ Default
+    | Bool_ Default
+    | Ref_ Ref
+
+
+type Properties
+    = Properties (List Property)
 
 
 type Property
-    = Property Definition
+    = Required Name Type
+    | Optional Name Type
+
+
+type Items
+    = Items Type
+
+
+type alias Name =
+    String
+
+
+type alias Ref =
+    String
+
+
+type alias Default =
+    Maybe String
+
+
+type alias Enum =
+    Maybe (List String)
 
 
 decodeSwagger : Decoder Swagger
 decodeSwagger =
     decode Swagger
-        |> required "definitions" decodeDefinitions
+        |> required "definitions" decodeTypes
 
 
-decodeDefinitions : Decoder Definitions
-decodeDefinitions =
-    dict decodeDefinition
+decodeTypes : Decoder Definitions
+decodeTypes =
+    keyValuePairs decodeType
+        |> map (List.map (\( name, type_ ) -> Definition name type_))
+        |> map Definitions
 
 
-decodeDefinition : Decoder Definition
-decodeDefinition =
+decodeType : Decoder Type
+decodeType =
     lazy
         (\_ ->
-            decode Definition
-                |> maybe "type" string
-                |> optional "required" (list string) []
-                |> maybe "properties" decodeProperties
-                |> maybe "items" (decodeDefinition |> map Property)
+            decode (,)
+                |> optional "type" string ""
                 |> maybe "$ref" string
-                |> maybe "enum" (list string)
-                |> maybe "default" decodeAlwaysString
-         -- TODO Support other enums than string?
+                |> andThen decodeTypeByType
         )
 
 
-decodeProperties : Decoder Properties
-decodeProperties =
-    dict decodeProperty
+decodeTypeByType : ( String, Maybe String ) -> Decoder Type
+decodeTypeByType ( type_, ref ) =
+    case ref of
+        Just ref_ ->
+            decodeRef
+
+        Nothing ->
+            case type_ of
+                "string" ->
+                    decodeString
+
+                "integer" ->
+                    decodePrimitive Int_
+
+                "number" ->
+                    decodePrimitive Int_
+
+                "bool" ->
+                    decodePrimitive Int_
+
+                "array" ->
+                    decodeArray
+
+                _ ->
+                    lazy (\_ -> decodeObject)
 
 
-decodeProperty : Decoder Property
-decodeProperty =
-    lazy (\_ -> decodeDefinition) |> map Property
+decodeRef : Decoder Type
+decodeRef =
+    decode identity
+        |> required "$ref" string
+        |> map (Ref_ << extractRef)
+
+
+extractRef : String -> Ref
+extractRef ref =
+    let
+        parsed =
+            (List.head (Regex.find (Regex.AtMost 1) (regex "^#/definitions/(.+)$") ref))
+                |> Maybe.andThen (List.head << .submatches)
+    in
+        case parsed of
+            Just (Just ref_) ->
+                ref_
+
+            _ ->
+                Debug.crash "Unparseable reference " ++ ref
+
+
+decodePrimitive : (Maybe String -> Type) -> Decoder Type
+decodePrimitive constructor =
+    decode identity
+        |> maybe "default" decodeAlwaysString
+        |> map constructor
+
+
+decodeString : Decoder Type
+decodeString =
+    decode (,)
+        |> maybe "default" decodeAlwaysString
+        |> maybe "enum" (list string)
+        |> map (apply2 String_)
+
+
+decodeArray : Decoder Type
+decodeArray =
+    decode identity
+        |> required "items" (lazy (\_ -> decodeType))
+        |> map (Array_ << Items)
+
+
+decodeObject : Decoder Type
+decodeObject =
+    decode (,)
+        |> optional "required" (list string) []
+        |> optional "properties" (lazy (\_ -> keyValuePairs decodeType)) []
+        |> map decodeProperties
+        |> map (Object_ << Properties)
+
+
+decodeProperties : ( List String, List ( String, Type ) ) -> List Property
+decodeProperties ( required, properties ) =
+    List.map (property required) properties
+
+
+property : List String -> ( String, Type ) -> Property
+property required ( name, type_ ) =
+    case List.any ((==) name) required of
+        True ->
+            Required name type_
+
+        False ->
+            Optional name type_
 
 
 
 -- helpers
 
 
-customDecoder : Decoder a -> (a -> Result String b) -> Decoder b
-customDecoder decoder toResult =
-    Json.andThen
-        (\a ->
-            case toResult a of
-                Ok b ->
-                    Json.succeed b
-
-                Err err ->
-                    Json.fail err
-        )
-        decoder
+apply2 : (a -> b -> c) -> ( a, b ) -> c
+apply2 fn ( a, b ) =
+    fn a b
 
 
 decodeAlwaysString : Decoder String
@@ -96,12 +193,6 @@ decodeAlwaysString =
         , float |> map toString
         , bool |> map toString
         ]
-
-
-lazy : (() -> Decoder a) -> Decoder a
-lazy thunk =
-    customDecoder value
-        (\js -> decodeValue (thunk ()) js)
 
 
 maybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b
