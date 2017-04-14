@@ -101,6 +101,9 @@
         },
         "lowerCaseDefinitionRef": {
           "$ref": "#/definitions/lowerCaseDefinition"
+        },
+        "lowerCaseDefinitionObjectRef": {
+          "$ref": "#/definitions/lowerCaseDefinitionObject"
         }
       }
     },
@@ -132,6 +135,9 @@
     "lowerCaseDefinition": {
       "type": "boolean",
       "description": "I know, but it's still allowed..."
+    },
+    "lowerCaseDefinitionObject": {
+      "type": "object"
     }
   }
 }
