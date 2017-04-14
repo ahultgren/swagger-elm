@@ -32,6 +32,7 @@ articleJson =
     "UpperCasedFieldSubfield": "test"
   },
   "lowerCaseDefinitionRef": true,
+  "lowerCaseDefinitionObjectRef": {},
   "$ref": "ref"
 }
 """
@@ -61,6 +62,7 @@ expectedArticle =
         { upperCasedFieldSubfield = "test"
         }
     , lowerCaseDefinitionRef = Just True
+    , lowerCaseDefinitionObjectRef = Just {}
     , ref = Just "ref"
     }
 
@@ -108,6 +110,7 @@ expectedGroup =
             { upperCasedFieldSubfield = "test"
             }
       , lowerCaseDefinitionRef = Nothing
+      , lowerCaseDefinitionObjectRef = Nothing
       , ref = Nothing
       }
     ]

@@ -75,7 +75,7 @@ renderObjectDecoder : String -> Properties -> String
 renderObjectDecoder safeName properties =
     properties
         |> List.map renderObjectDecoderProperty
-        |> pipeline ("decode " ++ safeName)
+        |> pipeline ("decode " ++ (capitalize safeName))
 
 
 renderObjectDecoderProperty : Definition -> String
