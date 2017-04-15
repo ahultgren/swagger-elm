@@ -8012,6 +8012,497 @@ var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
 
+var _user$project$Codegen_Function$caseof = F2(
+	function (case_, conditions) {
+		var conds = A2(
+			_elm_lang$core$String$join,
+			'\n',
+			A2(
+				_elm_lang$core$List$map,
+				function (_p0) {
+					var _p1 = _p0;
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						'      ',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_p1._0,
+							A2(_elm_lang$core$Basics_ops['++'], ' -> ', _p1._1)));
+				},
+				conditions));
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'  case ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				case_,
+				A2(_elm_lang$core$Basics_ops['++'], ' of\n', conds)));
+	});
+var _user$project$Codegen_Function$letin = F2(
+	function (declarations, body) {
+		var lets = A2(
+			_elm_lang$core$String$join,
+			'\n',
+			A2(
+				_elm_lang$core$List$map,
+				function (_p2) {
+					var _p3 = _p2;
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						'      ',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							_p3._0,
+							A2(_elm_lang$core$Basics_ops['++'], ' = ', _p3._1)));
+				},
+				declarations));
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'  let\n',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				lets,
+				A2(_elm_lang$core$Basics_ops['++'], '\n    in\n      ', body)));
+	});
+var _user$project$Codegen_Function$pipeline = F2(
+	function (init, items) {
+		return A2(
+			F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Basics_ops['++'], x, y);
+				}),
+			init,
+			_elm_lang$core$String$concat(
+				A2(
+					_elm_lang$core$List$map,
+					F2(
+						function (x, y) {
+							return A2(_elm_lang$core$Basics_ops['++'], x, y);
+						})('\n  |> '),
+					items)));
+	});
+var _user$project$Codegen_Function$argName = function (_p4) {
+	var _p5 = _p4;
+	return _p5._1;
+};
+var _user$project$Codegen_Function$argType = function (_p6) {
+	var _p7 = _p6;
+	return _p7._0;
+};
+var _user$project$Codegen_Function$functionDeclaration = F4(
+	function (name, args, type_, body) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			name,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(
+					_elm_lang$core$String$join,
+					' ',
+					A2(_elm_lang$core$List$map, _user$project$Codegen_Function$argName, args)),
+				A2(_elm_lang$core$Basics_ops['++'], ' = \n', body)));
+	});
+var _user$project$Codegen_Function$functionType = F4(
+	function (name, args, type_, body) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			name,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				' : ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$String$concat(
+						A2(
+							_elm_lang$core$List$map,
+							function (_p8) {
+								return A3(
+									_elm_lang$core$Basics$flip,
+									F2(
+										function (x, y) {
+											return A2(_elm_lang$core$Basics_ops['++'], x, y);
+										}),
+									' -> ',
+									_user$project$Codegen_Function$argType(_p8));
+							},
+							args)),
+					type_)));
+	});
+var _user$project$Codegen_Function$function = F4(
+	function (name, args, type_, body) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			A4(_user$project$Codegen_Function$functionType, name, args, type_, body),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'\n',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					A4(_user$project$Codegen_Function$functionDeclaration, name, args, type_, body),
+					'\n')));
+	});
+var _user$project$Codegen_Function$Arg = F2(
+	function (a, b) {
+		return {ctor: 'Arg', _0: a, _1: b};
+	});
+
+var _user$project$Codegen_Utils$keywords = {
+	ctor: '::',
+	_0: 'if',
+	_1: {
+		ctor: '::',
+		_0: 'then',
+		_1: {
+			ctor: '::',
+			_0: 'else',
+			_1: {
+				ctor: '::',
+				_0: 'case',
+				_1: {
+					ctor: '::',
+					_0: 'of',
+					_1: {
+						ctor: '::',
+						_0: 'let',
+						_1: {
+							ctor: '::',
+							_0: 'in',
+							_1: {
+								ctor: '::',
+								_0: 'type',
+								_1: {
+									ctor: '::',
+									_0: 'module',
+									_1: {
+										ctor: '::',
+										_0: 'where',
+										_1: {
+											ctor: '::',
+											_0: 'import',
+											_1: {
+												ctor: '::',
+												_0: 'exposing',
+												_1: {
+													ctor: '::',
+													_0: 'as',
+													_1: {
+														ctor: '::',
+														_0: 'port',
+														_1: {
+															ctor: '::',
+															_0: 'infix',
+															_1: {
+																ctor: '::',
+																_0: 'infixl',
+																_1: {
+																	ctor: '::',
+																	_0: 'infixr',
+																	_1: {ctor: '[]'}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _user$project$Codegen_Utils$santizeKeywords = function (str) {
+	return A2(_elm_lang$core$List$member, str, _user$project$Codegen_Utils$keywords) ? A2(_elm_lang$core$Basics_ops['++'], str, '_') : str;
+};
+var _user$project$Codegen_Utils$validUnicodeSymbols = '_';
+var _user$project$Codegen_Utils$validUnicodeNumerals = '0-9٠-٩۰-۹߀-߉०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯๐-๙໐-໙༠-༩၀-၉႐-႙០-៩᠐-᠙᥆-᥏᧐-᧙᪀-᪉᪐-᪙᭐-᭙᮰-᮹᱀-᱉᱐-᱙꘠-꘩꣐-꣙꤀-꤉꧐-꧙꩐-꩙꯰-꯹０-９ᛮ-ᛰⅠ-ↂↅ-ↈ〇〡-〩〸-〺ꛦ-ꛯ';
+var _user$project$Codegen_Utils$validFirstUnicodeCharacters = 'A-ZÀ-ÖØ-ÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĲĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŦŨŪŬŮŰŲŴŶŸŹŻŽƁƂƄƆƇƉ-ƋƎ-ƑƓƔƖ-ƘƜƝƟƠƢƤƦƧƩƬƮƯƱ-ƳƵƷƸƼǄǇǊǍǏǑǓǕǗǙǛǞǠǢǤǦǨǪǬǮǱǴǶ-ǸǺǼǾȀȂȄȆȈȊȌȎȐȒȔȖȘȚȜȞȠȢȤȦȨȪȬȮȰȲȺȻȽȾɁɃ-ɆɈɊɌɎͰͲͶΆΈ-ΊΌΎΏΑ-ΡΣ-ΫϏϒ-ϔϘϚϜϞϠϢϤϦϨϪϬϮϴϷϹϺϽ-ЯѠѢѤѦѨѪѬѮѰѲѴѶѸѺѼѾҀҊҌҎҐҒҔҖҘҚҜҞҠҢҤҦҨҪҬҮҰҲҴҶҸҺҼҾӀӁӃӅӇӉӋӍӐӒӔӖӘӚӜӞӠӢӤӦӨӪӬӮӰӲӴӶӸӺӼӾԀԂԄԆԈԊԌԎԐԒԔԖԘԚԜԞԠԢԤԦԱ-ՖႠ-ჅḀḂḄḆḈḊḌḎḐḒḔḖḘḚḜḞḠḢḤḦḨḪḬḮḰḲḴḶḸḺḼḾṀṂṄṆṈṊṌṎṐṒṔṖṘṚṜṞṠṢṤṦṨṪṬṮṰṲṴṶṸṺṼṾẀẂẄẆẈẊẌẎẐẒẔẞẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸỺỼỾἈ-ἏἘ-ἝἨ-ἯἸ-ἿὈ-ὍὙὛὝὟὨ-ὯᾸ-ΆῈ-ΉῘ-ΊῨ-ῬῸ-Ώℂℇℋ-ℍℐ-ℒℕℙ-ℝℤΩℨK-ℭℰ-ℳℾℿⅅↃⰀ-ⰮⱠⱢ-ⱤⱧⱩⱫⱭ-ⱰⱲⱵⱾ-ⲀⲂⲄⲆⲈⲊⲌⲎⲐⲒⲔⲖⲘⲚⲜⲞⲠⲢⲤⲦⲨⲪⲬⲮⲰⲲⲴⲶⲸⲺⲼⲾⳀⳂⳄⳆⳈⳊⳌⳎⳐⳒⳔⳖⳘⳚⳜⳞⳠⳢⳫⳭꙀꙂꙄꙆꙈꙊꙌꙎꙐꙒꙔꙖꙘꙚꙜꙞꙠꙢꙤꙦꙨꙪꙬꚀꚂꚄꚆꚈꚊꚌꚎꚐꚒꚔꚖꜢꜤꜦꜨꜪꜬꜮꜲꜴꜶꜸꜺꜼꜾꝀꝂꝄꝆꝈꝊꝌꝎꝐꝒꝔꝖꝘꝚꝜꝞꝠꝢꝤꝦꝨꝪꝬꝮꝹꝻꝽꝾꞀꞂꞄꞆꞋꞍꞐꞠꞢꞤꞦꞨＡ-Ｚa-zªµºß-öø-ÿāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıĳĵķĸĺļľŀłńņňŉŋōŏőœŕŗřśŝşšţťŧũūŭůűųŵŷźżž-ƀƃƅƈƌƍƒƕƙ-ƛƞơƣƥƨƪƫƭưƴƶƹƺƽ-ƿǆǉǌǎǐǒǔǖǘǚǜǝǟǡǣǥǧǩǫǭǯǰǳǵǹǻǽǿȁȃȅȇȉȋȍȏȑȓȕȗșțȝȟȡȣȥȧȩȫȭȯȱȳ-ȹȼȿɀɂɇɉɋɍɏ-ʓʕ-ʯͱͳͷͻ-ͽΐά-ώϐϑϕ-ϗϙϛϝϟϡϣϥϧϩϫϭϯ-ϳϵϸϻϼа-џѡѣѥѧѩѫѭѯѱѳѵѷѹѻѽѿҁҋҍҏґғҕҗҙқҝҟҡңҥҧҩҫҭүұҳҵҷҹһҽҿӂӄӆӈӊӌӎӏӑӓӕӗәӛӝӟӡӣӥӧөӫӭӯӱӳӵӷӹӻӽӿԁԃԅԇԉԋԍԏԑԓԕԗԙԛԝԟԡԣԥԧա-ևᴀ-ᴫᵢ-ᵷᵹ-ᶚḁḃḅḇḉḋḍḏḑḓḕḗḙḛḝḟḡḣḥḧḩḫḭḯḱḳḵḷḹḻḽḿṁṃṅṇṉṋṍṏṑṓṕṗṙṛṝṟṡṣṥṧṩṫṭṯṱṳṵṷṹṻṽṿẁẃẅẇẉẋẍẏẑẓẕ-ẝẟạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹỻỽỿ-ἇἐ-ἕἠ-ἧἰ-ἷὀ-ὅὐ-ὗὠ-ὧὰ-ώᾀ-ᾇᾐ-ᾗᾠ-ᾧᾰ-ᾴᾶᾷιῂ-ῄῆῇῐ-ΐῖῗῠ-ῧῲ-ῴῶῷℊℎℏℓℯℴℹℼℽⅆ-ⅉⅎↄⰰ-ⱞⱡⱥⱦⱨⱪⱬⱱⱳⱴⱶ-ⱼⲁⲃⲅⲇⲉⲋⲍⲏⲑⲓⲕⲗⲙⲛⲝⲟⲡⲣⲥⲧⲩⲫⲭⲯⲱⲳⲵⲷⲹⲻⲽⲿⳁⳃⳅⳇⳉⳋⳍⳏⳑⳓⳕⳗⳙⳛⳝⳟⳡⳣⳤⳬⳮⴀ-ⴥꙁꙃꙅꙇꙉꙋꙍꙏꙑꙓꙕꙗꙙꙛꙝꙟꙡꙣꙥꙧꙩꙫꙭꚁꚃꚅꚇꚉꚋꚍꚏꚑꚓꚕꚗꜣꜥꜧꜩꜫꜭꜯ-ꜱꜳꜵꜷꜹꜻꜽꜿꝁꝃꝅꝇꝉꝋꝍꝏꝑꝓꝕꝗꝙꝛꝝꝟꝡꝣꝥꝧꝩꝫꝭꝯꝱ-ꝸꝺꝼꝿꞁꞃꞅꞇꞌꞎꞑꞡꞣꞥꞧꞩꟺﬀ-ﬆﬓ-ﬗａ-ｚǅǈǋǲᾈ-ᾏᾘ-ᾟᾨ-ᾯᾼῌῼ';
+var _user$project$Codegen_Utils$validRestUnicodeCharacters = A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validFirstUnicodeCharacters, 'ʰ-ˁˆ-ˑˠ-ˤˬˮʹͺՙـۥۦߴߵߺࠚࠤࠨॱๆໆჼៗᡃᪧᱸ-ᱽᴬ-ᵡᵸᶛ-ᶿⁱⁿₐ-ₜⱽⵯⸯ々〱-〵〻ゝゞー-ヾꀕꓸ-ꓽꘌꙿꜗ-ꜟꝰꞈꧏꩰꫝｰﾞﾟƻǀ-ǃʔא-תװ-ײؠ-ؿف-يٮٯٱ-ۓەۮۯۺ-ۼۿܐܒ-ܯݍ-ޥޱߊ-ߪࠀ-ࠕࡀ-ࡘऄ-हऽॐक़-ॡॲ-ॷॹ-ॿঅ-ঌএঐও-নপ-রলশ-হঽৎড়ঢ়য়-ৡৰৱਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹਖ਼-ੜਫ਼ੲ-ੴઅ-ઍએ-ઑઓ-નપ-રલળવ-હઽૐૠૡଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହଽଡ଼ଢ଼ୟ-ୡୱஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹௐఅ-ఌఎ-ఐఒ-నప-ళవ-హఽౘౙౠౡಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹಽೞೠೡೱೲഅ-ഌഎ-ഐഒ-ഺഽൎൠൡൺ-ൿඅ-ඖක-නඳ-රලව-ෆก-ะาำเ-ๅກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ະາຳຽເ-ໄໜໝༀཀ-ཇཉ-ཬྈ-ྌက-ဪဿၐ-ၕၚ-ၝၡၥၦၮ-ၰၵ-ႁႎა-ჺᄀ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚᎀ-ᎏᎠ-Ᏼᐁ-ᙬᙯ-ᙿᚁ-ᚚᚠ-ᛪᜀ-ᜌᜎ-ᜑᜠ-ᜱᝀ-ᝑᝠ-ᝬᝮ-ᝰក-ឳៜᠠ-ᡂᡄ-ᡷᢀ-ᢨᢪᢰ-ᣵᤀ-ᤜᥐ-ᥭᥰ-ᥴᦀ-ᦫᧁ-ᧇᨀ-ᨖᨠ-ᩔᬅ-ᬳᭅ-ᭋᮃ-ᮠᮮᮯᯀ-ᯥᰀ-ᰣᱍ-ᱏᱚ-ᱷᳩ-ᳬᳮ-ᳱℵ-ℸⴰ-ⵥⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞ〆〼ぁ-ゖゟァ-ヺヿㄅ-ㄭㄱ-ㆎㆠ-ㆺㇰ-ㇿ㐀-䶵一-鿋ꀀ-ꀔꀖ-ꒌꓐ-ꓷꔀ-ꘋꘐ-ꘟꘪꘫꙮꚠ-ꛥꟻ-ꠁꠃ-ꠅꠇ-ꠊꠌ-ꠢꡀ-ꡳꢂ-ꢳꣲ-ꣷꣻꤊ-ꤥꤰ-ꥆꥠ-ꥼꦄ-ꦲꨀ-ꨨꩀ-ꩂꩄ-ꩋꩠ-ꩯꩱ-ꩶꩺꪀ-ꪯꪱꪵꪶꪹ-ꪽꫀꫂꫛꫜꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮꯀ-ꯢ가-힣ힰ-ퟆퟋ-ퟻ豈-鶴侮-舘並-龎יִײַ-ﬨשׁ-זּטּ-לּמּנּסּףּפּצּ-ﮱﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-ﷻﹰ-ﹴﹶ-ﻼｦ-ｯｱ-ﾝﾠ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ');
+var _user$project$Codegen_Utils$validChars = A2(
+	_elm_lang$core$Basics_ops['++'],
+	'[',
+	A2(
+		_elm_lang$core$Basics_ops['++'],
+		_user$project$Codegen_Utils$validFirstUnicodeCharacters,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_user$project$Codegen_Utils$validRestUnicodeCharacters,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$Codegen_Utils$validUnicodeSymbols,
+				A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validUnicodeNumerals, ']')))));
+var _user$project$Codegen_Utils$sanitizeRest = function (str) {
+	return _elm_lang$core$String$concat(
+		A2(
+			_elm_lang$core$List$map,
+			function (_) {
+				return _.match;
+			},
+			A3(
+				_elm_lang$core$Regex$find,
+				_elm_lang$core$Regex$All,
+				_elm_lang$core$Regex$regex(_user$project$Codegen_Utils$validChars),
+				str)));
+};
+var _user$project$Codegen_Utils$validLeadingChars = A2(
+	_elm_lang$core$Basics_ops['++'],
+	'[',
+	A2(_elm_lang$core$Basics_ops['++'], _user$project$Codegen_Utils$validFirstUnicodeCharacters, ']'));
+var _user$project$Codegen_Utils$isValidFirst = function (str) {
+	return A2(
+		_elm_lang$core$Regex$contains,
+		_elm_lang$core$Regex$regex(_user$project$Codegen_Utils$validLeadingChars),
+		_elm_lang$core$String$fromChar(str));
+};
+var _user$project$Codegen_Utils$sanitizeFirst = function (str) {
+	sanitizeFirst:
+	while (true) {
+		var _p0 = _elm_lang$core$String$uncons(str);
+		if (_p0.ctor === 'Just') {
+			var _p2 = _p0._0._1;
+			var _p1 = _p0._0._0;
+			if (_user$project$Codegen_Utils$isValidFirst(_p1)) {
+				return A2(_elm_lang$core$String$cons, _p1, _p2);
+			} else {
+				var _v1 = _p2;
+				str = _v1;
+				continue sanitizeFirst;
+			}
+		} else {
+			return '';
+		}
+	}
+};
+var _user$project$Codegen_Utils$sanitize = function (_p3) {
+	return _user$project$Codegen_Utils$santizeKeywords(
+		_user$project$Codegen_Utils$sanitizeRest(
+			_user$project$Codegen_Utils$sanitizeFirst(_p3)));
+};
+var _user$project$Codegen_Utils$uncapitalize = function (str) {
+	var _p4 = _elm_lang$core$String$uncons(str);
+	if (_p4.ctor === 'Just') {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$String$toLower(
+				_elm_lang$core$String$fromChar(_p4._0._0)),
+			_p4._0._1);
+	} else {
+		return '';
+	}
+};
+var _user$project$Codegen_Utils$capitalize = function (str) {
+	var _p5 = _elm_lang$core$String$uncons(str);
+	if (_p5.ctor === 'Just') {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$String$toUpper(
+				_elm_lang$core$String$fromChar(_p5._0._0)),
+			_p5._0._1);
+	} else {
+		return '';
+	}
+};
+
+var _user$project$Codegen_Type$wrap = F2(
+	function (name, body) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			name,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				' (',
+				A2(_elm_lang$core$Basics_ops['++'], body, ')')));
+	});
+var _user$project$Codegen_Type$maybe = function (body) {
+	return A2(_user$project$Codegen_Type$wrap, 'Maybe', body);
+};
+var _user$project$Codegen_Type$list = function (body) {
+	return A2(_user$project$Codegen_Type$wrap, 'List', body);
+};
+var _user$project$Codegen_Type$recordField = F2(
+	function (name, type_) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			_user$project$Codegen_Utils$uncapitalize(name),
+			A2(_elm_lang$core$Basics_ops['++'], ' : ', type_));
+	});
+var _user$project$Codegen_Type$record = function (properties) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'\n  { ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			A2(_elm_lang$core$String$join, '\n  , ', properties),
+			'\n  }\n'));
+};
+var _user$project$Codegen_Type$unionType = F2(
+	function (name, tags) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'type ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$Codegen_Utils$capitalize(name),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'\n  = ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						A2(_elm_lang$core$String$join, '\n  | ', tags),
+						'\n'))));
+	});
+var _user$project$Codegen_Type$typeAlias = F2(
+	function (name, body) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'type alias ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$Codegen_Utils$capitalize(name),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' = ',
+					A2(_elm_lang$core$Basics_ops['++'], body, '\n'))));
+	});
+
+var _user$project$Swagger_Type$getPropertyName = function (prop) {
+	var _p0 = prop;
+	if (_p0.ctor === 'Required') {
+		return _p0._0;
+	} else {
+		return _p0._0;
+	}
+};
+var _user$project$Swagger_Type$getPropertyType = function (prop) {
+	var _p1 = prop;
+	if (_p1.ctor === 'Required') {
+		return _p1._1;
+	} else {
+		return _p1._1;
+	}
+};
+var _user$project$Swagger_Type$Ref_ = function (a) {
+	return {ctor: 'Ref_', _0: a};
+};
+var _user$project$Swagger_Type$Bool_ = function (a) {
+	return {ctor: 'Bool_', _0: a};
+};
+var _user$project$Swagger_Type$Float_ = function (a) {
+	return {ctor: 'Float_', _0: a};
+};
+var _user$project$Swagger_Type$Int_ = function (a) {
+	return {ctor: 'Int_', _0: a};
+};
+var _user$project$Swagger_Type$String_ = F2(
+	function (a, b) {
+		return {ctor: 'String_', _0: a, _1: b};
+	});
+var _user$project$Swagger_Type$Array_ = function (a) {
+	return {ctor: 'Array_', _0: a};
+};
+var _user$project$Swagger_Type$Object_ = function (a) {
+	return {ctor: 'Object_', _0: a};
+};
+var _user$project$Swagger_Type$Properties = function (a) {
+	return {ctor: 'Properties', _0: a};
+};
+var _user$project$Swagger_Type$Optional = F2(
+	function (a, b) {
+		return {ctor: 'Optional', _0: a, _1: b};
+	});
+var _user$project$Swagger_Type$Required = F2(
+	function (a, b) {
+		return {ctor: 'Required', _0: a, _1: b};
+	});
+var _user$project$Swagger_Type$Items = function (a) {
+	return {ctor: 'Items', _0: a};
+};
+
+var _user$project$Swagger_Definition$foldl = F3(
+	function (fn, init, _p0) {
+		var _p1 = _p0;
+		return A3(_elm_lang$core$List$foldl, fn, init, _p1._0);
+	});
+var _user$project$Swagger_Definition$map = F2(
+	function (fn, _p2) {
+		var _p3 = _p2;
+		return A2(_elm_lang$core$List$map, fn, _p3._0);
+	});
+var _user$project$Swagger_Definition$getFullName = function (definition) {
+	var _p4 = definition;
+	if (_p4.ctor === 'Definition') {
+		return _p4._0;
+	} else {
+		return A2(
+			_elm_lang$core$Basics$flip,
+			F2(
+				function (x, y) {
+					return A2(_elm_lang$core$Basics_ops['++'], x, y);
+				}),
+			_user$project$Codegen_Utils$capitalize(_p4._1))(
+			_elm_lang$core$String$concat(
+				A2(
+					_elm_lang$core$List$map,
+					_user$project$Codegen_Utils$capitalize,
+					_elm_lang$core$List$reverse(_p4._0))));
+	}
+};
+var _user$project$Swagger_Definition$getName = function (definition) {
+	var _p5 = definition;
+	if (_p5.ctor === 'Definition') {
+		return _p5._0;
+	} else {
+		return _p5._1;
+	}
+};
+var _user$project$Swagger_Definition$getType = function (definition) {
+	var _p6 = definition;
+	if (_p6.ctor === 'Definition') {
+		return _p6._1;
+	} else {
+		return _p6._2;
+	}
+};
+var _user$project$Swagger_Definition$Definitions = function (a) {
+	return {ctor: 'Definitions', _0: a};
+};
+var _user$project$Swagger_Definition$singleton = _user$project$Swagger_Definition$Definitions(
+	{ctor: '[]'});
+var _user$project$Swagger_Definition$definitions = function (defs) {
+	return _user$project$Swagger_Definition$Definitions(defs);
+};
+var _user$project$Swagger_Definition$prepend = F2(
+	function (def, _p7) {
+		var _p8 = _p7;
+		return _user$project$Swagger_Definition$Definitions(
+			{ctor: '::', _0: def, _1: _p8._0});
+	});
+var _user$project$Swagger_Definition$NestedDefinition = F3(
+	function (a, b, c) {
+		return {ctor: 'NestedDefinition', _0: a, _1: b, _2: c};
+	});
+var _user$project$Swagger_Definition$Definition = F2(
+	function (a, b) {
+		return {ctor: 'Definition', _0: a, _1: b};
+	});
+var _user$project$Swagger_Definition$definition = F3(
+	function (parentNames, name, type_) {
+		var _p9 = parentNames;
+		if (_p9.ctor === 'Nothing') {
+			return A2(_user$project$Swagger_Definition$Definition, name, type_);
+		} else {
+			return A3(_user$project$Swagger_Definition$NestedDefinition, _p9._0, name, type_);
+		}
+	});
+
+var _user$project$Swagger_Swagger$Swagger = function (a) {
+	return {definitions: a};
+};
+
 var _user$project$Swagger_Decode$maybe = F2(
 	function (name, decoder) {
 		return A3(
@@ -8043,86 +8534,34 @@ var _user$project$Swagger_Decode$apply2 = F2(
 		var _p1 = _p0;
 		return A2(fn, _p1._0, _p1._1);
 	});
-var _user$project$Swagger_Decode$decodePrimitive = function (constructor) {
+var _user$project$Swagger_Decode$property = F2(
+	function (required, _p2) {
+		var _p3 = _p2;
+		var _p6 = _p3._1;
+		var _p5 = _p3._0;
+		var _p4 = A2(
+			_elm_lang$core$List$any,
+			F2(
+				function (x, y) {
+					return _elm_lang$core$Native_Utils.eq(x, y);
+				})(_p5),
+			required);
+		if (_p4 === true) {
+			return A2(_user$project$Swagger_Type$Required, _p5, _p6);
+		} else {
+			return A2(_user$project$Swagger_Type$Optional, _p5, _p6);
+		}
+	});
+var _user$project$Swagger_Decode$decodeProperties = function (_p7) {
+	var _p8 = _p7;
 	return A2(
-		_elm_lang$core$Json_Decode$map,
-		constructor,
-		A3(
-			_user$project$Swagger_Decode$maybe,
-			'default',
-			_user$project$Swagger_Decode$decodeAlwaysString,
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
+		_elm_lang$core$List$map,
+		_user$project$Swagger_Decode$property(_p8._0),
+		_p8._1);
 };
-var _user$project$Swagger_Decode$extractRef = function (ref) {
-	var parsed = A2(
-		_elm_lang$core$Maybe$andThen,
-		function (_p2) {
-			return _elm_lang$core$List$head(
-				function (_) {
-					return _.submatches;
-				}(_p2));
-		},
-		_elm_lang$core$List$head(
-			A3(
-				_elm_lang$core$Regex$find,
-				_elm_lang$core$Regex$AtMost(1),
-				_elm_lang$core$Regex$regex('^#/definitions/(.+)$'),
-				ref)));
-	var _p3 = parsed;
-	if ((_p3.ctor === 'Just') && (_p3._0.ctor === 'Just')) {
-		return _p3._0._0;
-	} else {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Native_Utils.crash(
-				'Swagger.Decode',
-				{
-					start: {line: 130, column: 17},
-					end: {line: 130, column: 28}
-				})('Unparseable reference '),
-			ref);
-	}
-};
-var _user$project$Swagger_Decode$Swagger = function (a) {
-	return {definitions: a};
-};
-var _user$project$Swagger_Decode$Definitions = function (a) {
-	return {ctor: 'Definitions', _0: a};
-};
-var _user$project$Swagger_Decode$Definition = F2(
-	function (a, b) {
-		return {ctor: 'Definition', _0: a, _1: b};
-	});
-var _user$project$Swagger_Decode$Ref_ = function (a) {
-	return {ctor: 'Ref_', _0: a};
-};
-var _user$project$Swagger_Decode$decodeRef = A2(
-	_elm_lang$core$Json_Decode$map,
-	function (_p4) {
-		return _user$project$Swagger_Decode$Ref_(
-			_user$project$Swagger_Decode$extractRef(_p4));
-	},
-	A3(
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-		'$ref',
-		_elm_lang$core$Json_Decode$string,
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
-var _user$project$Swagger_Decode$Bool_ = function (a) {
-	return {ctor: 'Bool_', _0: a};
-};
-var _user$project$Swagger_Decode$Float_ = function (a) {
-	return {ctor: 'Float_', _0: a};
-};
-var _user$project$Swagger_Decode$Int_ = function (a) {
-	return {ctor: 'Int_', _0: a};
-};
-var _user$project$Swagger_Decode$String_ = F2(
-	function (a, b) {
-		return {ctor: 'String_', _0: a, _1: b};
-	});
 var _user$project$Swagger_Decode$decodeString = A2(
 	_elm_lang$core$Json_Decode$map,
-	_user$project$Swagger_Decode$apply2(_user$project$Swagger_Decode$String_),
+	_user$project$Swagger_Decode$apply2(_user$project$Swagger_Type$String_),
 	A3(
 		_user$project$Swagger_Decode$maybe,
 		'enum',
@@ -8136,67 +8575,59 @@ var _user$project$Swagger_Decode$decodeString = A2(
 					function (v0, v1) {
 						return {ctor: '_Tuple2', _0: v0, _1: v1};
 					})))));
-var _user$project$Swagger_Decode$Array_ = function (a) {
-	return {ctor: 'Array_', _0: a};
-};
-var _user$project$Swagger_Decode$Object_ = function (a) {
-	return {ctor: 'Object_', _0: a};
-};
-var _user$project$Swagger_Decode$Properties = function (a) {
-	return {ctor: 'Properties', _0: a};
-};
-var _user$project$Swagger_Decode$Optional = F2(
-	function (a, b) {
-		return {ctor: 'Optional', _0: a, _1: b};
-	});
-var _user$project$Swagger_Decode$Required = F2(
-	function (a, b) {
-		return {ctor: 'Required', _0: a, _1: b};
-	});
-var _user$project$Swagger_Decode$property = F2(
-	function (required, _p5) {
-		var _p6 = _p5;
-		var _p9 = _p6._1;
-		var _p8 = _p6._0;
-		var _p7 = A2(
-			_elm_lang$core$List$any,
-			F2(
-				function (x, y) {
-					return _elm_lang$core$Native_Utils.eq(x, y);
-				})(_p8),
-			required);
-		if (_p7 === true) {
-			return A2(_user$project$Swagger_Decode$Required, _p8, _p9);
-		} else {
-			return A2(_user$project$Swagger_Decode$Optional, _p8, _p9);
-		}
-	});
-var _user$project$Swagger_Decode$decodeProperties = function (_p10) {
-	var _p11 = _p10;
+var _user$project$Swagger_Decode$decodePrimitive = function (constructor) {
 	return A2(
-		_elm_lang$core$List$map,
-		_user$project$Swagger_Decode$property(_p11._0),
-		_p11._1);
+		_elm_lang$core$Json_Decode$map,
+		constructor,
+		A3(
+			_user$project$Swagger_Decode$maybe,
+			'default',
+			_user$project$Swagger_Decode$decodeAlwaysString,
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
 };
-var _user$project$Swagger_Decode$Items = function (a) {
-	return {ctor: 'Items', _0: a};
+var _user$project$Swagger_Decode$extractRef = function (ref) {
+	var parsed = A2(
+		_elm_lang$core$Maybe$andThen,
+		function (_p9) {
+			return _elm_lang$core$List$head(
+				function (_) {
+					return _.submatches;
+				}(_p9));
+		},
+		_elm_lang$core$List$head(
+			A3(
+				_elm_lang$core$Regex$find,
+				_elm_lang$core$Regex$AtMost(1),
+				_elm_lang$core$Regex$regex('^#/definitions/(.+)$'),
+				ref)));
+	var _p10 = parsed;
+	if ((_p10.ctor === 'Just') && (_p10._0.ctor === 'Just')) {
+		return _p10._0._0;
+	} else {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Native_Utils.crash(
+				'Swagger.Decode',
+				{
+					start: {line: 92, column: 17},
+					end: {line: 92, column: 28}
+				})('Unparseable reference '),
+			ref);
+	}
 };
-var _user$project$Swagger_Decode$decodeArray = A2(
+var _user$project$Swagger_Decode$decodeRef = A2(
 	_elm_lang$core$Json_Decode$map,
-	function (_p12) {
-		return _user$project$Swagger_Decode$Array_(
-			_user$project$Swagger_Decode$Items(_p12));
+	function (_p11) {
+		return _user$project$Swagger_Type$Ref_(
+			_user$project$Swagger_Decode$extractRef(_p11));
 	},
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-		'items',
-		_elm_lang$core$Json_Decode$lazy(
-			function (_p13) {
-				return _user$project$Swagger_Decode$decodeType;
-			}),
+		'$ref',
+		_elm_lang$core$Json_Decode$string,
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
 var _user$project$Swagger_Decode$decodeType = _elm_lang$core$Json_Decode$lazy(
-	function (_p14) {
+	function (_p12) {
 		return A2(
 			_elm_lang$core$Json_Decode$andThen,
 			_user$project$Swagger_Decode$decodeTypeByType,
@@ -8215,37 +8646,51 @@ var _user$project$Swagger_Decode$decodeType = _elm_lang$core$Json_Decode$lazy(
 								return {ctor: '_Tuple2', _0: v0, _1: v1};
 							})))));
 	});
-var _user$project$Swagger_Decode$decodeTypeByType = function (_p15) {
-	var _p16 = _p15;
-	var _p17 = _p16._1;
-	if (_p17.ctor === 'Just') {
+var _user$project$Swagger_Decode$decodeTypeByType = function (_p13) {
+	var _p14 = _p13;
+	var _p15 = _p14._1;
+	if (_p15.ctor === 'Just') {
 		return _user$project$Swagger_Decode$decodeRef;
 	} else {
-		var _p18 = _p16._0;
-		switch (_p18) {
+		var _p16 = _p14._0;
+		switch (_p16) {
 			case 'string':
 				return _user$project$Swagger_Decode$decodeString;
 			case 'integer':
-				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Decode$Int_);
+				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Type$Int_);
 			case 'number':
-				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Decode$Int_);
-			case 'bool':
-				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Decode$Int_);
+				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Type$Float_);
+			case 'boolean':
+				return _user$project$Swagger_Decode$decodePrimitive(_user$project$Swagger_Type$Bool_);
 			case 'array':
 				return _user$project$Swagger_Decode$decodeArray;
 			default:
 				return _elm_lang$core$Json_Decode$lazy(
-					function (_p19) {
+					function (_p17) {
 						return _user$project$Swagger_Decode$decodeObject;
 					});
 		}
 	}
 };
+var _user$project$Swagger_Decode$decodeArray = A2(
+	_elm_lang$core$Json_Decode$map,
+	function (_p18) {
+		return _user$project$Swagger_Type$Array_(
+			_user$project$Swagger_Type$Items(_p18));
+	},
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'items',
+		_elm_lang$core$Json_Decode$lazy(
+			function (_p19) {
+				return _user$project$Swagger_Decode$decodeType;
+			}),
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
 var _user$project$Swagger_Decode$decodeObject = A2(
 	_elm_lang$core$Json_Decode$map,
 	function (_p20) {
-		return _user$project$Swagger_Decode$Object_(
-			_user$project$Swagger_Decode$Properties(_p20));
+		return _user$project$Swagger_Type$Object_(
+			_user$project$Swagger_Type$Properties(_p20));
 	},
 	A2(
 		_elm_lang$core$Json_Decode$map,
@@ -8270,33 +8715,296 @@ var _user$project$Swagger_Decode$decodeObject = A2(
 						}))))));
 var _user$project$Swagger_Decode$decodeTypes = A2(
 	_elm_lang$core$Json_Decode$map,
-	_user$project$Swagger_Decode$Definitions,
+	_user$project$Swagger_Definition$definitions,
 	A2(
 		_elm_lang$core$Json_Decode$map,
 		_elm_lang$core$List$map(
 			function (_p22) {
 				var _p23 = _p22;
-				return A2(_user$project$Swagger_Decode$Definition, _p23._0, _p23._1);
+				return A3(_user$project$Swagger_Definition$definition, _elm_lang$core$Maybe$Nothing, _p23._0, _p23._1);
 			}),
 		_elm_lang$core$Json_Decode$keyValuePairs(_user$project$Swagger_Decode$decodeType)));
 var _user$project$Swagger_Decode$decodeSwagger = A3(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 	'definitions',
 	_user$project$Swagger_Decode$decodeTypes,
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Decode$Swagger));
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Swagger$Swagger));
+
+var _user$project$Swagger_Flatten$typeToDefinition = F3(
+	function (parentNames, name, type_) {
+		return A3(
+			_user$project$Swagger_Definition$definition,
+			_elm_lang$core$Maybe$Just(parentNames),
+			name,
+			type_);
+	});
+var _user$project$Swagger_Flatten$propToDefinition = F2(
+	function (parentNames, prop) {
+		return A3(
+			_user$project$Swagger_Flatten$typeToDefinition,
+			parentNames,
+			_user$project$Swagger_Type$getPropertyName(prop),
+			_user$project$Swagger_Type$getPropertyType(prop));
+	});
+var _user$project$Swagger_Flatten$flattenProperties = F3(
+	function (parentNames, _p0, definitions) {
+		var _p1 = _p0;
+		return A3(
+			_elm_lang$core$List$foldl,
+			_user$project$Swagger_Flatten$flattenProperty(parentNames),
+			definitions,
+			_p1._0);
+	});
+var _user$project$Swagger_Flatten$flattenProperty = F3(
+	function (parentNames, prop, definitions) {
+		var newParentNames = {
+			ctor: '::',
+			_0: _user$project$Swagger_Type$getPropertyName(prop),
+			_1: parentNames
+		};
+		var newDefinitions = function () {
+			var _p2 = _user$project$Swagger_Type$getPropertyType(prop);
+			switch (_p2.ctor) {
+				case 'Object_':
+					return A2(
+						_user$project$Swagger_Definition$prepend,
+						A2(_user$project$Swagger_Flatten$propToDefinition, parentNames, prop),
+						A3(_user$project$Swagger_Flatten$flattenProperties, newParentNames, _p2._0, definitions));
+				case 'Array_':
+					return A2(
+						_user$project$Swagger_Definition$prepend,
+						A2(_user$project$Swagger_Flatten$propToDefinition, parentNames, prop),
+						A3(_user$project$Swagger_Flatten$flattenItems, newParentNames, _p2._0, definitions));
+				default:
+					return definitions;
+			}
+		}();
+		return newDefinitions;
+	});
+var _user$project$Swagger_Flatten$flattenItems = F3(
+	function (parentNames, _p3, definitions) {
+		var _p4 = _p3;
+		var _p6 = _p4._0;
+		var name = 'Item';
+		var newParentNames = {ctor: '::', _0: name, _1: parentNames};
+		var newDefinitions = function () {
+			var _p5 = _p6;
+			switch (_p5.ctor) {
+				case 'Object_':
+					return A2(
+						_user$project$Swagger_Definition$prepend,
+						A3(_user$project$Swagger_Flatten$typeToDefinition, parentNames, name, _p6),
+						A3(_user$project$Swagger_Flatten$flattenProperties, newParentNames, _p5._0, definitions));
+				case 'Array_':
+					return A2(
+						_user$project$Swagger_Definition$prepend,
+						A3(_user$project$Swagger_Flatten$typeToDefinition, parentNames, name, _p6),
+						A3(_user$project$Swagger_Flatten$flattenItems, newParentNames, _p5._0, definitions));
+				default:
+					return definitions;
+			}
+		}();
+		return newDefinitions;
+	});
+var _user$project$Swagger_Flatten$flattenEachRoot = F2(
+	function (definition, newDefinitions) {
+		var name = _user$project$Swagger_Definition$getName(definition);
+		var newDefinitions_ = function () {
+			var _p7 = _user$project$Swagger_Definition$getType(definition);
+			switch (_p7.ctor) {
+				case 'Object_':
+					return A3(
+						_user$project$Swagger_Flatten$flattenProperties,
+						{
+							ctor: '::',
+							_0: name,
+							_1: {ctor: '[]'}
+						},
+						_p7._0,
+						newDefinitions);
+				case 'Array_':
+					return A3(
+						_user$project$Swagger_Flatten$flattenItems,
+						{
+							ctor: '::',
+							_0: name,
+							_1: {ctor: '[]'}
+						},
+						_p7._0,
+						newDefinitions);
+				default:
+					return newDefinitions;
+			}
+		}();
+		return A2(_user$project$Swagger_Definition$prepend, definition, newDefinitions_);
+	});
+var _user$project$Swagger_Flatten$flattenDefinitions = A2(_user$project$Swagger_Definition$foldl, _user$project$Swagger_Flatten$flattenEachRoot, _user$project$Swagger_Definition$singleton);
+var _user$project$Swagger_Flatten$flatten = function (_p8) {
+	var _p9 = _p8;
+	return _elm_lang$core$Native_Utils.update(
+		_p9,
+		{
+			definitions: _user$project$Swagger_Flatten$flattenDefinitions(_p9.definitions)
+		});
+};
+
+var _user$project$Generate_Type$renderTypeBody = function (type_) {
+	var _p0 = type_;
+	switch (_p0.ctor) {
+		case 'String_':
+			return 'String';
+		case 'Int_':
+			return 'Int';
+		case 'Float_':
+			return 'Float';
+		case 'Bool_':
+			return 'Bool';
+		case 'Object_':
+			return 'todo';
+		case 'Array_':
+			return 'todo';
+		default:
+			return _user$project$Codegen_Utils$capitalize(
+				_user$project$Codegen_Utils$sanitize(_p0._0));
+	}
+};
+var _user$project$Generate_Type$renderType = function (definition) {
+	return A2(
+		_user$project$Codegen_Type$typeAlias,
+		_user$project$Codegen_Utils$sanitize(
+			_user$project$Swagger_Definition$getFullName(definition)),
+		_user$project$Generate_Type$renderTypeBody(
+			_user$project$Swagger_Definition$getType(definition)));
+};
+
+var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (property) {
+	var _p0 = property;
+	if (_p0.ctor === 'Required') {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'required \"',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_p0._0,
+				A2(_elm_lang$core$Basics_ops['++'], '\" ', 'todo')));
+	} else {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'optional \"',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_p0._0,
+				A2(_elm_lang$core$Basics_ops['++'], '\" ', 'todo')));
+	}
+};
+var _user$project$Generate_Decoder$renderObjectBody = function (_p1) {
+	var _p2 = _p1;
+	return A2(
+		_user$project$Codegen_Function$pipeline,
+		A2(_elm_lang$core$Basics_ops['++'], 'decode ', 'todo'),
+		A2(_elm_lang$core$List$map, _user$project$Generate_Decoder$renderObjectDecoderProperty, _p2._0));
+};
+var _user$project$Generate_Decoder$renderPrimitiveBody = F2(
+	function (type_, $default) {
+		var _p3 = $default;
+		if (_p3.ctor === 'Nothing') {
+			return type_;
+		} else {
+			return type_;
+		}
+	});
+var _user$project$Generate_Decoder$decoderName = function (name) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'decode',
+		_user$project$Codegen_Utils$capitalize(
+			_user$project$Codegen_Utils$sanitize(name)));
+};
+var _user$project$Generate_Decoder$renderDecoderBody = function (type_) {
+	var _p4 = type_;
+	switch (_p4.ctor) {
+		case 'Object_':
+			return _user$project$Generate_Decoder$renderObjectBody(_p4._0);
+		case 'Array_':
+			return _elm_lang$core$Basics$toString(_p4._0);
+		case 'String_':
+			return _elm_lang$core$Basics$toString(_p4._0);
+		case 'Int_':
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'int', _p4._0);
+		case 'Float_':
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'float', _p4._0);
+		case 'Bool_':
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'bool', _p4._0);
+		default:
+			return _user$project$Generate_Decoder$decoderName(_p4._0);
+	}
+};
+var _user$project$Generate_Decoder$renderDecoder = function (definition) {
+	var name = _user$project$Swagger_Definition$getFullName(definition);
+	return A4(
+		_user$project$Codegen_Function$function,
+		_user$project$Generate_Decoder$decoderName(name),
+		{ctor: '[]'},
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Decoder ',
+			_user$project$Codegen_Utils$capitalize(
+				_user$project$Codegen_Utils$sanitize(name))),
+		_user$project$Generate_Decoder$renderDecoderBody(
+			_user$project$Swagger_Definition$getType(definition)));
+};
+
+var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString, lazy)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\ncustomDecoder : Decoder a -> (a -> Result String b) -> Decoder b\ncustomDecoder decoder toResult =\n    Json.Decode.andThen\n        (\\a ->\n            case toResult a of\n                Ok b ->\n                    Json.Decode.succeed b\n\n                Err err ->\n                    Json.Decode.fail err\n        )\n        decoder\n\n\n';
+
+var _user$project$Generate_Swagger$moduleName = function (_p0) {
+	return _user$project$Codegen_Utils$capitalize(
+		_user$project$Codegen_Utils$sanitize(_p0));
+};
+var _user$project$Generate_Swagger$renderDefinition = function (definition) {
+	var name_ = _user$project$Generate_Swagger$moduleName(
+		_user$project$Swagger_Definition$getName(definition));
+	return _elm_lang$core$String$concat(
+		{
+			ctor: '::',
+			_0: _user$project$Generate_Type$renderType(definition),
+			_1: {
+				ctor: '::',
+				_0: _user$project$Generate_Decoder$renderDecoder(definition),
+				_1: {
+					ctor: '::',
+					_0: '\n\n',
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$Generate_Swagger$render = function (_p1) {
+	var _p2 = _p1;
+	return A2(
+		F2(
+			function (x, y) {
+				return A2(_elm_lang$core$Basics_ops['++'], x, y);
+			}),
+		_user$project$Generate_Headers$renderHeaders,
+		_elm_lang$core$String$concat(
+			A2(_user$project$Swagger_Definition$map, _user$project$Generate_Swagger$renderDefinition, _p2.definitions)));
+};
 
 var _user$project$Generate$generate = function (json) {
 	return A2(
 		_elm_lang$core$Result$map,
-		_elm_lang$core$Basics$toString,
+		function (_p0) {
+			return _user$project$Generate_Swagger$render(
+				_user$project$Swagger_Flatten$flatten(_p0));
+		},
 		A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Swagger_Decode$decodeSwagger, json));
 };
 var _user$project$Generate$toOutput = function (result) {
-	var _p0 = result;
-	if (_p0.ctor === 'Err') {
-		return A2(_elm_lang$core$Debug$log, 'error', _p0._0);
+	var _p1 = result;
+	if (_p1.ctor === 'Err') {
+		return A2(_elm_lang$core$Debug$log, 'error', _p1._0);
 	} else {
-		return _p0._0;
+		return _p1._0;
 	}
 };
 var _user$project$Generate$init = function (json) {
@@ -8305,17 +9013,17 @@ var _user$project$Generate$init = function (json) {
 var _user$project$Generate$main = _elm_lang$html$Html$programWithFlags(
 	{
 		init: _user$project$Generate$init,
-		view: function (_p1) {
+		view: function (_p2) {
 			return _elm_lang$html$Html$text(
 				_user$project$Generate$toOutput(
-					_user$project$Generate$generate(_p1)));
+					_user$project$Generate$generate(_p2)));
 		},
-		update: function (_p2) {
+		update: function (_p3) {
 			return _elm_lang$core$Basics$always(
 				A2(
 					_elm_lang$core$Basics$always,
 					{ctor: '_Tuple2', _0: '', _1: _elm_lang$core$Platform_Cmd$none},
-					_p2));
+					_p3));
 		},
 		subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
 	})(_elm_lang$core$Json_Decode$string);

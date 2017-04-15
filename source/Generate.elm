@@ -3,7 +3,9 @@ module Generate exposing (main, generate)
 import Html exposing (text)
 import Html exposing (programWithFlags)
 import Json.Decode exposing (decodeString)
-import Swagger.Decode as Swagger exposing (Swagger, decodeSwagger)
+import Swagger.Decode as Swagger exposing (decodeSwagger)
+import Swagger.Flatten exposing (flatten)
+import Generate.Swagger exposing (render)
 
 
 main : Program String String x
@@ -27,11 +29,11 @@ toOutput result =
         Err err ->
             Debug.log "error" err
 
-        Ok ok ->
-            ok
+        Ok str ->
+            str
 
 
 generate : String -> Result String String
 generate json =
     decodeString decodeSwagger json
-        |> Result.map toString
+        |> Result.map (flatten >> render)

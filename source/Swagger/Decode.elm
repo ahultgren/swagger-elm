@@ -3,58 +3,20 @@ module Swagger.Decode exposing (..)
 import Json.Decode as Json exposing (Decoder, string, int, float, bool, keyValuePairs, list, map, value, decodeValue, oneOf, lazy, andThen)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 import Regex exposing (regex)
-
-
-type alias Swagger =
-    { definitions : Definitions
-    }
-
-
-type Definitions
-    = Definitions (List Definition)
-
-
-type Definition
-    = Definition Name Type
-
-
-type Type
-    = Object_ Properties
-    | Array_ Items
-    | String_ Default Enum
-    | Int_ Default
-    | Float_ Default
-    | Bool_ Default
-    | Ref_ Ref
-
-
-type Properties
-    = Properties (List Property)
-
-
-type Property
-    = Required Name Type
-    | Optional Name Type
-
-
-type Items
-    = Items Type
+import Swagger.Swagger exposing (Swagger)
+import Swagger.Definition exposing (Definitions, definitions, definition, Definition)
+import Swagger.Type
+    exposing
+        ( Type(Object_, Array_, String_, Int_, Float_, Bool_, Ref_)
+        , Ref
+        , Properties(Properties)
+        , Items(Items)
+        , Property(Required, Optional)
+        )
 
 
 type alias Name =
     String
-
-
-type alias Ref =
-    String
-
-
-type alias Default =
-    Maybe String
-
-
-type alias Enum =
-    Maybe (List String)
 
 
 decodeSwagger : Decoder Swagger
@@ -66,8 +28,8 @@ decodeSwagger =
 decodeTypes : Decoder Definitions
 decodeTypes =
     keyValuePairs decodeType
-        |> map (List.map (\( name, type_ ) -> Definition name type_))
-        |> map Definitions
+        |> map (List.map (\( name, type_ ) -> definition Nothing name type_))
+        |> map definitions
 
 
 decodeType : Decoder Type
@@ -96,10 +58,10 @@ decodeTypeByType ( type_, ref ) =
                     decodePrimitive Int_
 
                 "number" ->
-                    decodePrimitive Int_
+                    decodePrimitive Float_
 
-                "bool" ->
-                    decodePrimitive Int_
+                "boolean" ->
+                    decodePrimitive Bool_
 
                 "array" ->
                     decodeArray
