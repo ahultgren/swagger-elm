@@ -58,3 +58,8 @@ getPropertyName prop =
 
         Optional name _ ->
             name
+
+
+getItemsType : Items -> Type
+getItemsType (Items type_) =
+    type_

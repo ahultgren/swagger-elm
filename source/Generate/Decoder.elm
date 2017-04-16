@@ -1,13 +1,14 @@
 module Generate.Decoder exposing (..)
 
+import Generate.Utils exposing (typeName, decoderName, nestedDecoderName)
 import Codegen.Function as Fun exposing (function, pipeline, letin, caseof)
-import Codegen.Utils exposing (capitalize, sanitize)
 import Swagger.Definition as Def exposing (Definition, getType, getFullName)
 import Swagger.Type
     exposing
         ( Type(Object_, Array_, String_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
         , Property(Required, Optional)
+        , getItemsType
         )
 
 
@@ -19,26 +20,22 @@ renderDecoder definition =
     in
         function (decoderName <| name)
             []
-            ("Decoder " ++ (capitalize <| sanitize <| name))
-            (renderDecoderBody <| getType definition)
+            ("Decoder " ++ typeName name)
+            (renderDecoderBody definition)
 
 
-decoderName : String -> String
-decoderName name =
-    "decode" ++ (capitalize <| sanitize name)
-
-
-renderDecoderBody : Type -> String
-renderDecoderBody type_ =
-    case type_ of
+renderDecoderBody : Definition -> String
+renderDecoderBody definition =
+    case getType definition of
         Object_ properties ->
-            renderObjectBody properties
+            renderObjectBody (getFullName definition) properties
 
         Array_ items ->
-            toString items
+            renderArrayBody (getFullName definition) (getItemsType items)
 
         String_ default enum ->
-            toString default
+            -- TODO: handle enum
+            renderPrimitiveBody "string" default
 
         Int_ default ->
             renderPrimitiveBody "int" default
@@ -64,18 +61,48 @@ renderPrimitiveBody type_ default =
             type_
 
 
-renderObjectBody : Properties -> String
-renderObjectBody (Properties properties) =
+renderArrayBody : String -> Type -> String
+renderArrayBody name type_ =
+    "list " ++ (renderPropertyDecoder name "Item" type_)
+
+
+renderObjectBody : String -> Properties -> String
+renderObjectBody name (Properties properties) =
     properties
-        |> List.map renderObjectDecoderProperty
-        |> pipeline ("decode " ++ "todo")
+        |> List.map (renderObjectDecoderProperty name)
+        |> pipeline ((++) "decode " <| typeName name)
 
 
-renderObjectDecoderProperty : Property -> String
-renderObjectDecoderProperty property =
+renderObjectDecoderProperty : String -> Property -> String
+renderObjectDecoderProperty parentName property =
     case property of
         Required name type_ ->
-            "required \"" ++ name ++ "\" " ++ "todo"
+            "required \"" ++ name ++ "\" " ++ renderPropertyDecoder parentName name type_
 
         Optional name type_ ->
-            "optional \"" ++ name ++ "\" " ++ "todo"
+            "maybe \"" ++ name ++ "\" " ++ renderPropertyDecoder parentName name type_
+
+
+renderPropertyDecoder : String -> String -> Type -> String
+renderPropertyDecoder parentName name type_ =
+    case type_ of
+        String_ default enum ->
+            "string"
+
+        Int_ default ->
+            "int"
+
+        Float_ default ->
+            "float"
+
+        Bool_ default ->
+            "bool"
+
+        Ref_ ref ->
+            decoderName ref
+
+        Object_ props ->
+            nestedDecoderName parentName name
+
+        Array_ items ->
+            nestedDecoderName parentName name
