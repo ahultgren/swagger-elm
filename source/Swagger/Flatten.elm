@@ -1,4 +1,4 @@
-module Swagger.Flatten exposing (..)
+module Swagger.Flatten exposing (flatten)
 
 import Swagger.Swagger exposing (Swagger)
 import Swagger.Definition as Definition
@@ -34,23 +34,23 @@ flattenDefinitions =
 
 
 flattenEachRoot : Definition -> Definitions -> Definitions
-flattenEachRoot definition newDefinitions =
+flattenEachRoot definition definitions =
     let
         name =
             getName definition
 
-        newDefinitions_ =
+        newDefinitions =
             case getType definition of
                 Object_ props ->
-                    flattenProperties [ name ] props newDefinitions
+                    flattenProperties [ name ] props definitions
 
                 Array_ items ->
-                    flattenItems [ name ] items newDefinitions
+                    flattenItems [ name ] items definitions
 
                 _ ->
-                    newDefinitions
+                    definitions
     in
-        Definition.prepend definition newDefinitions_
+        Definition.prepend definition newDefinitions
 
 
 flattenProperties : List String -> Properties -> Definitions -> Definitions
@@ -60,60 +60,32 @@ flattenProperties parentNames (Properties props) definitions =
 
 flattenProperty : List String -> Property -> Definitions -> Definitions
 flattenProperty parentNames prop definitions =
-    let
-        newParentNames =
-            getPropertyName prop :: parentNames
-
-        newDefinitions =
-            case getPropertyType prop of
-                Object_ props ->
-                    Definition.prepend
-                        (propToDefinition parentNames prop)
-                        (flattenProperties newParentNames props definitions)
-
-                Array_ items ->
-                    Definition.prepend
-                        (propToDefinition parentNames prop)
-                        (flattenItems newParentNames items definitions)
-
-                _ ->
-                    definitions
-    in
-        newDefinitions
+    flattenType parentNames (getPropertyName prop) (getPropertyType prop) definitions
 
 
 flattenItems : List String -> Items -> Definitions -> Definitions
 flattenItems parentNames (Items type_) definitions =
-    let
-        name =
-            "Item"
+    flattenType parentNames "Item" type_ definitions
 
-        newParentNames =
+
+flattenType : List String -> String -> Type -> Definitions -> Definitions
+flattenType parentNames name type_ definitions =
+    let
+        childParentNames =
             name :: parentNames
 
-        newDefinitions =
-            case type_ of
-                Object_ props ->
-                    Definition.prepend
-                        (typeToDefinition parentNames name type_)
-                        (flattenProperties newParentNames props definitions)
-
-                Array_ items ->
-                    Definition.prepend
-                        (typeToDefinition parentNames name type_)
-                        (flattenItems newParentNames items definitions)
-
-                _ ->
-                    definitions
+        prependSelf =
+            Definition.prepend
+                (definition (Just parentNames) name type_)
     in
-        newDefinitions
+        case type_ of
+            Object_ props ->
+                flattenProperties childParentNames props definitions
+                    |> prependSelf
 
+            Array_ items ->
+                flattenItems childParentNames items definitions
+                    |> prependSelf
 
-propToDefinition : List String -> Property -> Definition
-propToDefinition parentNames prop =
-    typeToDefinition parentNames (getPropertyName prop) (getPropertyType prop)
-
-
-typeToDefinition : List String -> String -> Type -> Definition
-typeToDefinition parentNames name type_ =
-    definition (Just parentNames) name type_
+            _ ->
+                definitions
