@@ -22,13 +22,13 @@
     "boolean": {
       "type": "boolean"
     },
-    "string": {
+    "str": {
       "type": "string"
     },
     "integer": {
       "type": "integer"
     },
-    "float": {
+    "number": {
       "type": "number"
     },
     "booleanD": {
@@ -49,6 +49,7 @@
     },
     "obj": {
       "type": "object",
+      "required": ["reqref"],
       "properties": {
         "stringprop": {
           "type": "string"
@@ -66,6 +67,12 @@
           "items": {
             "type": "string"
           }
+        },
+        "ref": {
+          "$ref": "#/definitions/arr"
+        },
+        "reqref": {
+          "$ref": "#/definitions/arr"
         }
       }
     },

@@ -8369,20 +8369,24 @@ var _user$project$Codegen_Type$typeAlias = F2(
 					A2(_elm_lang$core$Basics_ops['++'], body, '\n'))));
 	});
 
+var _user$project$Swagger_Type$getItemsType = function (_p0) {
+	var _p1 = _p0;
+	return _p1._0;
+};
 var _user$project$Swagger_Type$getPropertyName = function (prop) {
-	var _p0 = prop;
-	if (_p0.ctor === 'Required') {
-		return _p0._0;
+	var _p2 = prop;
+	if (_p2.ctor === 'Required') {
+		return _p2._0;
 	} else {
-		return _p0._0;
+		return _p2._0;
 	}
 };
 var _user$project$Swagger_Type$getPropertyType = function (prop) {
-	var _p1 = prop;
-	if (_p1.ctor === 'Required') {
-		return _p1._1;
+	var _p3 = prop;
+	if (_p3.ctor === 'Required') {
+		return _p3._1;
 	} else {
-		return _p1._1;
+		return _p3._1;
 	}
 };
 var _user$project$Swagger_Type$Ref_ = function (a) {
@@ -8816,110 +8820,235 @@ var _user$project$Swagger_Flatten$flatten = function (_p6) {
 		});
 };
 
-var _user$project$Generate_Type$renderTypeBody = function (type_) {
-	var _p0 = type_;
-	switch (_p0.ctor) {
-		case 'String_':
-			return 'String';
-		case 'Int_':
-			return 'Int';
-		case 'Float_':
-			return 'Float';
-		case 'Bool_':
-			return 'Bool';
-		case 'Object_':
-			return 'todo';
-		case 'Array_':
-			return 'todo';
-		default:
-			return _user$project$Codegen_Utils$capitalize(
-				_user$project$Codegen_Utils$sanitize(_p0._0));
-	}
+var _user$project$Generate_Utils$typeName = function (_p0) {
+	return _user$project$Codegen_Utils$capitalize(
+		_user$project$Codegen_Utils$sanitize(_p0));
 };
+var _user$project$Generate_Utils$nestedTypeName = F2(
+	function (parentName, name) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			_user$project$Generate_Utils$typeName(parentName),
+			_user$project$Generate_Utils$typeName(name));
+	});
+var _user$project$Generate_Utils$nestedDecoderName = F2(
+	function (parentName, name) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'decode',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_user$project$Generate_Utils$typeName(parentName),
+				_user$project$Generate_Utils$typeName(name)));
+	});
+var _user$project$Generate_Utils$decoderName = function (name) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'decode',
+		_user$project$Generate_Utils$typeName(name));
+};
+
+var _user$project$Generate_Type$renderPropertyType = F3(
+	function (parentName, name, type_) {
+		var _p0 = type_;
+		switch (_p0.ctor) {
+			case 'String_':
+				return 'String';
+			case 'Int_':
+				return 'Int';
+			case 'Float_':
+				return 'Float';
+			case 'Bool_':
+				return 'Bool';
+			case 'Ref_':
+				return _user$project$Generate_Utils$typeName(_p0._0);
+			case 'Object_':
+				return A2(_user$project$Generate_Utils$nestedTypeName, parentName, name);
+			default:
+				return A2(_user$project$Generate_Utils$nestedTypeName, parentName, name);
+		}
+	});
+var _user$project$Generate_Type$renderProperty = F2(
+	function (parentName, prop) {
+		var _p1 = prop;
+		if (_p1.ctor === 'Required') {
+			var _p2 = _p1._0;
+			return A2(
+				_user$project$Codegen_Type$recordField,
+				_p2,
+				A3(_user$project$Generate_Type$renderPropertyType, parentName, _p2, _p1._1));
+		} else {
+			var _p3 = _p1._0;
+			return A2(
+				_user$project$Codegen_Type$recordField,
+				_p3,
+				_user$project$Codegen_Type$maybe(
+					A3(_user$project$Generate_Type$renderPropertyType, parentName, _p3, _p1._1)));
+		}
+	});
+var _user$project$Generate_Type$renderRecord = F2(
+	function (parentName, _p4) {
+		var _p5 = _p4;
+		return _user$project$Codegen_Type$record(
+			A2(
+				_elm_lang$core$List$map,
+				_user$project$Generate_Type$renderProperty(parentName),
+				_p5._0));
+	});
+var _user$project$Generate_Type$renderTypeBody = F2(
+	function (name, type_) {
+		var _p6 = type_;
+		switch (_p6.ctor) {
+			case 'String_':
+				return 'String';
+			case 'Int_':
+				return 'Int';
+			case 'Float_':
+				return 'Float';
+			case 'Bool_':
+				return 'Bool';
+			case 'Object_':
+				return A2(_user$project$Generate_Type$renderRecord, name, _p6._0);
+			case 'Array_':
+				return _user$project$Codegen_Type$list(
+					A3(
+						_user$project$Generate_Type$renderPropertyType,
+						name,
+						'Item',
+						_user$project$Swagger_Type$getItemsType(_p6._0)));
+			default:
+				return _user$project$Generate_Utils$typeName(_p6._0);
+		}
+	});
 var _user$project$Generate_Type$renderType = function (definition) {
 	return A2(
 		_user$project$Codegen_Type$typeAlias,
 		_user$project$Codegen_Utils$sanitize(
 			_user$project$Swagger_Definition$getFullName(definition)),
-		_user$project$Generate_Type$renderTypeBody(
+		A2(
+			_user$project$Generate_Type$renderTypeBody,
+			_user$project$Swagger_Definition$getFullName(definition),
 			_user$project$Swagger_Definition$getType(definition)));
 };
 
-var _user$project$Generate_Decoder$renderObjectDecoderProperty = function (property) {
-	var _p0 = property;
-	if (_p0.ctor === 'Required') {
+var _user$project$Generate_Decoder$renderPropertyDecoder = F3(
+	function (parentName, name, type_) {
+		var _p0 = type_;
+		switch (_p0.ctor) {
+			case 'String_':
+				return 'string';
+			case 'Int_':
+				return 'int';
+			case 'Float_':
+				return 'float';
+			case 'Bool_':
+				return 'bool';
+			case 'Ref_':
+				return _user$project$Generate_Utils$decoderName(_p0._0);
+			case 'Object_':
+				return A2(_user$project$Generate_Utils$nestedDecoderName, parentName, name);
+			default:
+				return A2(_user$project$Generate_Utils$nestedDecoderName, parentName, name);
+		}
+	});
+var _user$project$Generate_Decoder$renderObjectDecoderProperty = F2(
+	function (parentName, property) {
+		var _p1 = property;
+		if (_p1.ctor === 'Required') {
+			var _p2 = _p1._0;
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				'required \"',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_p2,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'\" ',
+						A3(_user$project$Generate_Decoder$renderPropertyDecoder, parentName, _p2, _p1._1))));
+		} else {
+			var _p3 = _p1._0;
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				'maybe \"',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_p3,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'\" ',
+						A3(_user$project$Generate_Decoder$renderPropertyDecoder, parentName, _p3, _p1._1))));
+		}
+	});
+var _user$project$Generate_Decoder$renderObjectBody = F2(
+	function (name, _p4) {
+		var _p5 = _p4;
+		return A2(
+			_user$project$Codegen_Function$pipeline,
+			A2(
+				F2(
+					function (x, y) {
+						return A2(_elm_lang$core$Basics_ops['++'], x, y);
+					}),
+				'decode ',
+				_user$project$Generate_Utils$typeName(name)),
+			A2(
+				_elm_lang$core$List$map,
+				_user$project$Generate_Decoder$renderObjectDecoderProperty(name),
+				_p5._0));
+	});
+var _user$project$Generate_Decoder$renderArrayBody = F2(
+	function (name, type_) {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			'required \"',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_p0._0,
-				A2(_elm_lang$core$Basics_ops['++'], '\" ', 'todo')));
-	} else {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'optional \"',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_p0._0,
-				A2(_elm_lang$core$Basics_ops['++'], '\" ', 'todo')));
-	}
-};
-var _user$project$Generate_Decoder$renderObjectBody = function (_p1) {
-	var _p2 = _p1;
-	return A2(
-		_user$project$Codegen_Function$pipeline,
-		A2(_elm_lang$core$Basics_ops['++'], 'decode ', 'todo'),
-		A2(_elm_lang$core$List$map, _user$project$Generate_Decoder$renderObjectDecoderProperty, _p2._0));
-};
+			'list ',
+			A3(_user$project$Generate_Decoder$renderPropertyDecoder, name, 'Item', type_));
+	});
 var _user$project$Generate_Decoder$renderPrimitiveBody = F2(
 	function (type_, $default) {
-		var _p3 = $default;
-		if (_p3.ctor === 'Nothing') {
+		var _p6 = $default;
+		if (_p6.ctor === 'Nothing') {
 			return type_;
 		} else {
 			return type_;
 		}
 	});
-var _user$project$Generate_Decoder$decoderName = function (name) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		'decode',
-		_user$project$Codegen_Utils$capitalize(
-			_user$project$Codegen_Utils$sanitize(name)));
-};
-var _user$project$Generate_Decoder$renderDecoderBody = function (type_) {
-	var _p4 = type_;
-	switch (_p4.ctor) {
+var _user$project$Generate_Decoder$renderDecoderBody = function (definition) {
+	var _p7 = _user$project$Swagger_Definition$getType(definition);
+	switch (_p7.ctor) {
 		case 'Object_':
-			return _user$project$Generate_Decoder$renderObjectBody(_p4._0);
+			return A2(
+				_user$project$Generate_Decoder$renderObjectBody,
+				_user$project$Swagger_Definition$getFullName(definition),
+				_p7._0);
 		case 'Array_':
-			return _elm_lang$core$Basics$toString(_p4._0);
+			return A2(
+				_user$project$Generate_Decoder$renderArrayBody,
+				_user$project$Swagger_Definition$getFullName(definition),
+				_user$project$Swagger_Type$getItemsType(_p7._0));
 		case 'String_':
-			return _elm_lang$core$Basics$toString(_p4._0);
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'string', _p7._0);
 		case 'Int_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'int', _p4._0);
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'int', _p7._0);
 		case 'Float_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'float', _p4._0);
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'float', _p7._0);
 		case 'Bool_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'bool', _p4._0);
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'bool', _p7._0);
 		default:
-			return _user$project$Generate_Decoder$decoderName(_p4._0);
+			return _user$project$Generate_Utils$decoderName(_p7._0);
 	}
 };
 var _user$project$Generate_Decoder$renderDecoder = function (definition) {
 	var name = _user$project$Swagger_Definition$getFullName(definition);
 	return A4(
 		_user$project$Codegen_Function$function,
-		_user$project$Generate_Decoder$decoderName(name),
+		_user$project$Generate_Utils$decoderName(name),
 		{ctor: '[]'},
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			'Decoder ',
-			_user$project$Codegen_Utils$capitalize(
-				_user$project$Codegen_Utils$sanitize(name))),
-		_user$project$Generate_Decoder$renderDecoderBody(
-			_user$project$Swagger_Definition$getType(definition)));
+			_user$project$Generate_Utils$typeName(name)),
+		_user$project$Generate_Decoder$renderDecoderBody(definition));
 };
 
 var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString, lazy)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\ncustomDecoder : Decoder a -> (a -> Result String b) -> Decoder b\ncustomDecoder decoder toResult =\n    Json.Decode.andThen\n        (\\a ->\n            case toResult a of\n                Ok b ->\n                    Json.Decode.succeed b\n\n                Err err ->\n                    Json.Decode.fail err\n        )\n        decoder\n\n\n';
