@@ -8730,22 +8730,6 @@ var _user$project$Swagger_Decode$decodeSwagger = A3(
 	_user$project$Swagger_Decode$decodeTypes,
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Swagger_Swagger$Swagger));
 
-var _user$project$Swagger_Flatten$typeToDefinition = F3(
-	function (parentNames, name, type_) {
-		return A3(
-			_user$project$Swagger_Definition$definition,
-			_elm_lang$core$Maybe$Just(parentNames),
-			name,
-			type_);
-	});
-var _user$project$Swagger_Flatten$propToDefinition = F2(
-	function (parentNames, prop) {
-		return A3(
-			_user$project$Swagger_Flatten$typeToDefinition,
-			parentNames,
-			_user$project$Swagger_Type$getPropertyName(prop),
-			_user$project$Swagger_Type$getPropertyType(prop));
-	});
 var _user$project$Swagger_Flatten$flattenProperties = F3(
 	function (parentNames, _p0, definitions) {
 		var _p1 = _p0;
@@ -8757,61 +8741,45 @@ var _user$project$Swagger_Flatten$flattenProperties = F3(
 	});
 var _user$project$Swagger_Flatten$flattenProperty = F3(
 	function (parentNames, prop, definitions) {
-		var newParentNames = {
-			ctor: '::',
-			_0: _user$project$Swagger_Type$getPropertyName(prop),
-			_1: parentNames
-		};
-		var newDefinitions = function () {
-			var _p2 = _user$project$Swagger_Type$getPropertyType(prop);
-			switch (_p2.ctor) {
-				case 'Object_':
-					return A2(
-						_user$project$Swagger_Definition$prepend,
-						A2(_user$project$Swagger_Flatten$propToDefinition, parentNames, prop),
-						A3(_user$project$Swagger_Flatten$flattenProperties, newParentNames, _p2._0, definitions));
-				case 'Array_':
-					return A2(
-						_user$project$Swagger_Definition$prepend,
-						A2(_user$project$Swagger_Flatten$propToDefinition, parentNames, prop),
-						A3(_user$project$Swagger_Flatten$flattenItems, newParentNames, _p2._0, definitions));
-				default:
-					return definitions;
-			}
-		}();
-		return newDefinitions;
+		return A4(
+			_user$project$Swagger_Flatten$flattenType,
+			parentNames,
+			_user$project$Swagger_Type$getPropertyName(prop),
+			_user$project$Swagger_Type$getPropertyType(prop),
+			definitions);
+	});
+var _user$project$Swagger_Flatten$flattenType = F4(
+	function (parentNames, name, type_, definitions) {
+		var prependSelf = _user$project$Swagger_Definition$prepend(
+			A3(
+				_user$project$Swagger_Definition$definition,
+				_elm_lang$core$Maybe$Just(parentNames),
+				name,
+				type_));
+		var childParentNames = {ctor: '::', _0: name, _1: parentNames};
+		var _p2 = type_;
+		switch (_p2.ctor) {
+			case 'Object_':
+				return prependSelf(
+					A3(_user$project$Swagger_Flatten$flattenProperties, childParentNames, _p2._0, definitions));
+			case 'Array_':
+				return prependSelf(
+					A3(_user$project$Swagger_Flatten$flattenItems, childParentNames, _p2._0, definitions));
+			default:
+				return definitions;
+		}
 	});
 var _user$project$Swagger_Flatten$flattenItems = F3(
 	function (parentNames, _p3, definitions) {
 		var _p4 = _p3;
-		var _p6 = _p4._0;
-		var name = 'Item';
-		var newParentNames = {ctor: '::', _0: name, _1: parentNames};
-		var newDefinitions = function () {
-			var _p5 = _p6;
-			switch (_p5.ctor) {
-				case 'Object_':
-					return A2(
-						_user$project$Swagger_Definition$prepend,
-						A3(_user$project$Swagger_Flatten$typeToDefinition, parentNames, name, _p6),
-						A3(_user$project$Swagger_Flatten$flattenProperties, newParentNames, _p5._0, definitions));
-				case 'Array_':
-					return A2(
-						_user$project$Swagger_Definition$prepend,
-						A3(_user$project$Swagger_Flatten$typeToDefinition, parentNames, name, _p6),
-						A3(_user$project$Swagger_Flatten$flattenItems, newParentNames, _p5._0, definitions));
-				default:
-					return definitions;
-			}
-		}();
-		return newDefinitions;
+		return A4(_user$project$Swagger_Flatten$flattenType, parentNames, 'Item', _p4._0, definitions);
 	});
 var _user$project$Swagger_Flatten$flattenEachRoot = F2(
-	function (definition, newDefinitions) {
+	function (definition, definitions) {
 		var name = _user$project$Swagger_Definition$getName(definition);
-		var newDefinitions_ = function () {
-			var _p7 = _user$project$Swagger_Definition$getType(definition);
-			switch (_p7.ctor) {
+		var newDefinitions = function () {
+			var _p5 = _user$project$Swagger_Definition$getType(definition);
+			switch (_p5.ctor) {
 				case 'Object_':
 					return A3(
 						_user$project$Swagger_Flatten$flattenProperties,
@@ -8820,8 +8788,8 @@ var _user$project$Swagger_Flatten$flattenEachRoot = F2(
 							_0: name,
 							_1: {ctor: '[]'}
 						},
-						_p7._0,
-						newDefinitions);
+						_p5._0,
+						definitions);
 				case 'Array_':
 					return A3(
 						_user$project$Swagger_Flatten$flattenItems,
@@ -8830,21 +8798,21 @@ var _user$project$Swagger_Flatten$flattenEachRoot = F2(
 							_0: name,
 							_1: {ctor: '[]'}
 						},
-						_p7._0,
-						newDefinitions);
+						_p5._0,
+						definitions);
 				default:
-					return newDefinitions;
+					return definitions;
 			}
 		}();
-		return A2(_user$project$Swagger_Definition$prepend, definition, newDefinitions_);
+		return A2(_user$project$Swagger_Definition$prepend, definition, newDefinitions);
 	});
 var _user$project$Swagger_Flatten$flattenDefinitions = A2(_user$project$Swagger_Definition$foldl, _user$project$Swagger_Flatten$flattenEachRoot, _user$project$Swagger_Definition$singleton);
-var _user$project$Swagger_Flatten$flatten = function (_p8) {
-	var _p9 = _p8;
+var _user$project$Swagger_Flatten$flatten = function (_p6) {
+	var _p7 = _p6;
 	return _elm_lang$core$Native_Utils.update(
-		_p9,
+		_p7,
 		{
-			definitions: _user$project$Swagger_Flatten$flattenDefinitions(_p9.definitions)
+			definitions: _user$project$Swagger_Flatten$flattenDefinitions(_p7.definitions)
 		});
 };
 
