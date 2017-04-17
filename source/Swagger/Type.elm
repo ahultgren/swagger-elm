@@ -8,7 +8,8 @@ type alias Default =
 type Type
     = Object_ Properties
     | Array_ Items
-    | String_ Default Enum
+    | String_ Default
+    | Enum_ Default Enum
     | Int_ Default
     | Float_ Default
     | Bool_ Default
@@ -37,7 +38,7 @@ type alias Ref =
 
 
 type alias Enum =
-    Maybe (List String)
+    List String
 
 
 getPropertyType : Property -> Type

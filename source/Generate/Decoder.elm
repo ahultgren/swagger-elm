@@ -2,10 +2,11 @@ module Generate.Decoder exposing (..)
 
 import Generate.Utils exposing (typeName, decoderName, nestedDecoderName)
 import Codegen.Function as Fun exposing (function, pipeline, letin, caseof)
+import Codegen.Literal exposing (string)
 import Swagger.Definition as Def exposing (Definition, getType, getFullName)
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
         , Property(Required, Optional)
         , getItemsType
@@ -33,8 +34,10 @@ renderDecoderBody definition =
         Array_ items ->
             renderArrayBody (getFullName definition) (getItemsType items)
 
-        String_ default enum ->
-            -- TODO: handle enum
+        Enum_ default enum ->
+            renderEnumBody (getFullName definition) enum
+
+        String_ default ->
             renderPrimitiveBody "string" default
 
         Int_ default ->
@@ -77,16 +80,25 @@ renderObjectDecoderProperty : String -> Property -> String
 renderObjectDecoderProperty parentName property =
     case property of
         Required name type_ ->
-            "required \"" ++ name ++ "\" " ++ renderPropertyDecoder parentName name type_
+            "required " ++ string name ++ " " ++ renderPropertyDecoder parentName name type_
 
         Optional name type_ ->
-            "maybe \"" ++ name ++ "\" " ++ renderPropertyDecoder parentName name type_
+            "maybe " ++ string name ++ " " ++ renderPropertyDecoder parentName name type_
 
 
 renderPropertyDecoder : String -> String -> Type -> String
 renderPropertyDecoder parentName name type_ =
     case type_ of
-        String_ default enum ->
+        Object_ props ->
+            nestedDecoderName parentName name
+
+        Array_ items ->
+            nestedDecoderName parentName name
+
+        Enum_ _ _ ->
+            nestedDecoderName parentName name
+
+        String_ default ->
             "string"
 
         Int_ default ->
@@ -101,8 +113,28 @@ renderPropertyDecoder parentName name type_ =
         Ref_ ref ->
             decoderName ref
 
-        Object_ props ->
-            nestedDecoderName parentName name
 
-        Array_ items ->
-            nestedDecoderName parentName name
+renderEnumBody : String -> List String -> String
+renderEnumBody parentName enum =
+    let
+        decoderName_ =
+            decoderName parentName
+    in
+        (letin
+            [ ( "decodeToType string"
+              , caseof "string"
+                    ((List.map renderEnumEach enum) ++ [ renderEnumFail parentName ])
+              )
+            ]
+            "customDecoder string decodeToType"
+        )
+
+
+renderEnumEach : String -> ( String, String )
+renderEnumEach value =
+    ( string value, "Result.Ok " ++ typeName value )
+
+
+renderEnumFail : String -> ( String, String )
+renderEnumFail parentName =
+    ( "_", "Result.Err (\"Invalid value for " ++ typeName parentName ++ ". Value: \" ++ string)" )

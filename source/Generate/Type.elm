@@ -1,12 +1,12 @@
 module Generate.Type exposing (..)
 
 import Generate.Utils exposing (typeName, nestedTypeName)
+import Codegen.Utils exposing (sanitize)
 import Codegen.Type exposing (typeAlias, unionType, record, recordField, list, maybe)
-import Codegen.Utils exposing (capitalize, sanitize)
 import Swagger.Definition as Def exposing (Definition, getType, getFullName)
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
         , Property(Required, Optional)
         , getItemsType
@@ -15,34 +15,48 @@ import Swagger.Type
 
 renderType : Definition -> String
 renderType definition =
-    typeAlias (sanitize <| getFullName definition) <|
-        renderTypeBody (getFullName definition) <|
+    let
+        name =
+            typeName <| getFullName definition
+
+        type_ =
             getType definition
 
+        typeAliasDecl =
+            typeAlias name
 
-renderTypeBody : String -> Type -> String
-renderTypeBody name type_ =
-    case type_ of
-        String_ _ enum ->
-            "String"
+        unionTypeDecl =
+            unionType name
+    in
+        case type_ of
+            String_ _ ->
+                typeAliasDecl "String"
 
-        Int_ _ ->
-            "Int"
+            Int_ _ ->
+                typeAliasDecl "Int"
 
-        Float_ _ ->
-            "Float"
+            Float_ _ ->
+                typeAliasDecl "Float"
 
-        Bool_ _ ->
-            "Bool"
+            Bool_ _ ->
+                typeAliasDecl "Bool"
 
-        Object_ props ->
-            renderRecord name props
+            Enum_ _ enum ->
+                unionTypeDecl <| renderEnum name enum
 
-        Array_ items ->
-            list <| renderPropertyType name "Item" <| getItemsType items
+            Object_ props ->
+                typeAliasDecl <| renderRecord name props
 
-        Ref_ ref ->
-            typeName ref
+            Array_ items ->
+                typeAliasDecl <| list <| renderPropertyType name "Item" <| getItemsType items
+
+            Ref_ ref ->
+                typeAliasDecl <| typeName ref
+
+
+renderEnum : String -> List String -> List String
+renderEnum name =
+    List.map typeName
 
 
 renderRecord : String -> Properties -> String
@@ -54,16 +68,25 @@ renderProperty : String -> Property -> String
 renderProperty parentName prop =
     case prop of
         Required name type_ ->
-            recordField name <| renderPropertyType parentName name type_
+            recordField (sanitize name) <| renderPropertyType parentName name type_
 
         Optional name type_ ->
-            recordField name <| maybe <| renderPropertyType parentName name type_
+            recordField (sanitize name) <| maybe <| renderPropertyType parentName name type_
 
 
 renderPropertyType : String -> String -> Type -> String
 renderPropertyType parentName name type_ =
     case type_ of
-        String_ _ _ ->
+        Object_ _ ->
+            (nestedTypeName parentName name)
+
+        Array_ _ ->
+            (nestedTypeName parentName name)
+
+        Enum_ _ _ ->
+            (nestedTypeName parentName name)
+
+        String_ _ ->
             "String"
 
         Int_ _ ->
@@ -77,9 +100,3 @@ renderPropertyType parentName name type_ =
 
         Ref_ ref ->
             typeName ref
-
-        Object_ _ ->
-            (nestedTypeName parentName name)
-
-        Array_ _ ->
-            (nestedTypeName parentName name)
