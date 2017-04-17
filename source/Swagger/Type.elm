@@ -8,6 +8,7 @@ type alias Default =
 type Type
     = Object_ Properties
     | Array_ Items
+      -- TODO: remove default from each type?
     | String_ Default
     | Enum_ Default Enum
     | Int_ Default
@@ -23,6 +24,7 @@ type Properties
 type Property
     = Required Name Type
     | Optional Name Type
+    | Default Name Type String
 
 
 type Items
@@ -50,6 +52,9 @@ getPropertyType prop =
         Optional _ type_ ->
             type_
 
+        Default _ type_ _ ->
+            type_
+
 
 getPropertyName : Property -> Name
 getPropertyName prop =
@@ -60,7 +65,32 @@ getPropertyName prop =
         Optional name _ ->
             name
 
+        Default name _ _ ->
+            name
+
 
 getItemsType : Items -> Type
 getItemsType (Items type_) =
     type_
+
+
+getDefault : Type -> Maybe String
+getDefault type_ =
+    case type_ of
+        String_ (Just default) ->
+            Just default
+
+        Int_ (Just default) ->
+            Just default
+
+        Float_ (Just default) ->
+            Just default
+
+        Bool_ (Just default) ->
+            Just default
+
+        Enum_ (Just default) _ ->
+            Just default
+
+        _ ->
+            Nothing
