@@ -104,7 +104,7 @@ defaultValue type_ default =
         String_ (Enum name enum) ->
             case decodeString string default of
                 Ok default ->
-                    (enumTagName name default)
+                    (enumTagName default)
 
                 Err err ->
                     Debug.crash "Invalid default value" err default
@@ -145,7 +145,7 @@ renderEnum (Definition _ isRequired type_) =
 
 renderEnumEach : String -> String -> ( String, String )
 renderEnumEach enumName value =
-    ( "\"" ++ value ++ "\"", "Result.Ok " ++ (sanitize <| enumTagName enumName value) )
+    ( "\"" ++ value ++ "\"", "Result.Ok " ++ (sanitize <| enumTagName value) )
 
 
 renderEnumFail : String -> ( String, String )

@@ -145,4 +145,4 @@ makeEnum name enum =
 
 enumName : String -> String
 enumName name =
-    "Enum" ++ capitalize name
+    capitalize name

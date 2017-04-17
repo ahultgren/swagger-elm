@@ -3,7 +3,7 @@ module Integration.Decoder exposing (..)
 import Test exposing (..)
 import Expect exposing (Expectation, fail)
 import Json.Decode exposing (decodeString)
-import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, EnumDisplaySize(EnumDisplaySizeLarge, EnumDisplaySizeSmall))
+import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, DisplaySize(Large, Small))
 
 
 articleJson =
@@ -43,7 +43,7 @@ expectedArticle =
     , type_ = Just "article"
     , title = "Article one"
     , category_id = "blog"
-    , displaySize = EnumDisplaySizeLarge
+    , displaySize = Large
     , nested =
         Just
             { one = Just "1"
@@ -102,7 +102,7 @@ expectedGroup =
       , type_ = Nothing
       , title = "Article one"
       , category_id = "blog"
-      , displaySize = EnumDisplaySizeSmall
+      , displaySize = Small
       , nested = Nothing
       , rules = Nothing
       , sponsored = False

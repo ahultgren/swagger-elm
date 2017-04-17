@@ -103,12 +103,12 @@ renderEnum : Definition -> Maybe String
 renderEnum (Definition _ isRequired type_) =
     case type_ of
         String_ (Enum name enum) ->
-            Just <| unionType (sanitize name) (List.map (sanitize << enumTagName name) enum)
+            Just <| unionType (sanitize name) (List.map enumTagName enum)
 
         _ ->
             Nothing
 
 
-enumTagName : String -> String -> String
-enumTagName typeName tagName =
-    typeName ++ capitalize tagName
+enumTagName : String -> String
+enumTagName =
+    (sanitize << capitalize)
