@@ -7,7 +7,7 @@ import Swagger.Swagger exposing (Swagger)
 import Swagger.Definition exposing (Definitions, definitions, definition, Definition)
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Ref
         , Properties(Properties)
         , Items(Items)
@@ -104,7 +104,17 @@ decodeString =
     decode (,)
         |> maybe "default" decodeAlwaysString
         |> maybe "enum" (list string)
-        |> map (apply2 String_)
+        |> map (apply2 stringOrEnum)
+
+
+stringOrEnum : Maybe String -> Maybe (List String) -> Type
+stringOrEnum default enum =
+    case enum of
+        Nothing ->
+            String_ default
+
+        Just enum ->
+            Enum_ default enum
 
 
 decodeArray : Decoder Type

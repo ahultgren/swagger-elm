@@ -19,94 +19,125 @@
     "not used": {}
   },
   "definitions": {
-    "boolean": {
-      "type": "boolean"
+    "Group": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Article$"
+      }
     },
-    "str": {
-      "type": "string"
-    },
-    "integer": {
-      "type": "integer"
-    },
-    "number": {
-      "type": "number"
-    },
-    "booleanD": {
-      "type": "boolean",
-      "default": true
-    },
-    "stringD": {
-      "type": "string",
-      "default": "str"
-    },
-    "integerD": {
-      "type": "integer",
-      "default": 1
-    },
-    "floatD": {
-      "type": "number",
-      "default": 1.1
-    },
-    "obj": {
-      "type": "object",
-      "required": ["reqref"],
+    "Article$": {
+      "required": [
+        "id",
+        "title",
+        "category_id",
+        "UpperCasedField"
+      ],
       "properties": {
-        "stringprop": {
+        "type": {
           "type": "string"
         },
-        "objprop": {
+        "$ref": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "category_id": {
+          "type": "string"
+        },
+        "sponsored": {
+          "type": "boolean",
+          "default": false
+        },
+        "displaySize": {
+          "type": "string",
+          "enum": ["large", "small"],
+          "default": "small"
+        },
+        "rules": {
+          "$ref": "#/definitions/Rules"
+        },
+        "nested": {
           "type": "object",
           "properties": {
-            "nestedstringprop": {
+            "one": {
+              "type": "string"
+            },
+            "two": {
+              "type": "string"
+            },
+            "grandChildArray": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "grandAProp": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "arrayOfStrings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "grandChildObject": {
+              "type": "object",
+              "properties": {
+                "grandOProp": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "UpperCasedField": {
+          "type": "object",
+          "required": ["UpperCasedFieldSubfield"],
+          "properties": {
+            "UpperCasedFieldSubfield": {
               "type": "string"
             }
           }
         },
-        "arrprop": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "ref": {
-          "$ref": "#/definitions/arr"
-        },
-        "reqref": {
-          "$ref": "#/definitions/arr"
+        "lowerCaseDefinitionRef": {
+          "$ref": "#/definitions/lowerCaseDefinition"
         }
       }
     },
-    "arr": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
+    "Rules": {
+      "type": "object"
     },
-    "arrwithobj": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "arrobjstringprop": {
-            "type": "string"
-          },
-          "arrobjarrprop": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      }
-    },
-    "arrwitharr": {
-      "type": "array",
-      "items": {
-        "type": "array",
-        "items": {
+    "ErrorResponse": {
+      "required": [
+        "message"
+      ],
+      "properties": {
+        "message": {
           "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "default": 0
+        },
+        "readableCode": {
+          "type": "string",
+          "default": "fail"
+        },
+        "level": {
+          "type": "number",
+          "default": 1.1
         }
       }
+    },
+    "lowerCaseDefinition": {
+      "type": "boolean",
+      "description": "I know, but it's still allowed..."
     }
   }
 }
