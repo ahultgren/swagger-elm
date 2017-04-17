@@ -55,6 +55,7 @@ expectedArticle =
                      ]
                     )
             , grandChildObject = Just { grandOProp = Just 1.1 }
+            , arrayOfStrings = Nothing
             }
     , rules = Nothing
     , sponsored = False
