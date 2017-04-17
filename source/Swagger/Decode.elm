@@ -11,7 +11,8 @@ import Swagger.Type
         , Ref
         , Properties(Properties)
         , Items(Items)
-        , Property(Required, Optional)
+        , Property(Required, Optional, Default)
+        , getDefault
         )
 
 
@@ -145,7 +146,12 @@ property required ( name, type_ ) =
             Required name type_
 
         False ->
-            Optional name type_
+            case getDefault type_ of
+                Just default ->
+                    Default name type_ default
+
+                Nothing ->
+                    Optional name type_
 
 
 

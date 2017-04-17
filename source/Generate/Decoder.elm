@@ -1,5 +1,6 @@
 module Generate.Decoder exposing (..)
 
+import Json.Decode as Json exposing (decodeString)
 import Generate.Utils exposing (typeName, decoderName, nestedDecoderName)
 import Codegen.Function as Fun exposing (function, pipeline, letin, caseof)
 import Codegen.Literal exposing (string)
@@ -8,7 +9,7 @@ import Swagger.Type
     exposing
         ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
-        , Property(Required, Optional)
+        , Property(Required, Optional, Default)
         , getItemsType
         )
 
@@ -84,6 +85,29 @@ renderObjectDecoderProperty parentName property =
 
         Optional name type_ ->
             "maybe " ++ string name ++ " " ++ renderPropertyDecoder parentName name type_
+
+        Default name type_ default ->
+            "optional "
+                ++ string name
+                ++ " "
+                ++ renderPropertyDecoder parentName name type_
+                ++ " "
+                ++ defaultValue type_ default
+
+
+defaultValue : Type -> String -> String
+defaultValue type_ default =
+    case type_ of
+        Enum_ _ _ ->
+            case decodeString Json.string default of
+                Ok newDefault ->
+                    typeName newDefault
+
+                Err err ->
+                    Debug.crash "Invalid default value" err default
+
+        _ ->
+            default
 
 
 renderPropertyDecoder : String -> String -> Type -> String

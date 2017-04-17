@@ -8376,24 +8376,71 @@ var _user$project$Codegen_Type$typeAlias = F2(
 					A2(_elm_lang$core$Basics_ops['++'], body, '\n'))));
 	});
 
-var _user$project$Swagger_Type$getItemsType = function (_p0) {
-	var _p1 = _p0;
-	return _p1._0;
+var _user$project$Swagger_Type$getDefault = function (type_) {
+	var _p0 = type_;
+	_v0_5:
+	do {
+		switch (_p0.ctor) {
+			case 'String_':
+				if (_p0._0.ctor === 'Just') {
+					return _elm_lang$core$Maybe$Just(_p0._0._0);
+				} else {
+					break _v0_5;
+				}
+			case 'Int_':
+				if (_p0._0.ctor === 'Just') {
+					return _elm_lang$core$Maybe$Just(_p0._0._0);
+				} else {
+					break _v0_5;
+				}
+			case 'Float_':
+				if (_p0._0.ctor === 'Just') {
+					return _elm_lang$core$Maybe$Just(_p0._0._0);
+				} else {
+					break _v0_5;
+				}
+			case 'Bool_':
+				if (_p0._0.ctor === 'Just') {
+					return _elm_lang$core$Maybe$Just(_p0._0._0);
+				} else {
+					break _v0_5;
+				}
+			case 'Enum_':
+				if (_p0._0.ctor === 'Just') {
+					return _elm_lang$core$Maybe$Just(_p0._0._0);
+				} else {
+					break _v0_5;
+				}
+			default:
+				break _v0_5;
+		}
+	} while(false);
+	return _elm_lang$core$Maybe$Nothing;
+};
+var _user$project$Swagger_Type$getItemsType = function (_p1) {
+	var _p2 = _p1;
+	return _p2._0;
 };
 var _user$project$Swagger_Type$getPropertyName = function (prop) {
-	var _p2 = prop;
-	if (_p2.ctor === 'Required') {
-		return _p2._0;
-	} else {
-		return _p2._0;
+	var _p3 = prop;
+	switch (_p3.ctor) {
+		case 'Required':
+			return _p3._0;
+		case 'Optional':
+			return _p3._0;
+		default:
+			return _p3._0;
 	}
 };
 var _user$project$Swagger_Type$getPropertyType = function (prop) {
-	var _p3 = prop;
-	if (_p3.ctor === 'Required') {
-		return _p3._1;
-	} else {
-		return _p3._1;
+	var _p4 = prop;
+	switch (_p4.ctor) {
+		case 'Required':
+			return _p4._1;
+		case 'Optional':
+			return _p4._1;
+		default:
+			return _p4._1;
 	}
 };
 var _user$project$Swagger_Type$Ref_ = function (a) {
@@ -8424,6 +8471,10 @@ var _user$project$Swagger_Type$Object_ = function (a) {
 var _user$project$Swagger_Type$Properties = function (a) {
 	return {ctor: 'Properties', _0: a};
 };
+var _user$project$Swagger_Type$Default = F3(
+	function (a, b, c) {
+		return {ctor: 'Default', _0: a, _1: b, _2: c};
+	});
 var _user$project$Swagger_Type$Optional = F2(
 	function (a, b) {
 		return {ctor: 'Optional', _0: a, _1: b};
@@ -8551,35 +8602,40 @@ var _user$project$Swagger_Decode$apply2 = F2(
 var _user$project$Swagger_Decode$property = F2(
 	function (required, _p2) {
 		var _p3 = _p2;
-		var _p6 = _p3._1;
-		var _p5 = _p3._0;
+		var _p7 = _p3._1;
+		var _p6 = _p3._0;
 		var _p4 = A2(
 			_elm_lang$core$List$any,
 			F2(
 				function (x, y) {
 					return _elm_lang$core$Native_Utils.eq(x, y);
-				})(_p5),
+				})(_p6),
 			required);
 		if (_p4 === true) {
-			return A2(_user$project$Swagger_Type$Required, _p5, _p6);
+			return A2(_user$project$Swagger_Type$Required, _p6, _p7);
 		} else {
-			return A2(_user$project$Swagger_Type$Optional, _p5, _p6);
+			var _p5 = _user$project$Swagger_Type$getDefault(_p7);
+			if (_p5.ctor === 'Just') {
+				return A3(_user$project$Swagger_Type$Default, _p6, _p7, _p5._0);
+			} else {
+				return A2(_user$project$Swagger_Type$Optional, _p6, _p7);
+			}
 		}
 	});
-var _user$project$Swagger_Decode$decodeProperties = function (_p7) {
-	var _p8 = _p7;
+var _user$project$Swagger_Decode$decodeProperties = function (_p8) {
+	var _p9 = _p8;
 	return A2(
 		_elm_lang$core$List$map,
-		_user$project$Swagger_Decode$property(_p8._0),
-		_p8._1);
+		_user$project$Swagger_Decode$property(_p9._0),
+		_p9._1);
 };
 var _user$project$Swagger_Decode$stringOrEnum = F2(
 	function ($default, $enum) {
-		var _p9 = $enum;
-		if (_p9.ctor === 'Nothing') {
+		var _p10 = $enum;
+		if (_p10.ctor === 'Nothing') {
 			return _user$project$Swagger_Type$String_($default);
 		} else {
-			return A2(_user$project$Swagger_Type$Enum_, $default, _p9._0);
+			return A2(_user$project$Swagger_Type$Enum_, $default, _p10._0);
 		}
 	});
 var _user$project$Swagger_Decode$decodeString = A2(
@@ -8611,11 +8667,11 @@ var _user$project$Swagger_Decode$decodePrimitive = function (constructor) {
 var _user$project$Swagger_Decode$extractRef = function (ref) {
 	var parsed = A2(
 		_elm_lang$core$Maybe$andThen,
-		function (_p10) {
+		function (_p11) {
 			return _elm_lang$core$List$head(
 				function (_) {
 					return _.submatches;
-				}(_p10));
+				}(_p11));
 		},
 		_elm_lang$core$List$head(
 			A3(
@@ -8623,26 +8679,26 @@ var _user$project$Swagger_Decode$extractRef = function (ref) {
 				_elm_lang$core$Regex$AtMost(1),
 				_elm_lang$core$Regex$regex('^#/definitions/(.+)$'),
 				ref)));
-	var _p11 = parsed;
-	if ((_p11.ctor === 'Just') && (_p11._0.ctor === 'Just')) {
-		return _p11._0._0;
+	var _p12 = parsed;
+	if ((_p12.ctor === 'Just') && (_p12._0.ctor === 'Just')) {
+		return _p12._0._0;
 	} else {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
 			_elm_lang$core$Native_Utils.crash(
 				'Swagger.Decode',
 				{
-					start: {line: 92, column: 17},
-					end: {line: 92, column: 28}
+					start: {line: 93, column: 17},
+					end: {line: 93, column: 28}
 				})('Unparseable reference '),
 			ref);
 	}
 };
 var _user$project$Swagger_Decode$decodeRef = A2(
 	_elm_lang$core$Json_Decode$map,
-	function (_p12) {
+	function (_p13) {
 		return _user$project$Swagger_Type$Ref_(
-			_user$project$Swagger_Decode$extractRef(_p12));
+			_user$project$Swagger_Decode$extractRef(_p13));
 	},
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
@@ -8650,7 +8706,7 @@ var _user$project$Swagger_Decode$decodeRef = A2(
 		_elm_lang$core$Json_Decode$string,
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
 var _user$project$Swagger_Decode$decodeType = _elm_lang$core$Json_Decode$lazy(
-	function (_p13) {
+	function (_p14) {
 		return A2(
 			_elm_lang$core$Json_Decode$andThen,
 			_user$project$Swagger_Decode$decodeTypeByType,
@@ -8669,14 +8725,14 @@ var _user$project$Swagger_Decode$decodeType = _elm_lang$core$Json_Decode$lazy(
 								return {ctor: '_Tuple2', _0: v0, _1: v1};
 							})))));
 	});
-var _user$project$Swagger_Decode$decodeTypeByType = function (_p14) {
-	var _p15 = _p14;
-	var _p16 = _p15._1;
-	if (_p16.ctor === 'Just') {
+var _user$project$Swagger_Decode$decodeTypeByType = function (_p15) {
+	var _p16 = _p15;
+	var _p17 = _p16._1;
+	if (_p17.ctor === 'Just') {
 		return _user$project$Swagger_Decode$decodeRef;
 	} else {
-		var _p17 = _p15._0;
-		switch (_p17) {
+		var _p18 = _p16._0;
+		switch (_p18) {
 			case 'string':
 				return _user$project$Swagger_Decode$decodeString;
 			case 'integer':
@@ -8689,7 +8745,7 @@ var _user$project$Swagger_Decode$decodeTypeByType = function (_p14) {
 				return _user$project$Swagger_Decode$decodeArray;
 			default:
 				return _elm_lang$core$Json_Decode$lazy(
-					function (_p18) {
+					function (_p19) {
 						return _user$project$Swagger_Decode$decodeObject;
 					});
 		}
@@ -8697,23 +8753,23 @@ var _user$project$Swagger_Decode$decodeTypeByType = function (_p14) {
 };
 var _user$project$Swagger_Decode$decodeArray = A2(
 	_elm_lang$core$Json_Decode$map,
-	function (_p19) {
+	function (_p20) {
 		return _user$project$Swagger_Type$Array_(
-			_user$project$Swagger_Type$Items(_p19));
+			_user$project$Swagger_Type$Items(_p20));
 	},
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 		'items',
 		_elm_lang$core$Json_Decode$lazy(
-			function (_p20) {
+			function (_p21) {
 				return _user$project$Swagger_Decode$decodeType;
 			}),
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
 var _user$project$Swagger_Decode$decodeObject = A2(
 	_elm_lang$core$Json_Decode$map,
-	function (_p21) {
+	function (_p22) {
 		return _user$project$Swagger_Type$Object_(
-			_user$project$Swagger_Type$Properties(_p21));
+			_user$project$Swagger_Type$Properties(_p22));
 	},
 	A2(
 		_elm_lang$core$Json_Decode$map,
@@ -8722,7 +8778,7 @@ var _user$project$Swagger_Decode$decodeObject = A2(
 			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
 			'properties',
 			_elm_lang$core$Json_Decode$lazy(
-				function (_p22) {
+				function (_p23) {
 					return _elm_lang$core$Json_Decode$keyValuePairs(_user$project$Swagger_Decode$decodeType);
 				}),
 			{ctor: '[]'},
@@ -8742,9 +8798,9 @@ var _user$project$Swagger_Decode$decodeTypes = A2(
 	A2(
 		_elm_lang$core$Json_Decode$map,
 		_elm_lang$core$List$map(
-			function (_p23) {
-				var _p24 = _p23;
-				return A3(_user$project$Swagger_Definition$definition, _elm_lang$core$Maybe$Nothing, _p24._0, _p24._1);
+			function (_p24) {
+				var _p25 = _p24;
+				return A3(_user$project$Swagger_Definition$definition, _elm_lang$core$Maybe$Nothing, _p25._0, _p25._1);
 			}),
 		_elm_lang$core$Json_Decode$keyValuePairs(_user$project$Swagger_Decode$decodeType)));
 var _user$project$Swagger_Decode$decodeSwagger = A3(
@@ -8894,29 +8950,36 @@ var _user$project$Generate_Type$renderPropertyType = F3(
 var _user$project$Generate_Type$renderProperty = F2(
 	function (parentName, prop) {
 		var _p1 = prop;
-		if (_p1.ctor === 'Required') {
-			var _p2 = _p1._0;
-			return A2(
-				_user$project$Codegen_Type$recordField,
-				_user$project$Codegen_Utils$sanitize(_p2),
-				A3(_user$project$Generate_Type$renderPropertyType, parentName, _p2, _p1._1));
-		} else {
-			var _p3 = _p1._0;
-			return A2(
-				_user$project$Codegen_Type$recordField,
-				_user$project$Codegen_Utils$sanitize(_p3),
-				_user$project$Codegen_Type$maybe(
-					A3(_user$project$Generate_Type$renderPropertyType, parentName, _p3, _p1._1)));
+		switch (_p1.ctor) {
+			case 'Required':
+				var _p2 = _p1._0;
+				return A2(
+					_user$project$Codegen_Type$recordField,
+					_user$project$Codegen_Utils$sanitize(_p2),
+					A3(_user$project$Generate_Type$renderPropertyType, parentName, _p2, _p1._1));
+			case 'Optional':
+				var _p3 = _p1._0;
+				return A2(
+					_user$project$Codegen_Type$recordField,
+					_user$project$Codegen_Utils$sanitize(_p3),
+					_user$project$Codegen_Type$maybe(
+						A3(_user$project$Generate_Type$renderPropertyType, parentName, _p3, _p1._1)));
+			default:
+				var _p4 = _p1._0;
+				return A2(
+					_user$project$Codegen_Type$recordField,
+					_user$project$Codegen_Utils$sanitize(_p4),
+					A3(_user$project$Generate_Type$renderPropertyType, parentName, _p4, _p1._1));
 		}
 	});
 var _user$project$Generate_Type$renderRecord = F2(
-	function (parentName, _p4) {
-		var _p5 = _p4;
+	function (parentName, _p5) {
+		var _p6 = _p5;
 		return _user$project$Codegen_Type$record(
 			A2(
 				_elm_lang$core$List$map,
 				_user$project$Generate_Type$renderProperty(parentName),
-				_p5._0));
+				_p6._0));
 	});
 var _user$project$Generate_Type$renderEnum = function (name) {
 	return _elm_lang$core$List$map(_user$project$Generate_Utils$typeName);
@@ -8927,8 +8990,8 @@ var _user$project$Generate_Type$renderType = function (definition) {
 		_user$project$Swagger_Definition$getFullName(definition));
 	var typeAliasDecl = _user$project$Codegen_Type$typeAlias(name);
 	var unionTypeDecl = _user$project$Codegen_Type$unionType(name);
-	var _p6 = type_;
-	switch (_p6.ctor) {
+	var _p7 = type_;
+	switch (_p7.ctor) {
 		case 'String_':
 			return typeAliasDecl('String');
 		case 'Int_':
@@ -8939,10 +9002,10 @@ var _user$project$Generate_Type$renderType = function (definition) {
 			return typeAliasDecl('Bool');
 		case 'Enum_':
 			return unionTypeDecl(
-				A2(_user$project$Generate_Type$renderEnum, name, _p6._1));
+				A2(_user$project$Generate_Type$renderEnum, name, _p7._1));
 		case 'Object_':
 			return typeAliasDecl(
-				A2(_user$project$Generate_Type$renderRecord, name, _p6._0));
+				A2(_user$project$Generate_Type$renderRecord, name, _p7._0));
 		case 'Array_':
 			return typeAliasDecl(
 				_user$project$Codegen_Type$list(
@@ -8950,10 +9013,10 @@ var _user$project$Generate_Type$renderType = function (definition) {
 						_user$project$Generate_Type$renderPropertyType,
 						name,
 						'Item',
-						_user$project$Swagger_Type$getItemsType(_p6._0))));
+						_user$project$Swagger_Type$getItemsType(_p7._0))));
 		default:
 			return typeAliasDecl(
-				_user$project$Generate_Utils$typeName(_p6._0));
+				_user$project$Generate_Utils$typeName(_p7._0));
 	}
 };
 
@@ -9028,38 +9091,81 @@ var _user$project$Generate_Decoder$renderPropertyDecoder = F3(
 				return _user$project$Generate_Utils$decoderName(_p0._0);
 		}
 	});
+var _user$project$Generate_Decoder$defaultValue = F2(
+	function (type_, $default) {
+		var _p1 = type_;
+		if (_p1.ctor === 'Enum_') {
+			var _p2 = A2(_elm_lang$core$Json_Decode$decodeString, _elm_lang$core$Json_Decode$string, $default);
+			if (_p2.ctor === 'Ok') {
+				return _user$project$Generate_Utils$typeName(_p2._0);
+			} else {
+				return A3(
+					_elm_lang$core$Native_Utils.crash(
+						'Generate.Decoder',
+						{
+							start: {line: 107, column: 21},
+							end: {line: 107, column: 32}
+						}),
+					'Invalid default value',
+					_p2._0,
+					$default);
+			}
+		} else {
+			return $default;
+		}
+	});
 var _user$project$Generate_Decoder$renderObjectDecoderProperty = F2(
 	function (parentName, property) {
-		var _p1 = property;
-		if (_p1.ctor === 'Required') {
-			var _p2 = _p1._0;
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				'required ',
-				A2(
+		var _p3 = property;
+		switch (_p3.ctor) {
+			case 'Required':
+				var _p4 = _p3._0;
+				return A2(
 					_elm_lang$core$Basics_ops['++'],
-					_user$project$Codegen_Literal$string(_p2),
+					'required ',
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						' ',
-						A3(_user$project$Generate_Decoder$renderPropertyDecoder, parentName, _p2, _p1._1))));
-		} else {
-			var _p3 = _p1._0;
-			return A2(
-				_elm_lang$core$Basics_ops['++'],
-				'maybe ',
-				A2(
+						_user$project$Codegen_Literal$string(_p4),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							' ',
+							A3(_user$project$Generate_Decoder$renderPropertyDecoder, parentName, _p4, _p3._1))));
+			case 'Optional':
+				var _p5 = _p3._0;
+				return A2(
 					_elm_lang$core$Basics_ops['++'],
-					_user$project$Codegen_Literal$string(_p3),
+					'maybe ',
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						' ',
-						A3(_user$project$Generate_Decoder$renderPropertyDecoder, parentName, _p3, _p1._1))));
+						_user$project$Codegen_Literal$string(_p5),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							' ',
+							A3(_user$project$Generate_Decoder$renderPropertyDecoder, parentName, _p5, _p3._1))));
+			default:
+				var _p7 = _p3._1;
+				var _p6 = _p3._0;
+				return A2(
+					_elm_lang$core$Basics_ops['++'],
+					'optional ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_user$project$Codegen_Literal$string(_p6),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							' ',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								A3(_user$project$Generate_Decoder$renderPropertyDecoder, parentName, _p6, _p7),
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									' ',
+									A2(_user$project$Generate_Decoder$defaultValue, _p7, _p3._2))))));
 		}
 	});
 var _user$project$Generate_Decoder$renderObjectBody = F2(
-	function (name, _p4) {
-		var _p5 = _p4;
+	function (name, _p8) {
+		var _p9 = _p8;
 		return A2(
 			_user$project$Codegen_Function$pipeline,
 			A2(
@@ -9072,7 +9178,7 @@ var _user$project$Generate_Decoder$renderObjectBody = F2(
 			A2(
 				_elm_lang$core$List$map,
 				_user$project$Generate_Decoder$renderObjectDecoderProperty(name),
-				_p5._0));
+				_p9._0));
 	});
 var _user$project$Generate_Decoder$renderArrayBody = F2(
 	function (name, type_) {
@@ -9083,41 +9189,41 @@ var _user$project$Generate_Decoder$renderArrayBody = F2(
 	});
 var _user$project$Generate_Decoder$renderPrimitiveBody = F2(
 	function (type_, $default) {
-		var _p6 = $default;
-		if (_p6.ctor === 'Nothing') {
+		var _p10 = $default;
+		if (_p10.ctor === 'Nothing') {
 			return type_;
 		} else {
 			return type_;
 		}
 	});
 var _user$project$Generate_Decoder$renderDecoderBody = function (definition) {
-	var _p7 = _user$project$Swagger_Definition$getType(definition);
-	switch (_p7.ctor) {
+	var _p11 = _user$project$Swagger_Definition$getType(definition);
+	switch (_p11.ctor) {
 		case 'Object_':
 			return A2(
 				_user$project$Generate_Decoder$renderObjectBody,
 				_user$project$Swagger_Definition$getFullName(definition),
-				_p7._0);
+				_p11._0);
 		case 'Array_':
 			return A2(
 				_user$project$Generate_Decoder$renderArrayBody,
 				_user$project$Swagger_Definition$getFullName(definition),
-				_user$project$Swagger_Type$getItemsType(_p7._0));
+				_user$project$Swagger_Type$getItemsType(_p11._0));
 		case 'Enum_':
 			return A2(
 				_user$project$Generate_Decoder$renderEnumBody,
 				_user$project$Swagger_Definition$getFullName(definition),
-				_p7._1);
+				_p11._1);
 		case 'String_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'string', _p7._0);
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'string', _p11._0);
 		case 'Int_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'int', _p7._0);
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'int', _p11._0);
 		case 'Float_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'float', _p7._0);
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'float', _p11._0);
 		case 'Bool_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'bool', _p7._0);
+			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'bool', _p11._0);
 		default:
-			return _user$project$Generate_Utils$decoderName(_p7._0);
+			return _user$project$Generate_Utils$decoderName(_p11._0);
 	}
 };
 var _user$project$Generate_Decoder$renderDecoder = function (definition) {

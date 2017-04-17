@@ -8,7 +8,7 @@ import Swagger.Type
     exposing
         ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
-        , Property(Required, Optional)
+        , Property(Required, Optional, Default)
         , getItemsType
         )
 
@@ -72,6 +72,9 @@ renderProperty parentName prop =
 
         Optional name type_ ->
             recordField (sanitize name) <| maybe <| renderPropertyType parentName name type_
+
+        Default name type_ _ ->
+            recordField (sanitize name) <| renderPropertyType parentName name type_
 
 
 renderPropertyType : String -> String -> Type -> String
