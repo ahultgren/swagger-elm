@@ -4,6 +4,7 @@ import Test exposing (..)
 import Expect exposing (Expectation, fail)
 import Json.Decode exposing (decodeString)
 import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, ArticleDisplaySize(Large, Small))
+import Dict
 
 
 articleJson =
@@ -33,7 +34,11 @@ articleJson =
   },
   "lowerCaseDefinitionRef": true,
   "lowerCaseDefinitionObjectRef": {},
-  "$ref": "ref"
+  "$ref": "ref",
+  "map": {
+    "1": "one",
+    "2": "two"
+  }
 }
 """
 
@@ -65,6 +70,7 @@ expectedArticle =
     , lowerCaseDefinitionRef = Just True
     , lowerCaseDefinitionObjectRef = Just {}
     , ref = Just "ref"
+    , map = Just <| Dict.fromList [ ( "1", "one" ), ( "2", "two" ) ]
     }
 
 
@@ -113,6 +119,7 @@ expectedGroup =
       , lowerCaseDefinitionRef = Nothing
       , lowerCaseDefinitionObjectRef = Nothing
       , ref = Nothing
+      , map = Nothing
       }
     ]
 

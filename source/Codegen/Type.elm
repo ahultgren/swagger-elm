@@ -48,6 +48,11 @@ recordField name type_ =
     (uncapitalize name) ++ " : " ++ type_
 
 
+dict : Name -> Body -> String
+dict k v =
+    "( Dict " ++ k ++ " " ++ v ++ ")"
+
+
 list : Body -> String
 list body =
     wrap "List" body

@@ -110,6 +110,12 @@
         },
         "lowerCaseDefinitionObjectRef": {
           "$ref": "#/definitions/lowerCaseDefinitionObject"
+        },
+        "map": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },

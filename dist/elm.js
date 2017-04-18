@@ -8330,6 +8330,19 @@ var _user$project$Codegen_Type$maybe = function (body) {
 var _user$project$Codegen_Type$list = function (body) {
 	return A2(_user$project$Codegen_Type$wrap, 'List', body);
 };
+var _user$project$Codegen_Type$dict = F2(
+	function (k, v) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'( Dict ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				k,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' ',
+					A2(_elm_lang$core$Basics_ops['++'], v, ')'))));
+	});
 var _user$project$Codegen_Type$recordField = F2(
 	function (name, type_) {
 		return A2(
@@ -8464,6 +8477,9 @@ var _user$project$Swagger_Type$String_ = function (a) {
 };
 var _user$project$Swagger_Type$Array_ = function (a) {
 	return {ctor: 'Array_', _0: a};
+};
+var _user$project$Swagger_Type$Dict_ = function (a) {
+	return {ctor: 'Dict_', _0: a};
 };
 var _user$project$Swagger_Type$Object_ = function (a) {
 	return {ctor: 'Object_', _0: a};
@@ -8622,20 +8638,42 @@ var _user$project$Swagger_Decode$property = F2(
 			}
 		}
 	});
-var _user$project$Swagger_Decode$decodeProperties = function (_p8) {
+var _user$project$Swagger_Decode$objectOrDict = function (_p8) {
 	var _p9 = _p8;
-	return A2(
-		_elm_lang$core$List$map,
-		_user$project$Swagger_Decode$property(_p9._0),
-		_p9._1);
+	var _p10 = {ctor: '_Tuple2', _0: _p9._1, _1: _p9._2};
+	_v5_2:
+	do {
+		if (_p10.ctor === '_Tuple2') {
+			if (_p10._0.ctor === 'Nothing') {
+				if (_p10._1.ctor === 'Just') {
+					return _user$project$Swagger_Type$Dict_(
+						_user$project$Swagger_Type$Items(_p10._1._0));
+				} else {
+					break _v5_2;
+				}
+			} else {
+				return _user$project$Swagger_Type$Object_(
+					_user$project$Swagger_Type$Properties(
+						A2(
+							_elm_lang$core$List$map,
+							_user$project$Swagger_Decode$property(_p9._0),
+							_p10._0._0)));
+			}
+		} else {
+			break _v5_2;
+		}
+	} while(false);
+	return _user$project$Swagger_Type$Object_(
+		_user$project$Swagger_Type$Properties(
+			{ctor: '[]'}));
 };
 var _user$project$Swagger_Decode$stringOrEnum = F2(
 	function ($default, $enum) {
-		var _p10 = $enum;
-		if (_p10.ctor === 'Nothing') {
+		var _p11 = $enum;
+		if (_p11.ctor === 'Nothing') {
 			return _user$project$Swagger_Type$String_($default);
 		} else {
-			return A2(_user$project$Swagger_Type$Enum_, $default, _p10._0);
+			return A2(_user$project$Swagger_Type$Enum_, $default, _p11._0);
 		}
 	});
 var _user$project$Swagger_Decode$decodeString = A2(
@@ -8667,11 +8705,11 @@ var _user$project$Swagger_Decode$decodePrimitive = function (constructor) {
 var _user$project$Swagger_Decode$extractRef = function (ref) {
 	var parsed = A2(
 		_elm_lang$core$Maybe$andThen,
-		function (_p11) {
+		function (_p12) {
 			return _elm_lang$core$List$head(
 				function (_) {
 					return _.submatches;
-				}(_p11));
+				}(_p12));
 		},
 		_elm_lang$core$List$head(
 			A3(
@@ -8679,9 +8717,9 @@ var _user$project$Swagger_Decode$extractRef = function (ref) {
 				_elm_lang$core$Regex$AtMost(1),
 				_elm_lang$core$Regex$regex('^#/definitions/(.+)$'),
 				ref)));
-	var _p12 = parsed;
-	if ((_p12.ctor === 'Just') && (_p12._0.ctor === 'Just')) {
-		return _p12._0._0;
+	var _p13 = parsed;
+	if ((_p13.ctor === 'Just') && (_p13._0.ctor === 'Just')) {
+		return _p13._0._0;
 	} else {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
@@ -8696,9 +8734,9 @@ var _user$project$Swagger_Decode$extractRef = function (ref) {
 };
 var _user$project$Swagger_Decode$decodeRef = A2(
 	_elm_lang$core$Json_Decode$map,
-	function (_p13) {
+	function (_p14) {
 		return _user$project$Swagger_Type$Ref_(
-			_user$project$Swagger_Decode$extractRef(_p13));
+			_user$project$Swagger_Decode$extractRef(_p14));
 	},
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
@@ -8706,7 +8744,7 @@ var _user$project$Swagger_Decode$decodeRef = A2(
 		_elm_lang$core$Json_Decode$string,
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
 var _user$project$Swagger_Decode$decodeType = _elm_lang$core$Json_Decode$lazy(
-	function (_p14) {
+	function (_p15) {
 		return A2(
 			_elm_lang$core$Json_Decode$andThen,
 			_user$project$Swagger_Decode$decodeTypeByType,
@@ -8725,14 +8763,14 @@ var _user$project$Swagger_Decode$decodeType = _elm_lang$core$Json_Decode$lazy(
 								return {ctor: '_Tuple2', _0: v0, _1: v1};
 							})))));
 	});
-var _user$project$Swagger_Decode$decodeTypeByType = function (_p15) {
-	var _p16 = _p15;
-	var _p17 = _p16._1;
-	if (_p17.ctor === 'Just') {
+var _user$project$Swagger_Decode$decodeTypeByType = function (_p16) {
+	var _p17 = _p16;
+	var _p18 = _p17._1;
+	if (_p18.ctor === 'Just') {
 		return _user$project$Swagger_Decode$decodeRef;
 	} else {
-		var _p18 = _p16._0;
-		switch (_p18) {
+		var _p19 = _p17._0;
+		switch (_p19) {
 			case 'string':
 				return _user$project$Swagger_Decode$decodeString;
 			case 'integer':
@@ -8745,7 +8783,7 @@ var _user$project$Swagger_Decode$decodeTypeByType = function (_p15) {
 				return _user$project$Swagger_Decode$decodeArray;
 			default:
 				return _elm_lang$core$Json_Decode$lazy(
-					function (_p19) {
+					function (_p20) {
 						return _user$project$Swagger_Decode$decodeObject;
 					});
 		}
@@ -8753,44 +8791,44 @@ var _user$project$Swagger_Decode$decodeTypeByType = function (_p15) {
 };
 var _user$project$Swagger_Decode$decodeArray = A2(
 	_elm_lang$core$Json_Decode$map,
-	function (_p20) {
+	function (_p21) {
 		return _user$project$Swagger_Type$Array_(
-			_user$project$Swagger_Type$Items(_p20));
+			_user$project$Swagger_Type$Items(_p21));
 	},
 	A3(
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
 		'items',
 		_elm_lang$core$Json_Decode$lazy(
-			function (_p21) {
+			function (_p22) {
 				return _user$project$Swagger_Decode$decodeType;
 			}),
 		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_elm_lang$core$Basics$identity)));
 var _user$project$Swagger_Decode$decodeObject = A2(
 	_elm_lang$core$Json_Decode$map,
-	function (_p22) {
-		return _user$project$Swagger_Type$Object_(
-			_user$project$Swagger_Type$Properties(_p22));
-	},
-	A2(
-		_elm_lang$core$Json_Decode$map,
-		_user$project$Swagger_Decode$decodeProperties,
-		A4(
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+	_user$project$Swagger_Decode$objectOrDict,
+	A3(
+		_user$project$Swagger_Decode$maybe,
+		'additionalProperties',
+		_elm_lang$core$Json_Decode$lazy(
+			function (_p23) {
+				return _user$project$Swagger_Decode$decodeType;
+			}),
+		A3(
+			_user$project$Swagger_Decode$maybe,
 			'properties',
 			_elm_lang$core$Json_Decode$lazy(
-				function (_p23) {
+				function (_p24) {
 					return _elm_lang$core$Json_Decode$keyValuePairs(_user$project$Swagger_Decode$decodeType);
 				}),
-			{ctor: '[]'},
 			A4(
 				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
 				'required',
 				_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
 				{ctor: '[]'},
 				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(
-					F2(
-						function (v0, v1) {
-							return {ctor: '_Tuple2', _0: v0, _1: v1};
+					F3(
+						function (v0, v1, v2) {
+							return {ctor: '_Tuple3', _0: v0, _1: v1, _2: v2};
 						}))))));
 var _user$project$Swagger_Decode$decodeTypes = A2(
 	_elm_lang$core$Json_Decode$map,
@@ -8798,9 +8836,9 @@ var _user$project$Swagger_Decode$decodeTypes = A2(
 	A2(
 		_elm_lang$core$Json_Decode$map,
 		_elm_lang$core$List$map(
-			function (_p24) {
-				var _p25 = _p24;
-				return A3(_user$project$Swagger_Definition$definition, _elm_lang$core$Maybe$Nothing, _p25._0, _p25._1);
+			function (_p25) {
+				var _p26 = _p25;
+				return A3(_user$project$Swagger_Definition$definition, _elm_lang$core$Maybe$Nothing, _p26._0, _p26._1);
 			}),
 		_elm_lang$core$Json_Decode$keyValuePairs(_user$project$Swagger_Decode$decodeType)));
 var _user$project$Swagger_Decode$decodeSwagger = A3(
@@ -8842,6 +8880,9 @@ var _user$project$Swagger_Flatten$flattenType = F4(
 				return prependSelf(
 					A3(_user$project$Swagger_Flatten$flattenProperties, childParentNames, _p2._0, definitions));
 			case 'Array_':
+				return prependSelf(
+					A3(_user$project$Swagger_Flatten$flattenItems, childParentNames, _p2._0, definitions));
+			case 'Dict_':
 				return prependSelf(
 					A3(_user$project$Swagger_Flatten$flattenItems, childParentNames, _p2._0, definitions));
 			case 'Enum_':
@@ -8931,6 +8972,8 @@ var _user$project$Generate_Type$renderPropertyType = F3(
 		switch (_p0.ctor) {
 			case 'Object_':
 				return A2(_user$project$Generate_Utils$nestedTypeName, parentName, name);
+			case 'Dict_':
+				return A2(_user$project$Generate_Utils$nestedTypeName, parentName, name);
 			case 'Array_':
 				return A2(_user$project$Generate_Utils$nestedTypeName, parentName, name);
 			case 'Enum_':
@@ -9006,6 +9049,16 @@ var _user$project$Generate_Type$renderType = function (definition) {
 		case 'Object_':
 			return typeAliasDecl(
 				A2(_user$project$Generate_Type$renderRecord, name, _p7._0));
+		case 'Dict_':
+			return typeAliasDecl(
+				A2(
+					_user$project$Codegen_Type$dict,
+					'String',
+					A3(
+						_user$project$Generate_Type$renderPropertyType,
+						name,
+						'Property',
+						_user$project$Swagger_Type$getItemsType(_p7._0))));
 		case 'Array_':
 			return typeAliasDecl(
 				_user$project$Codegen_Type$list(
@@ -9075,6 +9128,8 @@ var _user$project$Generate_Decoder$renderPropertyDecoder = F3(
 		switch (_p0.ctor) {
 			case 'Object_':
 				return A2(_user$project$Generate_Utils$nestedDecoderName, parentName, name);
+			case 'Dict_':
+				return A2(_user$project$Generate_Utils$nestedDecoderName, parentName, name);
 			case 'Array_':
 				return A2(_user$project$Generate_Utils$nestedDecoderName, parentName, name);
 			case 'Enum_':
@@ -9103,8 +9158,8 @@ var _user$project$Generate_Decoder$defaultValue = F2(
 					_elm_lang$core$Native_Utils.crash(
 						'Generate.Decoder',
 						{
-							start: {line: 107, column: 21},
-							end: {line: 107, column: 32}
+							start: {line: 115, column: 21},
+							end: {line: 115, column: 32}
 						}),
 					'Invalid default value',
 					_p2._0,
@@ -9187,6 +9242,13 @@ var _user$project$Generate_Decoder$renderArrayBody = F2(
 			'list ',
 			A3(_user$project$Generate_Decoder$renderPropertyDecoder, name, 'Item', type_));
 	});
+var _user$project$Generate_Decoder$renderDictBody = F2(
+	function (name, type_) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'dict ',
+			A3(_user$project$Generate_Decoder$renderPropertyDecoder, name, 'Property', type_));
+	});
 var _user$project$Generate_Decoder$renderPrimitiveBody = F2(
 	function (type_, $default) {
 		var _p10 = $default;
@@ -9204,6 +9266,11 @@ var _user$project$Generate_Decoder$renderDecoderBody = function (definition) {
 				_user$project$Generate_Decoder$renderObjectBody,
 				_user$project$Swagger_Definition$getFullName(definition),
 				_p11._0);
+		case 'Dict_':
+			return A2(
+				_user$project$Generate_Decoder$renderDictBody,
+				_user$project$Swagger_Definition$getFullName(definition),
+				_user$project$Swagger_Type$getItemsType(_p11._0));
 		case 'Array_':
 			return A2(
 				_user$project$Generate_Decoder$renderArrayBody,
@@ -9239,7 +9306,7 @@ var _user$project$Generate_Decoder$renderDecoder = function (definition) {
 		_user$project$Generate_Decoder$renderDecoderBody(definition));
 };
 
-var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString, lazy)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\ncustomDecoder : Decoder a -> (a -> Result String b) -> Decoder b\ncustomDecoder decoder toResult =\n    Json.Decode.andThen\n        (\\a ->\n            case toResult a of\n                Ok b ->\n                    Json.Decode.succeed b\n\n                Err err ->\n                    Json.Decode.fail err\n        )\n        decoder\n\n\n';
+var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString, lazy)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\nimport Dict exposing (Dict)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\ncustomDecoder : Decoder a -> (a -> Result String b) -> Decoder b\ncustomDecoder decoder toResult =\n    Json.Decode.andThen\n        (\\a ->\n            case toResult a of\n                Ok b ->\n                    Json.Decode.succeed b\n\n                Err err ->\n                    Json.Decode.fail err\n        )\n        decoder\n\n\n';
 
 var _user$project$Generate_Swagger$moduleName = function (_p0) {
 	return _user$project$Codegen_Utils$capitalize(

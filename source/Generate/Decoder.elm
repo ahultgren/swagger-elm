@@ -7,7 +7,7 @@ import Codegen.Literal exposing (string)
 import Swagger.Definition as Def exposing (Definition, getType, getFullName)
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Dict_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
         , Property(Required, Optional, Default)
         , getItemsType
@@ -31,6 +31,9 @@ renderDecoderBody definition =
     case getType definition of
         Object_ properties ->
             renderObjectBody (getFullName definition) properties
+
+        Dict_ items ->
+            renderDictBody (getFullName definition) (getItemsType items)
 
         Array_ items ->
             renderArrayBody (getFullName definition) (getItemsType items)
@@ -63,6 +66,11 @@ renderPrimitiveBody type_ default =
         Just default ->
             -- TODO: What to do here?
             type_
+
+
+renderDictBody : String -> Type -> String
+renderDictBody name type_ =
+    "dict " ++ (renderPropertyDecoder name "Property" type_)
 
 
 renderArrayBody : String -> Type -> String
@@ -114,6 +122,9 @@ renderPropertyDecoder : String -> String -> Type -> String
 renderPropertyDecoder parentName name type_ =
     case type_ of
         Object_ props ->
+            nestedDecoderName parentName name
+
+        Dict_ _ ->
             nestedDecoderName parentName name
 
         Array_ items ->

@@ -7,7 +7,7 @@ import Swagger.Swagger exposing (Swagger)
 import Swagger.Definition exposing (Definitions, definitions, definition, Definition)
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Dict_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Ref
         , Properties(Properties)
         , Items(Items)
@@ -127,16 +127,24 @@ decodeArray =
 
 decodeObject : Decoder Type
 decodeObject =
-    decode (,)
+    decode (,,)
         |> optional "required" (list string) []
-        |> optional "properties" (lazy (\_ -> keyValuePairs decodeType)) []
-        |> map decodeProperties
-        |> map (Object_ << Properties)
+        |> maybe "properties" (lazy (\_ -> keyValuePairs decodeType))
+        |> maybe "additionalProperties" (lazy (\_ -> decodeType))
+        |> map objectOrDict
 
 
-decodeProperties : ( List String, List ( String, Type ) ) -> List Property
-decodeProperties ( required, properties ) =
-    List.map (property required) properties
+objectOrDict : ( List String, Maybe (List ( String, Type )), Maybe Type ) -> Type
+objectOrDict ( required, properties, additionalProperties ) =
+    case ( properties, additionalProperties ) of
+        ( Nothing, Just addProps ) ->
+            Dict_ <| Items addProps
+
+        ( Just props, _ ) ->
+            Object_ <| Properties <| List.map (property required) props
+
+        _ ->
+            Object_ <| Properties []
 
 
 property : List String -> ( String, Type ) -> Property
