@@ -84,16 +84,16 @@ renderPropertyType : String -> String -> Type -> String
 renderPropertyType parentName name type_ =
     case type_ of
         Object_ _ ->
-            (nestedTypeName parentName name)
+            nestedTypeName parentName name
 
         Dict_ _ ->
-            (nestedTypeName parentName name)
+            nestedTypeName parentName name
 
         Array_ _ ->
-            (nestedTypeName parentName name)
+            nestedTypeName parentName name
 
         Enum_ _ _ ->
-            (nestedTypeName parentName name)
+            nestedTypeName parentName name
 
         String_ _ ->
             "String"

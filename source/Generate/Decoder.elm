@@ -121,28 +121,28 @@ defaultValue type_ default =
 renderPropertyDecoder : String -> String -> Type -> String
 renderPropertyDecoder parentName name type_ =
     case type_ of
-        Object_ props ->
+        Object_ _ ->
             nestedDecoderName parentName name
 
         Dict_ _ ->
             nestedDecoderName parentName name
 
-        Array_ items ->
+        Array_ _ ->
             nestedDecoderName parentName name
 
         Enum_ _ _ ->
             nestedDecoderName parentName name
 
-        String_ default ->
+        String_ _ ->
             "string"
 
-        Int_ default ->
+        Int_ _ ->
             "int"
 
-        Float_ default ->
+        Float_ _ ->
             "float"
 
-        Bool_ default ->
+        Bool_ _ ->
             "bool"
 
         Ref_ ref ->
