@@ -3,7 +3,7 @@ module Integration.Decoder exposing (..)
 import Test exposing (..)
 import Expect exposing (Expectation, fail)
 import Json.Decode exposing (decodeString)
-import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, ArticleDisplaySize(Large, Small))
+import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, decodeObjectDict, ArticleDisplaySize(Large, Small))
 import Dict
 
 
@@ -136,6 +136,34 @@ expectedRules =
     {}
 
 
+dictJson =
+    """
+{
+    "key": { "message": "this is a dict" }
+}
+"""
+
+
+expectedDict =
+    Dict.fromList
+        [ ( "key"
+          , { message = "this is a dict"
+            , code = 0
+            , readableCode = "fail"
+            , level = 1.1
+            }
+          )
+        ]
+
+
+emptyDictJson =
+    "{}"
+
+
+expectedEmptyDict =
+    Dict.empty
+
+
 all : Test
 all =
     describe "Decoder"
@@ -151,4 +179,10 @@ all =
         , test "should decode Rules" <|
             always <|
                 Expect.equal (Ok expectedRules) (decodeString decodeRules rulesJson)
+        , test "should decode ObjectDict" <|
+            always <|
+                Expect.equal (Ok expectedDict) (decodeString decodeObjectDict dictJson)
+        , test "should decode empty dict" <|
+            always <|
+                Expect.equal (Ok expectedEmptyDict) (decodeString decodeObjectDict emptyDictJson)
         ]

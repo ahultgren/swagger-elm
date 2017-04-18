@@ -150,6 +150,12 @@
     },
     "lowerCaseDefinitionObject": {
       "type": "object"
+    },
+    "ObjectDict": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ErrorResponse"
+      }
     }
   }
 }
