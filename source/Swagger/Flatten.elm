@@ -95,5 +95,17 @@ flattenType parentNames name type_ definitions =
                 definitions
                     |> prependSelf
 
-            _ ->
+            String_ _ ->
+                definitions
+
+            Int_ _ ->
+                definitions
+
+            Float_ _ ->
+                definitions
+
+            Bool_ _ ->
+                definitions
+
+            Ref_ _ ->
                 definitions

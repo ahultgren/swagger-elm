@@ -8887,6 +8887,14 @@ var _user$project$Swagger_Flatten$flattenType = F4(
 					A3(_user$project$Swagger_Flatten$flattenItems, childParentNames, _p2._0, definitions));
 			case 'Enum_':
 				return prependSelf(definitions);
+			case 'String_':
+				return definitions;
+			case 'Int_':
+				return definitions;
+			case 'Float_':
+				return definitions;
+			case 'Bool_':
+				return definitions;
 			default:
 				return definitions;
 		}
