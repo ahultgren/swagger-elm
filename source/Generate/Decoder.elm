@@ -7,7 +7,7 @@ import Codegen.Literal exposing (string)
 import Swagger.Definition as Def exposing (Definition, getType, getFullName)
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Array_, Dict_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
         , Property(Required, Optional, Default)
         , getItemsType
@@ -34,6 +34,9 @@ renderDecoderBody definition =
 
         Array_ items ->
             renderArrayBody (getFullName definition) (getItemsType items)
+
+        Dict_ typeName ->
+            renderDictBody (getFullName definition) typeName
 
         Enum_ default enum ->
             renderEnumBody (getFullName definition) enum
@@ -68,6 +71,11 @@ renderPrimitiveBody type_ default =
 renderArrayBody : String -> Type -> String
 renderArrayBody name type_ =
     "list " ++ (renderPropertyDecoder name "Item" type_)
+
+
+renderDictBody : String -> Type -> String
+renderDictBody name type_ =
+    "dict " ++ (renderPropertyDecoder name "Property" type_)
 
 
 renderObjectBody : String -> Properties -> String
@@ -117,6 +125,9 @@ renderPropertyDecoder parentName name type_ =
             nestedDecoderName parentName name
 
         Array_ items ->
+            nestedDecoderName parentName name
+
+        Dict_ _ ->
             nestedDecoderName parentName name
 
         Enum_ _ _ ->

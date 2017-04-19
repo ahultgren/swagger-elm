@@ -8,6 +8,7 @@ type alias Default =
 type Type
     = Object_ Properties
     | Array_ Items
+    | Dict_ Type
       -- TODO: remove default from each type?
     | String_ Default
     | Enum_ Default Enum

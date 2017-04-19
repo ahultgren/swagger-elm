@@ -53,6 +53,11 @@ list body =
     wrap "List" body
 
 
+dict : Body -> String
+dict typeName =
+    "Dict String " ++ typeName
+
+
 maybe : Body -> String
 maybe body =
     wrap "Maybe" body
