@@ -3,7 +3,8 @@ module Integration.Decoder exposing (..)
 import Test exposing (..)
 import Expect exposing (Expectation, fail)
 import Json.Decode exposing (decodeString)
-import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, ArticleDisplaySize(Large, Small))
+import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, decodeLabels, decodeDictWithObject, decodeDictWithRef, ArticleDisplaySize(Large, Small))
+import Dict
 
 
 articleJson =
@@ -129,6 +130,66 @@ expectedRules =
     {}
 
 
+labelsJson =
+    """
+ {
+           "label1": "labelContent",
+           "label2": "labelContent",
+           "label3": "labelContent"
+       }
+     """
+
+
+expectedLabels =
+    Dict.fromList
+        [ ( "label1", "labelContent" )
+        , ( "label2", "labelContent" )
+        , ( "label3", "labelContent" )
+        ]
+
+dictWithObjectJson =
+    """
+     {
+     "label1": {"nestedProperty": "value1"},
+     "label2": {"nestedProperty": "value2"},
+     "label3": {"nestedProperty": "value3"},
+     "label4": {"nestedProperty": "value4"},
+     "label5": {"nestedProperty": "value5"}
+     }
+     """
+
+expectedDictWithObject =
+    Dict.fromList
+        [( "label1", {nestedProperty = Just "value1"})
+        ,( "label2", {nestedProperty = Just "value2"})
+        ,( "label3", {nestedProperty = Just "value3"})
+        ,( "label4", {nestedProperty = Just "value4"})
+        ,( "label5", {nestedProperty = Just "value5"})
+        ]
+
+dictWithRefJson =
+    """
+     {
+       "label1": {},
+       "label2": {},
+       "label3": {},
+       "label4": {},
+       "label5": {}
+     }
+
+     """
+
+expectedDictWithRef =
+    Dict.fromList
+        [( "label1", {})
+        ,( "label2", {})
+        ,( "label3", {})
+        ,( "label4", {})
+        ,( "label5", {})
+        ]
+
+
+
 all : Test
 all =
     describe "Decoder"
@@ -144,4 +205,16 @@ all =
         , test "should decode Rules" <|
             always <|
                 Expect.equal (Ok expectedRules) (decodeString decodeRules rulesJson)
+        , test "should decode labels" <|
+            always <|
+                Expect.equal (Ok expectedLabels) (decodeString decodeLabels labelsJson)
+        , test "should decode empty dict" <|
+            always <|
+                Expect.equal (Ok <| Dict.fromList []) (decodeString decodeLabels "{}")
+        , test "should decode dict with nested object" <|
+            always <|
+                Expect.equal (Ok expectedDictWithObject) (decodeString decodeDictWithObject dictWithObjectJson)
+        , test "should decode dict with nested ref" <|
+            always <|
+                Expect.equal (Ok expectedDictWithRef) (decodeString decodeDictWithRef dictWithRefJson)
         ]

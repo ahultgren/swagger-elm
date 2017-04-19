@@ -12,7 +12,7 @@ import Swagger.Definition as Definition
         )
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Array_, Dict_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
         , Property(Required, Optional)
         , Items(Items)
@@ -46,6 +46,9 @@ flattenEachRoot definition definitions =
 
                 Array_ items ->
                     flattenItems [ name ] items definitions
+
+                Dict_ type_ ->
+                    flattenType [ name ] "Property" type_ definitions
 
                 _ ->
                     definitions
@@ -86,6 +89,9 @@ flattenType parentNames name type_ definitions =
             Array_ items ->
                 flattenItems childParentNames items definitions
                     |> prependSelf
+
+            Dict_ type_ ->
+                flattenType childParentNames "Property" type_ definitions
 
             (Enum_ _ _) as enum ->
                 definitions

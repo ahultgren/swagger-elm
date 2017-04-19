@@ -2,11 +2,11 @@ module Generate.Type exposing (..)
 
 import Generate.Utils exposing (typeName, nestedTypeName)
 import Codegen.Utils exposing (sanitize)
-import Codegen.Type exposing (typeAlias, unionType, record, recordField, list, maybe)
+import Codegen.Type exposing (typeAlias, unionType, record, recordField, list, dict, maybe)
 import Swagger.Definition as Def exposing (Definition, getType, getFullName)
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Array_, Dict_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Properties(Properties)
         , Property(Required, Optional, Default)
         , getItemsType
@@ -50,6 +50,9 @@ renderType definition =
             Array_ items ->
                 typeAliasDecl <| list <| renderPropertyType name "Item" <| getItemsType items
 
+            Dict_ type_ ->
+                typeAliasDecl <| dict <| renderPropertyType name "Property" type_
+
             Ref_ ref ->
                 typeAliasDecl <| typeName ref
 
@@ -84,6 +87,9 @@ renderPropertyType parentName name type_ =
             (nestedTypeName parentName name)
 
         Array_ _ ->
+            (nestedTypeName parentName name)
+
+        Dict_ _ ->
             (nestedTypeName parentName name)
 
         Enum_ _ _ ->

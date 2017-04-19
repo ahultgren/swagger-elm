@@ -144,6 +144,29 @@
     },
     "lowerCaseDefinitionObject": {
       "type": "object"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "dictWithObject": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "nestedProperty": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dictWithRef": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/lowerCaseDefinitionObject"
+      }
     }
   }
 }

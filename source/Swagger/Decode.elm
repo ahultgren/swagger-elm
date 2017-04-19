@@ -1,13 +1,13 @@
 module Swagger.Decode exposing (..)
 
-import Json.Decode as Json exposing (Decoder, string, int, float, bool, keyValuePairs, list, map, value, decodeValue, oneOf, lazy, andThen)
+import Json.Decode as Json exposing (Decoder, string, int, float, bool, keyValuePairs, field, list, map, value, Value, decodeValue, oneOf, lazy, andThen)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
 import Regex exposing (regex)
 import Swagger.Swagger exposing (Swagger)
 import Swagger.Definition exposing (Definitions, definitions, definition, Definition)
 import Swagger.Type
     exposing
-        ( Type(Object_, Array_, String_, Enum_, Int_, Float_, Bool_, Ref_)
+        ( Type(Object_, Array_, Dict_, String_, Enum_, Int_, Float_, Bool_, Ref_)
         , Ref
         , Properties(Properties)
         , Items(Items)
@@ -68,7 +68,7 @@ decodeTypeByType ( type_, ref ) =
                     decodeArray
 
                 _ ->
-                    lazy (\_ -> decodeObject)
+                    decodeObject
 
 
 decodeRef : Decoder Type
@@ -125,13 +125,48 @@ decodeArray =
         |> map (Array_ << Items)
 
 
+decodeDict : Decoder Type
+decodeDict =
+    decode Dict_
+        |> required "additionalProperties" (lazy (\_ -> decodeType))
+
+
 decodeObject : Decoder Type
 decodeObject =
-    decode (,)
+    decode (,,)
         |> optional "required" (list string) []
-        |> optional "properties" (lazy (\_ -> keyValuePairs decodeType)) []
-        |> map decodeProperties
-        |> map (Object_ << Properties)
+        |> maybe "properties" (lazy (\_ -> keyValuePairs decodeType))
+        |> maybe "additionalProperties" (lazy (\_ -> decodeType))
+        |> map objectOrDict
+
+
+
+{-
+   According to the [Swagger specification]
+   (http://swagger.io/specification/#model-with-map-dictionary-properties-88)
+   a dict is defined by the following json:
+   {
+     "type": "object",
+     "additionalProperties": {
+       "type": "string"
+     }
+   }
+   So if the key "properties" is not set and the key "additionalProperties" is set
+   we interpret it as a dictionary instead of an object.
+-}
+
+
+objectOrDict : ( List String, Maybe (List ( String, Type )), Maybe Type ) -> Type
+objectOrDict ( required, properties, additionalProperties ) =
+    case ( properties, additionalProperties ) of
+        ( Nothing, Just addProps ) ->
+            Dict_ addProps
+
+        ( Just props, _ ) ->
+            Object_ <| Properties <| List.map (property required) props
+
+        _ ->
+            Object_ <| Properties []
 
 
 decodeProperties : ( List String, List ( String, Type ) ) -> List Property
