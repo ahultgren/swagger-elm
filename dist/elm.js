@@ -8897,6 +8897,14 @@ var _user$project$Swagger_Flatten$flattenType = F4(
 					continue flattenType;
 				case 'Enum_':
 					return prependSelf(definitions);
+				case 'String_':
+					return definitions;
+				case 'Int_':
+					return definitions;
+				case 'Float_':
+					return definitions;
+				case 'Bool_':
+					return definitions;
 				default:
 					return definitions;
 			}
@@ -8944,6 +8952,16 @@ var _user$project$Swagger_Flatten$flattenEachRoot = F2(
 						'Property',
 						_p5._0,
 						definitions);
+				case 'Enum_':
+					return definitions;
+				case 'String_':
+					return definitions;
+				case 'Int_':
+					return definitions;
+				case 'Float_':
+					return definitions;
+				case 'Bool_':
+					return definitions;
 				default:
 					return definitions;
 			}

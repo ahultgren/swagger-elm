@@ -50,7 +50,22 @@ flattenEachRoot definition definitions =
                 Dict_ type_ ->
                     flattenType [ name ] "Property" type_ definitions
 
-                _ ->
+                Enum_ _ _ ->
+                    definitions
+
+                String_ _ ->
+                    definitions
+
+                Int_ _ ->
+                    definitions
+
+                Float_ _ ->
+                    definitions
+
+                Bool_ _ ->
+                    definitions
+
+                Ref_ _ ->
                     definitions
     in
         Definition.prepend definition newDefinitions
@@ -93,9 +108,21 @@ flattenType parentNames name type_ definitions =
             Dict_ type_ ->
                 flattenType childParentNames "Property" type_ definitions
 
-            (Enum_ _ _) as enum ->
+            Enum_ _ _ ->
                 definitions
                     |> prependSelf
 
-            _ ->
+            String_ _ ->
+                definitions
+
+            Int_ _ ->
+                definitions
+
+            Float_ _ ->
+                definitions
+
+            Bool_ _ ->
+                definitions
+
+            Ref_ _ ->
                 definitions
