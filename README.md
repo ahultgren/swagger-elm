@@ -40,7 +40,7 @@ Help and feedback would be gladly appreciated, but please just drop me a line
   - [ ] Complex types (if meaningful)
 - [x] Sanitization of identifiers
 - [x] Unit tests
-- [ ] Dicts (additionalProperties)
+- [x] Dicts (additionalProperties)
 - [ ] Polymorphism (allOf and discriminator)
 - [ ] Recursive types and decoders
 - [ ] Formats? (datetime, uuid, etc)
