@@ -9192,8 +9192,8 @@ var _user$project$Generate_Decoder$defaultValue = F2(
 					_elm_lang$core$Native_Utils.crash(
 						'Generate.Decoder',
 						{
-							start: {line: 115, column: 21},
-							end: {line: 115, column: 32}
+							start: {line: 109, column: 21},
+							end: {line: 109, column: 32}
 						}),
 					'Invalid default value',
 					_p2._0,
@@ -9283,48 +9283,42 @@ var _user$project$Generate_Decoder$renderArrayBody = F2(
 			'list ',
 			A3(_user$project$Generate_Decoder$renderPropertyDecoder, name, 'Item', type_));
 	});
-var _user$project$Generate_Decoder$renderPrimitiveBody = F2(
-	function (type_, $default) {
-		var _p10 = $default;
-		if (_p10.ctor === 'Nothing') {
-			return type_;
-		} else {
-			return type_;
-		}
-	});
+var _user$project$Generate_Decoder$renderPrimitiveBody = function (type_) {
+	return type_;
+};
 var _user$project$Generate_Decoder$renderDecoderBody = function (definition) {
-	var _p11 = _user$project$Swagger_Definition$getType(definition);
-	switch (_p11.ctor) {
+	var _p10 = _user$project$Swagger_Definition$getType(definition);
+	switch (_p10.ctor) {
 		case 'Object_':
 			return A2(
 				_user$project$Generate_Decoder$renderObjectBody,
 				_user$project$Swagger_Definition$getFullName(definition),
-				_p11._0);
+				_p10._0);
 		case 'Array_':
 			return A2(
 				_user$project$Generate_Decoder$renderArrayBody,
 				_user$project$Swagger_Definition$getFullName(definition),
-				_user$project$Swagger_Type$getItemsType(_p11._0));
+				_user$project$Swagger_Type$getItemsType(_p10._0));
 		case 'Dict_':
 			return A2(
 				_user$project$Generate_Decoder$renderDictBody,
 				_user$project$Swagger_Definition$getFullName(definition),
-				_p11._0);
+				_p10._0);
 		case 'Enum_':
 			return A2(
 				_user$project$Generate_Decoder$renderEnumBody,
 				_user$project$Swagger_Definition$getFullName(definition),
-				_p11._1);
+				_p10._1);
 		case 'String_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'string', _p11._0);
+			return _user$project$Generate_Decoder$renderPrimitiveBody('string');
 		case 'Int_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'int', _p11._0);
+			return _user$project$Generate_Decoder$renderPrimitiveBody('int');
 		case 'Float_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'float', _p11._0);
+			return _user$project$Generate_Decoder$renderPrimitiveBody('float');
 		case 'Bool_':
-			return A2(_user$project$Generate_Decoder$renderPrimitiveBody, 'bool', _p11._0);
+			return _user$project$Generate_Decoder$renderPrimitiveBody('bool');
 		default:
-			return _user$project$Generate_Utils$decoderName(_p11._0);
+			return _user$project$Generate_Utils$decoderName(_p10._0);
 	}
 };
 var _user$project$Generate_Decoder$renderDecoder = function (definition) {

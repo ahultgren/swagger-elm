@@ -38,34 +38,28 @@ renderDecoderBody definition =
         Dict_ typeName ->
             renderDictBody (getFullName definition) typeName
 
-        Enum_ default enum ->
+        Enum_ _ enum ->
             renderEnumBody (getFullName definition) enum
 
-        String_ default ->
-            renderPrimitiveBody "string" default
+        String_ _ ->
+            renderPrimitiveBody "string"
 
-        Int_ default ->
-            renderPrimitiveBody "int" default
+        Int_ _ ->
+            renderPrimitiveBody "int"
 
-        Float_ default ->
-            renderPrimitiveBody "float" default
+        Float_ _ ->
+            renderPrimitiveBody "float"
 
-        Bool_ default ->
-            renderPrimitiveBody "bool" default
+        Bool_ _ ->
+            renderPrimitiveBody "bool"
 
         Ref_ ref ->
             decoderName ref
 
 
-renderPrimitiveBody : String -> Maybe String -> String
-renderPrimitiveBody type_ default =
-    case default of
-        Nothing ->
-            type_
-
-        Just default ->
-            -- TODO: What to do here?
-            type_
+renderPrimitiveBody : String -> String
+renderPrimitiveBody type_ =
+    type_
 
 
 renderArrayBody : String -> Type -> String
@@ -121,10 +115,10 @@ defaultValue type_ default =
 renderPropertyDecoder : String -> String -> Type -> String
 renderPropertyDecoder parentName name type_ =
     case type_ of
-        Object_ props ->
+        Object_ _ ->
             nestedDecoderName parentName name
 
-        Array_ items ->
+        Array_ _ ->
             nestedDecoderName parentName name
 
         Dict_ _ ->
@@ -133,16 +127,16 @@ renderPropertyDecoder parentName name type_ =
         Enum_ _ _ ->
             nestedDecoderName parentName name
 
-        String_ default ->
+        String_ _ ->
             "string"
 
-        Int_ default ->
+        Int_ _ ->
             "int"
 
-        Float_ default ->
+        Float_ _ ->
             "float"
 
-        Bool_ default ->
+        Bool_ _ ->
             "bool"
 
         Ref_ ref ->
