@@ -8012,6 +8012,12 @@ var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
 
+var _user$project$Codegen_Function$lazy = function (body) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'(lazy (\\_ -> ',
+		A2(_elm_lang$core$Basics_ops['++'], body, '))'));
+};
 var _user$project$Codegen_Function$caseof = F2(
 	function (case_, conditions) {
 		var conds = A2(
@@ -9073,6 +9079,42 @@ var _user$project$Generate_Type$renderType = function (definition) {
 		_user$project$Swagger_Definition$getFullName(definition));
 	var typeAliasDecl = _user$project$Codegen_Type$typeAlias(name);
 	var unionTypeDecl = _user$project$Codegen_Type$unionType(name);
+	var objectDecl = _user$project$Codegen_Type$typeAlias(
+		A2(_elm_lang$core$Basics_ops['++'], name, 'Record'));
+	var arrayDecl = function (body) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'type ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				name,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' = ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						name,
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							' (',
+							A2(_elm_lang$core$Basics_ops['++'], body, ')\n\n'))))));
+	};
+	var recordDecl = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'type ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			name,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				' = ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					name,
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						' ',
+						A2(_elm_lang$core$Basics_ops['++'], name, 'Record \n\n'))))));
 	var _p7 = type_;
 	switch (_p7.ctor) {
 		case 'String_':
@@ -9087,10 +9129,13 @@ var _user$project$Generate_Type$renderType = function (definition) {
 			return unionTypeDecl(
 				A2(_user$project$Generate_Type$renderEnum, name, _p7._1));
 		case 'Object_':
-			return typeAliasDecl(
-				A2(_user$project$Generate_Type$renderRecord, name, _p7._0));
+			return A2(
+				_elm_lang$core$Basics_ops['++'],
+				objectDecl(
+					A2(_user$project$Generate_Type$renderRecord, name, _p7._0)),
+				recordDecl);
 		case 'Array_':
-			return typeAliasDecl(
+			return arrayDecl(
 				_user$project$Codegen_Type$list(
 					A3(
 						_user$project$Generate_Type$renderPropertyType,
@@ -9161,7 +9206,8 @@ var _user$project$Generate_Decoder$renderPropertyDecoder = F3(
 		var _p0 = type_;
 		switch (_p0.ctor) {
 			case 'Object_':
-				return A2(_user$project$Generate_Utils$nestedDecoderName, parentName, name);
+				return _user$project$Codegen_Function$lazy(
+					A2(_user$project$Generate_Utils$nestedDecoderName, parentName, name));
 			case 'Array_':
 				return A2(_user$project$Generate_Utils$nestedDecoderName, parentName, name);
 			case 'Dict_':
@@ -9177,7 +9223,8 @@ var _user$project$Generate_Decoder$renderPropertyDecoder = F3(
 			case 'Bool_':
 				return 'bool';
 			default:
-				return _user$project$Generate_Utils$decoderName(_p0._0);
+				return _user$project$Codegen_Function$lazy(
+					_user$project$Generate_Utils$decoderName(_p0._0));
 		}
 	});
 var _user$project$Generate_Decoder$defaultValue = F2(
@@ -9192,8 +9239,8 @@ var _user$project$Generate_Decoder$defaultValue = F2(
 					_elm_lang$core$Native_Utils.crash(
 						'Generate.Decoder',
 						{
-							start: {line: 109, column: 21},
-							end: {line: 109, column: 32}
+							start: {line: 112, column: 21},
+							end: {line: 112, column: 32}
 						}),
 					'Invalid default value',
 					_p2._0,
@@ -9263,11 +9310,26 @@ var _user$project$Generate_Decoder$renderObjectBody = F2(
 						return A2(_elm_lang$core$Basics_ops['++'], x, y);
 					}),
 				'decode ',
-				_user$project$Generate_Utils$typeName(name)),
-			A2(
-				_elm_lang$core$List$map,
-				_user$project$Generate_Decoder$renderObjectDecoderProperty(name),
-				_p9._0));
+				_user$project$Generate_Utils$typeName(
+					A2(_elm_lang$core$Basics_ops['++'], name, 'Record'))),
+			A3(
+				_elm_lang$core$Basics$flip,
+				F2(
+					function (x, y) {
+						return A2(_elm_lang$core$Basics_ops['++'], x, y);
+					}),
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$core$Basics_ops['++'],
+						'map ',
+						_user$project$Generate_Utils$typeName(name)),
+					_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$List$map,
+					_user$project$Generate_Decoder$renderObjectDecoderProperty(name),
+					_p9._0)));
 	});
 var _user$project$Generate_Decoder$renderDictBody = F2(
 	function (name, type_) {
@@ -9278,10 +9340,21 @@ var _user$project$Generate_Decoder$renderDictBody = F2(
 	});
 var _user$project$Generate_Decoder$renderArrayBody = F2(
 	function (name, type_) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'list ',
-			A3(_user$project$Generate_Decoder$renderPropertyDecoder, name, 'Item', type_));
+		return A3(
+			_elm_lang$core$Basics$flip,
+			_user$project$Codegen_Function$pipeline,
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'map ',
+					_user$project$Generate_Utils$typeName(name)),
+				_1: {ctor: '[]'}
+			},
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'list ',
+				A3(_user$project$Generate_Decoder$renderPropertyDecoder, name, 'Item', type_)));
 	});
 var _user$project$Generate_Decoder$renderPrimitiveBody = function (type_) {
 	return type_;
@@ -9334,7 +9407,7 @@ var _user$project$Generate_Decoder$renderDecoder = function (definition) {
 		_user$project$Generate_Decoder$renderDecoderBody(definition));
 };
 
-var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString, lazy)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\nimport Dict exposing (Dict)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\ncustomDecoder : Decoder a -> (a -> Result String b) -> Decoder b\ncustomDecoder decoder toResult =\n    Json.Decode.andThen\n        (\\a ->\n            case toResult a of\n                Ok b ->\n                    Json.Decode.succeed b\n\n                Err err ->\n                    Json.Decode.fail err\n        )\n        decoder\n\n\n';
+var _user$project$Generate_Headers$renderHeaders = 'module Decoder exposing (..)\n\nimport Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString, lazy, succeed, fail, andThen)\nimport Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)\nimport Dict exposing (Dict)\n\n\nmaybe : String -> Decoder a -> Decoder (Maybe a -> b) -> Decoder b\nmaybe name decoder =\n    optional name (map Just decoder) Nothing\n\n\ncustomDecoder : Decoder a -> (a -> Result String b) -> Decoder b\ncustomDecoder decoder toResult =\n    andThen\n        (\\a ->\n            case toResult a of\n                Ok b ->\n                    succeed b\n\n                Err err ->\n                    fail err\n        )\n        decoder\n\n\n';
 
 var _user$project$Generate_Swagger$moduleName = function (_p0) {
 	return _user$project$Codegen_Utils$capitalize(
@@ -9370,6 +9443,15 @@ var _user$project$Generate_Swagger$render = function (_p1) {
 			A2(_user$project$Swagger_Definition$map, _user$project$Generate_Swagger$renderDefinition, _p2.definitions)));
 };
 
+var _user$project$Generate$maybe = F2(
+	function (name, decoder) {
+		return A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
+			name,
+			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, decoder),
+			_elm_lang$core$Maybe$Nothing);
+	});
+var _user$project$Generate$json = '\n{\n  \"message\": \"asd\",\n  \"upvotes\": 0,\n  \"downvotes\": 0,\n  \"responses\": [\n    {\n      \"message\": \"asd\",\n      \"upvotes\": 0,\n      \"downvotes\": 0,\n      \"responses\": [\n        {\n          \"message\": \"asd\",\n          \"upvotes\": 0,\n          \"downvotes\": 0,\n          \"responses\": []\n        }\n      ]\n    },\n    {\n      \"message\": \"asd\",\n      \"upvotes\": 0,\n      \"downvotes\": 0,\n      \"responses\": []\n    }\n  ]\n}\n';
 var _user$project$Generate$generate = function (json) {
 	return A2(
 		_elm_lang$core$Result$map,
@@ -9407,6 +9489,26 @@ var _user$project$Generate$main = _elm_lang$html$Html$programWithFlags(
 		},
 		subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
 	})(_elm_lang$core$Json_Decode$string);
+var _user$project$Generate$Comment = function (a) {
+	return {responses: a};
+};
+var _user$project$Generate$Responses = function (a) {
+	return {ctor: 'Responses', _0: a};
+};
+var _user$project$Generate$decodeResponses = A2(
+	_elm_lang$core$Json_Decode$map,
+	_user$project$Generate$Responses,
+	_elm_lang$core$Json_Decode$list(
+		_elm_lang$core$Json_Decode$lazy(
+			function (_p4) {
+				return _user$project$Generate$decodeComment;
+			})));
+var _user$project$Generate$decodeComment = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'responses',
+	_user$project$Generate$decodeResponses,
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Generate$Comment));
+var _user$project$Generate$test = A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Generate$decodeComment, _user$project$Generate$json);
 
 var Elm = {};
 Elm['Generate'] = Elm['Generate'] || {};

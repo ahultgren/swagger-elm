@@ -41,8 +41,8 @@ Help and feedback would be gladly appreciated, but please just drop me a line
 - [x] Sanitization of identifiers
 - [x] Unit tests
 - [x] Dicts (additionalProperties)
+- [x] Recursive types and decoders
 - [ ] Polymorphism (allOf and discriminator)
-- [ ] Recursive types and decoders
 - [ ] Formats? (datetime, uuid, etc)
 - [ ] Encoders
 - [ ] Deduplication of types and fields

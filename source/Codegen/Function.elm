@@ -1,4 +1,4 @@
-module Codegen.Function exposing (Arg, function, pipeline, letin, caseof)
+module Codegen.Function exposing (Arg, function, pipeline, letin, caseof, lazy)
 
 import String
 
@@ -90,3 +90,8 @@ caseof case_ conditions =
                 |> String.join "\n"
     in
         "  case " ++ case_ ++ " of\n" ++ conds
+
+
+lazy : Body -> String
+lazy body =
+    "(lazy (\\_ -> " ++ body ++ "))"

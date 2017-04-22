@@ -167,6 +167,21 @@
       "additionalProperties": {
         "$ref": "#/definitions/lowerCaseDefinitionObject"
       }
+    },
+    "Comment": {
+      "type": "object",
+      "required": ["responses"],
+      "properties": {
+        "responses": {
+          "$ref": "#/definitions/Responses"
+        }
+      }
+    },
+    "Responses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Comment"
+      }
     }
   }
 }

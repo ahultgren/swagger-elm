@@ -2,7 +2,7 @@ module Generate.Decoder exposing (..)
 
 import Json.Decode as Json exposing (decodeString)
 import Generate.Utils exposing (typeName, decoderName, nestedDecoderName)
-import Codegen.Function as Fun exposing (function, pipeline, letin, caseof)
+import Codegen.Function as Fun exposing (function, pipeline, letin, caseof, lazy)
 import Codegen.Literal exposing (string)
 import Swagger.Definition as Def exposing (Definition, getType, getFullName)
 import Swagger.Type
@@ -64,7 +64,9 @@ renderPrimitiveBody type_ =
 
 renderArrayBody : String -> Type -> String
 renderArrayBody name type_ =
-    "list " ++ (renderPropertyDecoder name "Item" type_)
+    "list "
+        ++ (renderPropertyDecoder name "Item" type_)
+        |> flip pipeline [ "map " ++ typeName name ]
 
 
 renderDictBody : String -> Type -> String
@@ -76,7 +78,8 @@ renderObjectBody : String -> Properties -> String
 renderObjectBody name (Properties properties) =
     properties
         |> List.map (renderObjectDecoderProperty name)
-        |> pipeline ((++) "decode " <| typeName name)
+        |> flip (++) [ "map " ++ typeName name ]
+        |> pipeline ((++) "decode " <| typeName (name ++ "Record"))
 
 
 renderObjectDecoderProperty : String -> Property -> String
@@ -116,7 +119,7 @@ renderPropertyDecoder : String -> String -> Type -> String
 renderPropertyDecoder parentName name type_ =
     case type_ of
         Object_ _ ->
-            nestedDecoderName parentName name
+            lazy <| nestedDecoderName parentName name
 
         Array_ _ ->
             nestedDecoderName parentName name
@@ -140,7 +143,7 @@ renderPropertyDecoder parentName name type_ =
             "bool"
 
         Ref_ ref ->
-            decoderName ref
+            lazy <| decoderName ref
 
 
 renderEnumBody : String -> List String -> String

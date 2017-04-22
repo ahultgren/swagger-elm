@@ -27,6 +27,17 @@ renderType definition =
 
         unionTypeDecl =
             unionType name
+
+        objectDecl =
+            typeAlias <| name ++ "Record"
+
+        arrayDecl =
+            (\body ->
+                "type " ++ name ++ " = " ++ name ++ " (" ++ body ++ ")\n\n"
+            )
+
+        recordDecl =
+            "type " ++ name ++ " = " ++ name ++ " " ++ name ++ "Record \n\n"
     in
         case type_ of
             String_ _ ->
@@ -45,10 +56,11 @@ renderType definition =
                 unionTypeDecl <| renderEnum name enum
 
             Object_ props ->
-                typeAliasDecl <| renderRecord name props
+                (objectDecl <| renderRecord name props)
+                    ++ recordDecl
 
             Array_ items ->
-                typeAliasDecl <| list <| renderPropertyType name "Item" <| getItemsType items
+                arrayDecl <| list <| renderPropertyType name "Item" <| getItemsType items
 
             Dict_ type_ ->
                 typeAliasDecl <| dict <| renderPropertyType name "Property" type_
