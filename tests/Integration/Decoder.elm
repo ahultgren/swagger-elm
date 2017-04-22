@@ -3,8 +3,33 @@ module Integration.Decoder exposing (..)
 import Test exposing (..)
 import Expect exposing (Expectation, fail)
 import Json.Decode exposing (decodeString)
-import Decoder exposing (Article, decodeArticle, decodeErrorResponse, decodeGroup, decodeRules, decodeLabels, decodeDictWithObject, decodeDictWithRef, ArticleDisplaySize(Large, Small))
 import Dict
+import Decoder
+    exposing
+        ( Article(Article)
+        , ArticleDisplaySize(Large, Small)
+        , ArticleNested(ArticleNested)
+        , ArticleNestedGrandChildArray(ArticleNestedGrandChildArray)
+        , ArticleNestedGrandChildArrayItem(ArticleNestedGrandChildArrayItem)
+        , ArticleNestedGrandChildObject(ArticleNestedGrandChildObject)
+        , ArticleUpperCasedField(ArticleUpperCasedField)
+        , Comment(Comment)
+        , DictWithObjectProperty(DictWithObjectProperty)
+        , DictWithRef
+        , ErrorResponse(ErrorResponse)
+        , Group(Group)
+        , LowerCaseDefinitionObject(LowerCaseDefinitionObject)
+        , Responses(Responses)
+        , Rules(Rules)
+        , decodeArticle
+        , decodeErrorResponse
+        , decodeComment
+        , decodeGroup
+        , decodeLabels
+        , decodeDictWithObject
+        , decodeDictWithRef
+        , decodeRules
+        )
 
 
 articleJson =
@@ -39,34 +64,39 @@ articleJson =
 """
 
 
+expectedArticle : Article
 expectedArticle =
-    { id = "article1"
-    , type_ = Just "article"
-    , title = "Article one"
-    , category_id = "blog"
-    , displaySize = Large
-    , nested =
-        Just
-            { one = Just "1"
-            , two = Nothing
-            , grandChildArray =
-                Just
-                    ([ { grandAProp = Just "Array child one" }
-                     , { grandAProp = Just "Array child two" }
-                     ]
-                    )
-            , grandChildObject = Just { grandOProp = Just 1.1 }
-            , arrayOfStrings = Nothing
-            }
-    , rules = Nothing
-    , sponsored = False
-    , upperCasedField =
-        { upperCasedFieldSubfield = "test"
+    Article
+        { id = "article1"
+        , type_ = Just "article"
+        , title = "Article one"
+        , category_id = "blog"
+        , displaySize = Large
+        , nested =
+            Just <|
+                ArticleNested
+                    { one = Just "1"
+                    , two = Nothing
+                    , grandChildArray =
+                        Just
+                            (ArticleNestedGrandChildArray
+                                [ ArticleNestedGrandChildArrayItem { grandAProp = Just "Array child one" }
+                                , ArticleNestedGrandChildArrayItem { grandAProp = Just "Array child two" }
+                                ]
+                            )
+                    , grandChildObject = Just <| ArticleNestedGrandChildObject { grandOProp = Just 1.1 }
+                    , arrayOfStrings = Nothing
+                    }
+        , rules = Nothing
+        , sponsored = False
+        , upperCasedField =
+            ArticleUpperCasedField
+                { upperCasedFieldSubfield = "test"
+                }
+        , lowerCaseDefinitionRef = Just True
+        , lowerCaseDefinitionObjectRef = Just <| LowerCaseDefinitionObject {}
+        , ref = Just "ref"
         }
-    , lowerCaseDefinitionRef = Just True
-    , lowerCaseDefinitionObjectRef = Just {}
-    , ref = Just "ref"
-    }
 
 
 errorResponseJson =
@@ -78,12 +108,14 @@ errorResponseJson =
 """
 
 
+expectedErrorResponse : ErrorResponse
 expectedErrorResponse =
-    { message = "Everything went wrong"
-    , code = 0
-    , level = 9000.1
-    , readableCode = "fail"
-    }
+    ErrorResponse
+        { message = "Everything went wrong"
+        , code = 0
+        , level = 9000.1
+        , readableCode = "fail"
+        }
 
 
 groupJson =
@@ -99,23 +131,27 @@ groupJson =
 """
 
 
+expectedGroup : Group
 expectedGroup =
-    [ { id = "article1"
-      , type_ = Nothing
-      , title = "Article one"
-      , category_id = "blog"
-      , displaySize = Small
-      , nested = Nothing
-      , rules = Nothing
-      , sponsored = False
-      , upperCasedField =
-            { upperCasedFieldSubfield = "test"
+    Group
+        [ Article
+            { id = "article1"
+            , type_ = Nothing
+            , title = "Article one"
+            , category_id = "blog"
+            , displaySize = Small
+            , nested = Nothing
+            , rules = Nothing
+            , sponsored = False
+            , upperCasedField =
+                ArticleUpperCasedField
+                    { upperCasedFieldSubfield = "test"
+                    }
+            , lowerCaseDefinitionRef = Nothing
+            , lowerCaseDefinitionObjectRef = Nothing
+            , ref = Nothing
             }
-      , lowerCaseDefinitionRef = Nothing
-      , lowerCaseDefinitionObjectRef = Nothing
-      , ref = Nothing
-      }
-    ]
+        ]
 
 
 rulesJson =
@@ -126,8 +162,9 @@ rulesJson =
 """
 
 
+expectedRules : Rules
 expectedRules =
-    {}
+    Rules {}
 
 
 labelsJson =
@@ -147,6 +184,7 @@ expectedLabels =
         , ( "label3", "labelContent" )
         ]
 
+
 dictWithObjectJson =
     """
      {
@@ -158,14 +196,16 @@ dictWithObjectJson =
      }
      """
 
+
 expectedDictWithObject =
     Dict.fromList
-        [( "label1", {nestedProperty = Just "value1"})
-        ,( "label2", {nestedProperty = Just "value2"})
-        ,( "label3", {nestedProperty = Just "value3"})
-        ,( "label4", {nestedProperty = Just "value4"})
-        ,( "label5", {nestedProperty = Just "value5"})
+        [ ( "label1", DictWithObjectProperty { nestedProperty = Just "value1" } )
+        , ( "label2", DictWithObjectProperty { nestedProperty = Just "value2" } )
+        , ( "label3", DictWithObjectProperty { nestedProperty = Just "value3" } )
+        , ( "label4", DictWithObjectProperty { nestedProperty = Just "value4" } )
+        , ( "label5", DictWithObjectProperty { nestedProperty = Just "value5" } )
         ]
+
 
 dictWithRefJson =
     """
@@ -179,15 +219,53 @@ dictWithRefJson =
 
      """
 
+
 expectedDictWithRef =
     Dict.fromList
-        [( "label1", {})
-        ,( "label2", {})
-        ,( "label3", {})
-        ,( "label4", {})
-        ,( "label5", {})
+        [ ( "label1", LowerCaseDefinitionObject {} )
+        , ( "label2", LowerCaseDefinitionObject {} )
+        , ( "label3", LowerCaseDefinitionObject {} )
+        , ( "label4", LowerCaseDefinitionObject {} )
+        , ( "label5", LowerCaseDefinitionObject {} )
         ]
 
+
+commentJson =
+    """
+{
+  "responses": [
+    {
+      "responses": [
+        {
+          "responses": []
+        }
+      ]
+    },
+    {
+      "responses": []
+    }
+  ]
+}
+"""
+
+
+expectedComment =
+    Comment
+        { responses =
+            Responses
+                [ Comment
+                    { responses =
+                        Responses
+                            [ Comment
+                                { responses = Responses []
+                                }
+                            ]
+                    }
+                , Comment
+                    { responses = Responses []
+                    }
+                ]
+        }
 
 
 all : Test
@@ -217,4 +295,7 @@ all =
         , test "should decode dict with nested ref" <|
             always <|
                 Expect.equal (Ok expectedDictWithRef) (decodeString decodeDictWithRef dictWithRefJson)
+        , test "should decode comment (recursive)" <|
+            always <|
+                Expect.equal (Ok expectedComment) (decodeString decodeComment commentJson)
         ]
