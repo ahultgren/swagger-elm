@@ -9443,15 +9443,6 @@ var _user$project$Generate_Swagger$render = function (_p1) {
 			A2(_user$project$Swagger_Definition$map, _user$project$Generate_Swagger$renderDefinition, _p2.definitions)));
 };
 
-var _user$project$Generate$maybe = F2(
-	function (name, decoder) {
-		return A3(
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$optional,
-			name,
-			A2(_elm_lang$core$Json_Decode$map, _elm_lang$core$Maybe$Just, decoder),
-			_elm_lang$core$Maybe$Nothing);
-	});
-var _user$project$Generate$json = '\n{\n  \"message\": \"asd\",\n  \"upvotes\": 0,\n  \"downvotes\": 0,\n  \"responses\": [\n    {\n      \"message\": \"asd\",\n      \"upvotes\": 0,\n      \"downvotes\": 0,\n      \"responses\": [\n        {\n          \"message\": \"asd\",\n          \"upvotes\": 0,\n          \"downvotes\": 0,\n          \"responses\": []\n        }\n      ]\n    },\n    {\n      \"message\": \"asd\",\n      \"upvotes\": 0,\n      \"downvotes\": 0,\n      \"responses\": []\n    }\n  ]\n}\n';
 var _user$project$Generate$generate = function (json) {
 	return A2(
 		_elm_lang$core$Result$map,
@@ -9489,26 +9480,6 @@ var _user$project$Generate$main = _elm_lang$html$Html$programWithFlags(
 		},
 		subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
 	})(_elm_lang$core$Json_Decode$string);
-var _user$project$Generate$Comment = function (a) {
-	return {responses: a};
-};
-var _user$project$Generate$Responses = function (a) {
-	return {ctor: 'Responses', _0: a};
-};
-var _user$project$Generate$decodeResponses = A2(
-	_elm_lang$core$Json_Decode$map,
-	_user$project$Generate$Responses,
-	_elm_lang$core$Json_Decode$list(
-		_elm_lang$core$Json_Decode$lazy(
-			function (_p4) {
-				return _user$project$Generate$decodeComment;
-			})));
-var _user$project$Generate$decodeComment = A3(
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-	'responses',
-	_user$project$Generate$decodeResponses,
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Generate$Comment));
-var _user$project$Generate$test = A2(_elm_lang$core$Json_Decode$decodeString, _user$project$Generate$decodeComment, _user$project$Generate$json);
 
 var Elm = {};
 Elm['Generate'] = Elm['Generate'] || {};
