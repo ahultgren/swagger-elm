@@ -15,9 +15,11 @@ import Decoder
         , ArticleUpperCasedField(ArticleUpperCasedField)
         , Comment(Comment)
         , DictWithObjectProperty(DictWithObjectProperty)
+        , DictWithObject
         , DictWithRef
         , ErrorResponse(ErrorResponse)
         , Group(Group)
+        , Labels
         , LowerCaseDefinitionObject(LowerCaseDefinitionObject)
         , Responses(Responses)
         , Rules(Rules)
@@ -177,6 +179,7 @@ labelsJson =
      """
 
 
+expectedLabels : Labels
 expectedLabels =
     Dict.fromList
         [ ( "label1", "labelContent" )
@@ -197,6 +200,7 @@ dictWithObjectJson =
      """
 
 
+expectedDictWithObject : DictWithObject
 expectedDictWithObject =
     Dict.fromList
         [ ( "label1", DictWithObjectProperty { nestedProperty = Just "value1" } )
@@ -220,6 +224,7 @@ dictWithRefJson =
      """
 
 
+expectedDictWithRef : DictWithRef
 expectedDictWithRef =
     Dict.fromList
         [ ( "label1", LowerCaseDefinitionObject {} )
@@ -249,6 +254,7 @@ commentJson =
 """
 
 
+expectedComment : Comment
 expectedComment =
     Comment
         { responses =
