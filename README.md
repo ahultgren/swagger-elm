@@ -2,6 +2,8 @@
 
 Swagger elm generates types and decoders from [Swagger document][swagger].
 
+[Try it out in the browser!](https://ahultgren.github.com/swagger-elm)
+
 _Note: This project is currently under active and initial development. Thus
 everything is not finished and there's no guarantee that anything will work as
 promised. However I'm happy for any testing and feedback I can get._
