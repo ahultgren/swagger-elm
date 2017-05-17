@@ -21,6 +21,7 @@
     "node-elm-stdio": "github:ahultgren/node-elm-stdio"
   },
   "devDependencies": {
-    "elm-test": "^0.18.7"
+    "elm-test": "^0.18.7",
+    "nodemon": "^1.11.0"
   }
 }
