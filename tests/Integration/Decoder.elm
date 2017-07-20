@@ -1,4 +1,4 @@
-module Integration.Decoder exposing (..)
+module Integration.Decoder exposing (all)
 
 import Test exposing (..)
 import Expect exposing (Expectation, fail)
