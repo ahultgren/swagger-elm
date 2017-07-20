@@ -1,4 +1,4 @@
-module Unit.Codegen.Utils exposing (..)
+module Unit.Codegen.Utils exposing (all)
 
 import Test exposing (..)
 import Expect exposing (Expectation, fail)
