@@ -4,7 +4,7 @@ import Test exposing (..)
 import Expect exposing (Expectation, fail)
 import Json.Decode exposing (decodeString)
 import Dict
-import Decoder
+import Swagger
     exposing
         ( Article(Article)
         , ArticleDisplaySize(Large, Small)
