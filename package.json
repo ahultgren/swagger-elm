@@ -8,7 +8,7 @@
     "test": "npm run test-build -s && elm-test",
     "build": "elm-make --warn source/Generate.elm --output dist/elm.js",
     "dev-build": "npm run build -s && npm run test -s",
-    "dev": "nodemon -i tests/Decoder.elm -e 'elm' -x npm run dev-build -s",
+    "dev": "nodemon -i tests/Decoder.elm -i elm-stuff -i tests/elm-stuff -e 'elm' -x npm run dev-build -s",
     "debug-build": "cat tests/fixtures/swagger.json | swagger-to-elm",
     "debug": "nodemon -w dist -x npm run debug-build -s"
   },
