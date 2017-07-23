@@ -6,7 +6,7 @@ import Dict
 import Json.Decode exposing (decodeString)
 import Json.Encode exposing (encode)
 import Integration.Decoder exposing (expectedArticle, expectedErrorResponse, expectedGroup, expectedRules, expectedLabels, expectedDictWithObject, expectedDictWithRef, expectedComment)
-import Decoder exposing (decodeArticle, encodeArticle, decodeErrorResponse, decodeGroup, decodeRules, decodeLabels, decodeDictWithObject, decodeDictWithRef, decodeComment, encodeErrorResponse, encodeGroup, encodeRules, encodeLabels, encodeDictWithObject, encodeDictWithRef, encodeComment)
+import Swagger exposing (decodeArticle, encodeArticle, decodeErrorResponse, decodeGroup, decodeRules, decodeLabels, decodeDictWithObject, decodeDictWithRef, decodeComment, encodeErrorResponse, encodeGroup, encodeRules, encodeLabels, encodeDictWithObject, encodeDictWithRef, encodeComment)
 
 
 all : Test

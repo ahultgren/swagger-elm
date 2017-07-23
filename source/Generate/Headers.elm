@@ -3,7 +3,7 @@ module Generate.Headers exposing (..)
 
 renderHeaders : String
 renderHeaders =
-    """module Decoder exposing (..)
+    """module Swagger exposing (..)
 
 import Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString, lazy, succeed, fail, andThen)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
