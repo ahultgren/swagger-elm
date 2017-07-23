@@ -7,6 +7,8 @@ renderHeaders =
 
 import Json.Decode exposing (Decoder, string, int, float, dict, list, bool, map, value, decodeValue, decodeString, lazy, succeed, fail, andThen)
 import Json.Decode.Pipeline exposing (decode, required, optional, hardcoded)
+import Json.Encode
+import Json.Encode.Extra
 import Dict exposing (Dict)
 
 
@@ -28,5 +30,11 @@ customDecoder decoder toResult =
         )
         decoder
 
+
+dictEncoder : (a -> Json.Encode.Value) -> Dict String a -> Json.Encode.Value
+dictEncoder enc dict =
+    Dict.toList dict
+        |> List.map (\\(k,v) -> (k, enc v))
+        |> Json.Encode.object
 
 """

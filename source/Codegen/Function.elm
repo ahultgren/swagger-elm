@@ -1,4 +1,4 @@
-module Codegen.Function exposing (Arg, function, pipeline, letin, caseof, lazy)
+module Codegen.Function exposing (function, arg, pipeline, letin, caseof, lazy)
 
 import String
 
@@ -41,7 +41,12 @@ functionType name args type_ body =
 
 functionDeclaration : Name -> Args -> Type -> Body -> String
 functionDeclaration name args type_ body =
-    name ++ (String.join " " <| List.map argName args) ++ " = \n" ++ body
+    name ++ " " ++ (String.join " " <| List.map argName args) ++ " = \n" ++ body
+
+
+arg : Type -> Name -> Arg
+arg type_ name =
+    Arg type_ name
 
 
 argType : Arg -> Type

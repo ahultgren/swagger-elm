@@ -3,6 +3,7 @@ module Generate.Swagger exposing (..)
 import Codegen.Utils exposing (capitalize, sanitize)
 import Generate.Type exposing (renderType)
 import Generate.Decoder exposing (renderDecoder)
+import Generate.Encoder exposing (renderEncoder)
 import Swagger.Swagger exposing (Swagger)
 import Swagger.Definition as Def exposing (Definition, getName)
 import Generate.Headers exposing (renderHeaders)
@@ -24,6 +25,7 @@ renderDefinition definition =
         String.concat
             [ renderType definition
             , renderDecoder definition
+            , renderEncoder definition
             , "\n\n"
             ]
 
