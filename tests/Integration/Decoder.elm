@@ -1,4 +1,4 @@
-module Integration.Decoder exposing (all)
+module Integration.Decoder exposing (..)
 
 import Test exposing (..)
 import Expect exposing (Expectation, fail)
@@ -61,7 +61,8 @@ articleJson =
   },
   "lowerCaseDefinitionRef": true,
   "lowerCaseDefinitionObjectRef": {},
-  "$ref": "ref"
+  "$ref": "ref",
+  "rules": null
 }
 """
 
@@ -69,36 +70,40 @@ articleJson =
 expectedArticle : Article
 expectedArticle =
     Article
-        { id = "article1"
-        , type_ = Just "article"
-        , title = "Article one"
-        , category_id = "blog"
-        , displaySize = Large
-        , nested =
-            Just <|
-                ArticleNested
-                    { one = Just "1"
-                    , two = Nothing
-                    , grandChildArray =
-                        Just
-                            (ArticleNestedGrandChildArray
-                                [ ArticleNestedGrandChildArrayItem { grandAProp = Just "Array child one" }
-                                , ArticleNestedGrandChildArrayItem { grandAProp = Just "Array child two" }
-                                ]
-                            )
-                    , grandChildObject = Just <| ArticleNestedGrandChildObject { grandOProp = Just 1.1 }
-                    , arrayOfStrings = Nothing
-                    }
-        , rules = Nothing
-        , sponsored = False
-        , upperCasedField =
-            ArticleUpperCasedField
-                { upperCasedFieldSubfield = "test"
+        expectedArticleRecord
+
+
+expectedArticleRecord =
+    { id = "article1"
+    , type_ = Just "article"
+    , title = "Article one"
+    , category_id = "blog"
+    , displaySize = Large
+    , nested =
+        Just <|
+            ArticleNested
+                { one = Just "1"
+                , two = Nothing
+                , grandChildArray =
+                    Just
+                        (ArticleNestedGrandChildArray
+                            [ ArticleNestedGrandChildArrayItem { grandAProp = Just "Array child one" }
+                            , ArticleNestedGrandChildArrayItem { grandAProp = Just "Array child two" }
+                            ]
+                        )
+                , grandChildObject = Just <| ArticleNestedGrandChildObject { grandOProp = Just 1.1 }
+                , arrayOfStrings = Nothing
                 }
-        , lowerCaseDefinitionRef = Just True
-        , lowerCaseDefinitionObjectRef = Just <| LowerCaseDefinitionObject {}
-        , ref = Just "ref"
-        }
+    , rules = Just (Rules {})
+    , sponsored = False
+    , upperCasedField =
+        ArticleUpperCasedField
+            { upperCasedFieldSubfield = "test"
+            }
+    , lowerCaseDefinitionRef = Just True
+    , lowerCaseDefinitionObjectRef = Just <| LowerCaseDefinitionObject {}
+    , ref = Just "ref"
+    }
 
 
 errorResponseJson =
@@ -121,39 +126,13 @@ expectedErrorResponse =
 
 
 groupJson =
-    """
-[{
-    "id": "article1",
-    "title": "Article one",
-    "category_id": "blog",
-    "UpperCasedField": {
-      "UpperCasedFieldSubfield": "test"
-    }
-}]
-"""
+    "[" ++ articleJson ++ "]"
 
 
 expectedGroup : Group
 expectedGroup =
     Group
-        [ Article
-            { id = "article1"
-            , type_ = Nothing
-            , title = "Article one"
-            , category_id = "blog"
-            , displaySize = Small
-            , nested = Nothing
-            , rules = Nothing
-            , sponsored = False
-            , upperCasedField =
-                ArticleUpperCasedField
-                    { upperCasedFieldSubfield = "test"
-                    }
-            , lowerCaseDefinitionRef = Nothing
-            , lowerCaseDefinitionObjectRef = Nothing
-            , ref = Nothing
-            }
-        ]
+        [ expectedArticle ]
 
 
 rulesJson =
